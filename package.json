@@ -1,0 +1,24 @@
+{
+  "name": "teatralnaya-zavalinka",
+  "version": "1.0.0",
+  "description": "Многостраничный сайт фестиваля «Театральная Завалинка» с минимальной админкой на Express.",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js"
+  },
+  "keywords": [
+    "festival",
+    "vanilla-js",
+    "express",
+    "admin"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "multer": "^1.4.5-lts.1"
+  }
+}

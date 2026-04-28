@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 420" fill="none">
+  <defs>
+    <linearGradient id="maskFillLeft" x1="52" y1="56" x2="294" y2="328" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0080FF" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#0080FF" stop-opacity="0.03"/>
+    </linearGradient>
+    <linearGradient id="maskFillRight" x1="248" y1="44" x2="496" y2="334" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0080FF" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#0080FF" stop-opacity="0.02"/>
+    </linearGradient>
+  </defs>
+  <g opacity="0.95">
+    <path
+      d="M194 46C142 58 106 108 110 172C114 252 161 313 226 354C240 363 258 363 272 354C337 313 384 252 388 172C392 108 356 58 304 46C280 40 255 47 240 62C223 47 218 40 194 46Z"
+      fill="url(#maskFillLeft)"
+      stroke="#0080FF"
+      stroke-opacity="0.34"
+      stroke-width="12"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M173 158C184 144 197 139 213 141C198 154 186 167 173 158Z"
+      fill="#0080FF"
+      fill-opacity="0.18"
+      stroke="#0080FF"
+      stroke-opacity="0.3"
+      stroke-width="6"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M267 141C283 139 296 144 307 158C294 167 282 154 267 141Z"
+      fill="#0080FF"
+      fill-opacity="0.18"
+      stroke="#0080FF"
+      stroke-opacity="0.3"
+      stroke-width="6"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M183 250C203 275 231 288 249 288C267 288 294 275 313 250"
+      stroke="#0080FF"
+      stroke-opacity="0.34"
+      stroke-width="10"
+      stroke-linecap="round"
+    />
+  </g>
+  <g opacity="0.82">
+    <path
+      d="M354 58C304 72 270 120 274 181C279 256 321 318 380 356C394 365 410 365 424 356C483 318 525 256 530 181C534 120 500 72 450 58C424 51 399 57 384 72C369 57 380 51 354 58Z"
+      fill="url(#maskFillRight)"
+      stroke="#0080FF"
+      stroke-opacity="0.24"
+      stroke-width="12"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M338 171C349 155 363 149 378 151C363 164 350 178 338 171Z"
+      fill="#0080FF"
+      fill-opacity="0.12"
+      stroke="#0080FF"
+      stroke-opacity="0.22"
+      stroke-width="6"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M432 151C447 149 461 155 472 171C460 178 447 164 432 151Z"
+      fill="#0080FF"
+      fill-opacity="0.12"
+      stroke="#0080FF"
+      stroke-opacity="0.22"
+      stroke-width="6"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M347 272C367 252 398 242 424 246C450 250 472 263 485 284"
+      stroke="#0080FF"
+      stroke-opacity="0.26"
+      stroke-width="10"
+      stroke-linecap="round"
+    />
+  </g>
+</svg>

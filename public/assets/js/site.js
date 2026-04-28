@@ -1,0 +1,430 @@
+const carouselAnimations = new WeakMap();
+
+document.addEventListener("DOMContentLoaded", () => {
+  initMenu();
+  initDocumentSearch();
+
+  const desktopCarouselMode = supportsDesktopCarouselMode();
+
+  bindCarouselButtons(desktopCarouselMode);
+  initCarousels(desktopCarouselMode);
+});
+
+function initMenu() {
+  const toggle = document.querySelector("[data-menu-toggle]");
+  const menu = document.querySelector("[data-menu]");
+
+  if (!toggle || !menu) {
+    return;
+  }
+
+  toggle.addEventListener("click", () => {
+    const nextState = !menu.classList.contains("is-open");
+    menu.classList.toggle("is-open", nextState);
+    toggle.setAttribute("aria-expanded", String(nextState));
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!menu.contains(event.target) && !toggle.contains(event.target)) {
+      menu.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+  });
+}
+
+function initDocumentSearch() {
+  const searchRoot = document.querySelector("[data-doc-search]");
+  const input = document.querySelector("[data-doc-search-input]");
+  const clearButton = document.querySelector("[data-doc-search-clear]");
+  const status = document.querySelector("[data-doc-search-status]");
+  const emptyState = document.querySelector("[data-doc-search-empty]");
+  const cards = Array.from(document.querySelectorAll("[data-document-card]"));
+  const groups = Array.from(document.querySelectorAll("[data-documents-group]"));
+  const archiveSection = document.querySelector("[data-documents-archive]");
+
+  if (!searchRoot || !input || !cards.length) {
+    return;
+  }
+
+  const totalCount = cards.length;
+
+  const applySearch = () => {
+    const query = normalizeSearchValue(input.value);
+    const tokens = query.split(" ").filter(Boolean);
+    let visibleCount = 0;
+
+    cards.forEach((card) => {
+      const haystack = normalizeSearchValue(card.dataset.documentSearch || "");
+      const matches = !tokens.length || tokens.every((token) => haystack.includes(token));
+      card.hidden = !matches;
+
+      if (matches) {
+        visibleCount += 1;
+      }
+    });
+
+    groups.forEach((group) => {
+      const visibleCards = Array.from(group.querySelectorAll("[data-document-card]")).some((card) => !card.hidden);
+      group.hidden = !visibleCards;
+    });
+
+    if (archiveSection) {
+      const visibleArchiveGroups = Array.from(archiveSection.querySelectorAll("[data-documents-group]")).some((group) => !group.hidden);
+      archiveSection.hidden = !visibleArchiveGroups;
+    }
+
+    if (clearButton) {
+      clearButton.hidden = !query;
+    }
+
+    if (emptyState) {
+      emptyState.hidden = visibleCount > 0 || !query;
+    }
+
+    if (status) {
+      if (!query) {
+        status.textContent = `Всего документов: ${totalCount}`;
+      } else if (visibleCount > 0) {
+        status.textContent = `Найдено документов: ${visibleCount} из ${totalCount}`;
+      } else {
+        status.textContent = "По вашему запросу ничего не найдено.";
+      }
+    }
+  };
+
+  input.addEventListener("input", applySearch);
+
+  if (clearButton) {
+    clearButton.addEventListener("click", () => {
+      input.value = "";
+      applySearch();
+      input.focus();
+    });
+  }
+
+  applySearch();
+}
+
+function normalizeSearchValue(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function supportsDesktopCarouselMode() {
+  return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+}
+
+function bindCarouselButtons(desktopCarouselMode) {
+  document.querySelectorAll("[data-carousel-prev], [data-carousel-next]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const targetId = button.getAttribute("data-carousel-prev") || button.getAttribute("data-carousel-next");
+      const track = document.getElementById(targetId);
+
+      if (!track) {
+        return;
+      }
+
+      const direction = button.hasAttribute("data-carousel-next") ? 1 : -1;
+      const targetLeft = getDirectionalCardLeft(track, direction);
+
+      if (desktopCarouselMode) {
+        animateTrackScroll(track, targetLeft, 240);
+        return;
+      }
+
+      track.scrollTo({
+        left: targetLeft,
+        behavior: "smooth"
+      });
+    });
+  });
+}
+
+function initCarousels(desktopCarouselMode) {
+  const tracks = Array.from(document.querySelectorAll("[data-carousel-track]"));
+
+  if (!tracks.length) {
+    return;
+  }
+
+  const updateAll = () => {
+    tracks.forEach((track) => {
+      cancelTrackAnimation(track);
+      updateCarouselState(track);
+    });
+  };
+
+  tracks.forEach((track) => {
+    updateCarouselState(track);
+    track.addEventListener("scroll", () => updateCarouselState(track), { passive: true });
+
+    if (desktopCarouselMode) {
+      bindPointerDrag(track);
+      bindDesktopScrollSnap(track);
+    }
+
+    if ("ResizeObserver" in window) {
+      const observer = new ResizeObserver(() => updateCarouselState(track));
+      observer.observe(track);
+
+      const shell = track.closest("[data-carousel-shell]");
+      if (shell) {
+        observer.observe(shell);
+      }
+    }
+  });
+
+  window.requestAnimationFrame(() => window.requestAnimationFrame(updateAll));
+  window.addEventListener("load", updateAll);
+  window.addEventListener("resize", updateAll);
+}
+
+function updateCarouselState(track) {
+  const shell = track.closest("[data-carousel-shell]");
+  const maxScrollLeft = Math.max(track.scrollWidth - track.clientWidth, 0);
+  const offsets = getCardOffsets(track);
+  const firstCard = track.firstElementChild;
+  const meaningfulOverflowThreshold = firstCard
+    ? Math.max(48, firstCard.getBoundingClientRect().width * 0.35)
+    : 48;
+  const hasOverflow = maxScrollLeft > meaningfulOverflowThreshold && offsets.length > 1;
+  const isAtStart = track.scrollLeft <= 8;
+  const isAtEnd = track.scrollLeft >= maxScrollLeft - 8;
+  const prevButtons = document.querySelectorAll(`[data-carousel-prev="${track.id}"]`);
+  const nextButtons = document.querySelectorAll(`[data-carousel-next="${track.id}"]`);
+
+  if (shell) {
+    shell.classList.toggle("is-at-start", isAtStart);
+    shell.classList.toggle("is-at-end", isAtEnd);
+    shell.classList.toggle("has-overflow", hasOverflow);
+  }
+
+  prevButtons.forEach((button) => {
+    button.disabled = !hasOverflow || isAtStart;
+    button.setAttribute("aria-disabled", String(button.disabled));
+  });
+
+  nextButtons.forEach((button) => {
+    button.disabled = !hasOverflow || isAtEnd;
+    button.setAttribute("aria-disabled", String(button.disabled));
+  });
+}
+
+function bindPointerDrag(track) {
+  let dragState = null;
+  let suppressClick = false;
+
+  const finishDrag = () => {
+    if (!dragState) {
+      return;
+    }
+
+    const didMove = dragState.moved;
+    dragState = null;
+    track.classList.remove("is-dragging");
+
+    if (didMove) {
+      snapToNearestCard(track, 220);
+
+      window.setTimeout(() => {
+        suppressClick = false;
+      }, 0);
+    }
+  };
+
+  track.addEventListener("dragstart", (event) => {
+    event.preventDefault();
+  });
+
+  track.addEventListener("pointerdown", (event) => {
+    if (event.pointerType !== "mouse" || event.button !== 0) {
+      return;
+    }
+
+    if (track.scrollWidth <= track.clientWidth + 8) {
+      return;
+    }
+
+    cancelTrackAnimation(track);
+
+    dragState = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startScrollLeft: track.scrollLeft,
+      moved: false
+    };
+
+    track.classList.add("is-dragging");
+
+    if (track.setPointerCapture) {
+      track.setPointerCapture(event.pointerId);
+    }
+  });
+
+  track.addEventListener("pointermove", (event) => {
+    if (!dragState || dragState.pointerId !== event.pointerId) {
+      return;
+    }
+
+    const deltaX = event.clientX - dragState.startX;
+
+    if (Math.abs(deltaX) > 6) {
+      dragState.moved = true;
+      suppressClick = true;
+    }
+
+    track.scrollLeft = dragState.startScrollLeft - deltaX;
+    updateCarouselState(track);
+  });
+
+  track.addEventListener("pointerup", finishDrag);
+  track.addEventListener("pointercancel", finishDrag);
+  track.addEventListener("lostpointercapture", finishDrag);
+
+  track.addEventListener(
+    "click",
+    (event) => {
+      if (suppressClick) {
+        event.preventDefault();
+        event.stopPropagation();
+        suppressClick = false;
+      }
+    },
+    true
+  );
+}
+
+function bindDesktopScrollSnap(track) {
+  let timeoutId = 0;
+
+  track.addEventListener(
+    "scroll",
+    () => {
+      window.clearTimeout(timeoutId);
+
+      timeoutId = window.setTimeout(() => {
+        if (track.classList.contains("is-dragging") || track.classList.contains("is-snapping")) {
+          return;
+        }
+
+        snapToNearestCard(track, 200);
+      }, 130);
+    },
+    { passive: true }
+  );
+}
+
+function snapToNearestCard(track, duration = 220) {
+  const targetLeft = getDirectionalCardLeft(track, 0);
+
+  if (Math.abs(targetLeft - track.scrollLeft) <= 6) {
+    track.classList.remove("is-snapping");
+    updateCarouselState(track);
+    return;
+  }
+
+  animateTrackScroll(track, targetLeft, duration);
+}
+
+function getDirectionalCardLeft(track, direction) {
+  const offsets = getCardOffsets(track);
+
+  if (!offsets.length) {
+    return track.scrollLeft;
+  }
+
+  const currentIndex = getNearestOffsetIndex(offsets, track.scrollLeft);
+  const targetIndex = clamp(currentIndex + direction, 0, offsets.length - 1);
+
+  return offsets[targetIndex];
+}
+
+function getCardOffsets(track) {
+  const maxScrollLeft = Math.max(track.scrollWidth - track.clientWidth, 0);
+  const leadingInset = getTrackLeadingInset(track);
+
+  return Array.from(track.children)
+    .map((card) => clamp(card.offsetLeft - leadingInset, 0, maxScrollLeft))
+    .filter((offset, index, offsets) => index === 0 || Math.abs(offset - offsets[index - 1]) > 1);
+}
+
+function getTrackLeadingInset(track) {
+  const styles = window.getComputedStyle(track);
+  return Number.parseFloat(styles.paddingLeft) || 0;
+}
+
+function getNearestOffsetIndex(offsets, currentScrollLeft) {
+  let nearestIndex = 0;
+  let nearestDistance = Number.POSITIVE_INFINITY;
+
+  offsets.forEach((offset, index) => {
+    const distance = Math.abs(offset - currentScrollLeft);
+
+    if (distance < nearestDistance) {
+      nearestDistance = distance;
+      nearestIndex = index;
+    }
+  });
+
+  return nearestIndex;
+}
+
+function animateTrackScroll(track, targetLeft, duration = 220) {
+  cancelTrackAnimation(track);
+
+  const startLeft = track.scrollLeft;
+  const delta = targetLeft - startLeft;
+
+  if (Math.abs(delta) <= 1) {
+    track.scrollLeft = targetLeft;
+    updateCarouselState(track);
+    return;
+  }
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    track.scrollLeft = targetLeft;
+    updateCarouselState(track);
+    return;
+  }
+
+  track.classList.add("is-snapping");
+
+  const startTime = performance.now();
+
+  const step = (timestamp) => {
+    const progress = Math.min((timestamp - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+
+    track.scrollLeft = startLeft + delta * eased;
+    updateCarouselState(track);
+
+    if (progress < 1) {
+      carouselAnimations.set(track, window.requestAnimationFrame(step));
+      return;
+    }
+
+    track.scrollLeft = targetLeft;
+    track.classList.remove("is-snapping");
+    carouselAnimations.delete(track);
+    updateCarouselState(track);
+  };
+
+  carouselAnimations.set(track, window.requestAnimationFrame(step));
+}
+
+function cancelTrackAnimation(track) {
+  const animationFrameId = carouselAnimations.get(track);
+
+  if (animationFrameId) {
+    window.cancelAnimationFrame(animationFrameId);
+    carouselAnimations.delete(track);
+  }
+
+  track.classList.remove("is-snapping");
+}
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}

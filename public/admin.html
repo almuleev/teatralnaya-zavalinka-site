@@ -1,0 +1,441 @@
+﻿<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Админка | Театральная Завалинка</title>
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+    <script defer src="/assets/js/admin.js"></script>
+  </head>
+  <body class="admin-body">
+    <header class="admin-header">
+      <div class="admin-header__inner">
+        <div>
+          <p class="admin-kicker">Панель управления</p>
+          <h1>Театральная Завалинка</h1>
+        </div>
+        <div class="admin-header__actions">
+          <a class="admin-link" href="/home" target="_blank" rel="noreferrer">Открыть сайт</a>
+          <button class="admin-button admin-button--ghost is-hidden" type="button" data-logout-button>Выйти</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <section class="auth-card" data-auth-panel>
+        <div class="auth-card__content">
+          <p class="admin-kicker">Вход для менеджера</p>
+          <h2>Редактирование сайта и документов</h2>
+          <p class="auth-card__lead">
+            Здесь можно менять тексты, ссылки, карточки людей, документы и видео без ручного редактирования кода.
+          </p>
+          <form class="auth-form" data-login-form>
+            <label class="field">
+              <span>Логин</span>
+              <input type="text" name="username" autocomplete="username" required>
+            </label>
+            <label class="field">
+              <span>Пароль</span>
+              <input type="password" name="password" autocomplete="current-password" required>
+            </label>
+            <button class="admin-button" type="submit">Войти</button>
+          </form>
+          <p class="status-message" data-auth-message></p>
+        </div>
+      </section>
+
+      <section class="admin-app is-hidden" data-admin-app>
+        <aside class="admin-sidebar" aria-label="Разделы админки">
+          <button class="admin-nav__item is-active" type="button" data-section-link="overview">Обзор</button>
+          <button class="admin-nav__item" type="button" data-section-link="site">Основное</button>
+          <button class="admin-nav__item" type="button" data-section-link="home">Главная</button>
+          <button class="admin-nav__item" type="button" data-section-link="about">О фестивале</button>
+          <button class="admin-nav__item" type="button" data-section-link="documents">Документы</button>
+          <button class="admin-nav__item" type="button" data-section-link="contacts">Контакты</button>
+          <button class="admin-nav__item" type="button" data-section-link="people">Карточки</button>
+        </aside>
+
+        <div class="admin-main">
+          <section class="toolbar">
+            <div>
+              <p class="admin-kicker">Публикация</p>
+              <p class="toolbar__text">Изменения сохраняются в JSON и сразу используются сайтом.</p>
+            </div>
+            <div class="toolbar__actions">
+              <button class="admin-button admin-button--ghost" type="button" data-reload-button>Обновить данные</button>
+              <button class="admin-button" type="button" data-save-button>Сохранить изменения</button>
+            </div>
+          </section>
+
+          <p class="status-message" data-global-message></p>
+
+          <section class="admin-section is-active" data-section="overview">
+            <div class="section-card">
+              <h2>Что можно редактировать</h2>
+              <div class="overview-grid">
+                <article class="overview-item">
+                  <h3>Тексты страниц</h3>
+                  <p>Главная, описание фестиваля, контакты и ключевые организационные блоки.</p>
+                </article>
+                <article class="overview-item">
+                  <h3>Документы</h3>
+                  <p>Список документов по годам, внешние ссылки и локальная загрузка файлов.</p>
+                </article>
+                <article class="overview-item">
+                  <h3>Карточки</h3>
+                  <p>Жюри, эксперты, гости, партнёры, победители, организаторы фестиваля и медиакоманда.</p>
+                </article>
+                <article class="overview-item">
+                  <h3>Видео</h3>
+                  <p>Отдельные видеоподборки на странице «О фестивале» с загрузкой файлов и постеров.</p>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section class="admin-section" data-section="site">
+            <div class="section-card">
+              <h2>Основные настройки</h2>
+              <div class="form-grid">
+                <label class="field">
+                  <span>Название сайта</span>
+                  <input type="text" data-path="meta.siteName">
+                </label>
+                <label class="field">
+                  <span>Короткое название</span>
+                  <input type="text" data-path="meta.siteShortName">
+                </label>
+                <label class="field field--full">
+                  <span>Подзаголовок</span>
+                  <input type="text" data-path="meta.tagline">
+                </label>
+                <label class="field field--full">
+                  <span>Юридическое наименование</span>
+                  <textarea rows="3" data-path="meta.organizationLegalName"></textarea>
+                </label>
+                <label class="field">
+                  <span>Наименование организации</span>
+                  <input type="text" data-path="meta.organizationName">
+                </label>
+                <label class="field">
+                  <span>ОГРН</span>
+                  <input type="text" data-path="meta.ogrn">
+                </label>
+                <label class="field field--full">
+                  <span>Ссылка на форму заявки</span>
+                  <input type="url" data-path="links.applicationForm">
+                </label>
+                <div class="field field--full">
+                  <span>Положение фестиваля</span>
+                  <div class="upload-row">
+                    <input type="url" data-path="links.festivalRegulation" data-upload-target="links.festivalRegulation">
+                    <input type="file" accept=".pdf,.doc,.docx" data-upload-input="links.festivalRegulation" data-upload-kind="document">
+                    <button class="admin-button admin-button--ghost" type="button" data-upload-button="links.festivalRegulation">Загрузить файл</button>
+                  </div>
+                </div>
+                <label class="field">
+                  <span>Telegram</span>
+                  <input type="url" data-path="links.telegram">
+                </label>
+                <label class="field">
+                  <span>ВКонтакте</span>
+                  <input type="url" data-path="links.vk">
+                </label>
+                <label class="field">
+                  <span>Rutube</span>
+                  <input type="url" data-path="links.rutube">
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <section class="admin-section" data-section="home">
+            <div class="section-card">
+              <h2>Главная страница</h2>
+              <div class="form-grid">
+                <label class="field field--full">
+                  <span>Hero: заголовок</span>
+                  <input type="text" data-path="home.heroTitle">
+                </label>
+                <label class="field field--full">
+                  <span>Hero: подзаголовок</span>
+                  <input type="text" data-path="home.heroSubtitle">
+                </label>
+                <label class="field field--full">
+                  <span>Hero: пояснение</span>
+                  <textarea rows="4" data-path="home.heroLead"></textarea>
+                </label>
+                <label class="field">
+                  <span>Заголовок блока описания</span>
+                  <input type="text" data-path="home.descriptionTitle">
+                </label>
+                <label class="field field--full">
+                  <span>Текст описания</span>
+                  <textarea rows="4" data-path="home.descriptionText"></textarea>
+                </label>
+                <label class="field field--full">
+                  <span>Плашка: заголовок инструкции</span>
+                  <input type="text" data-path="home.applicationGuideTitle">
+                </label>
+                <label class="field field--full">
+                  <span>Плашка: текст инструкции</span>
+                  <textarea rows="3" data-path="home.applicationGuideText"></textarea>
+                </label>
+                <label class="field">
+                  <span>Текст кнопки</span>
+                  <input type="text" data-path="home.applicationGuideButtonLabel">
+                </label>
+                <div class="field field--full">
+                  <span>Видеоинструкция (MP4)</span>
+                  <div class="upload-row">
+                    <input type="url" data-path="home.applicationGuideVideoUrl" data-upload-target="home.applicationGuideVideoUrl">
+                    <input type="file" accept=".mp4" data-upload-input="home.applicationGuideVideoUrl" data-upload-kind="video">
+                    <button class="admin-button admin-button--ghost" type="button" data-upload-button="home.applicationGuideVideoUrl">Загрузить видео</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h3>Этапы фестиваля</h3>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="home.stages">Добавить этап</button>
+              </div>
+              <div data-list="home.stages"></div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h3>Факты и преимущества</h3>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="home.facts">Добавить факт</button>
+              </div>
+              <div data-list="home.facts"></div>
+            </div>
+          </section>
+
+          <section class="admin-section" data-section="about">
+            <div class="section-card">
+              <h2>Страница «О фестивале»</h2>
+              <div class="form-grid">
+                <label class="field field--full">
+                  <span>Заголовок страницы</span>
+                  <input type="text" data-path="about.pageTitle">
+                </label>
+                <label class="field field--full">
+                  <span>Вступительный текст</span>
+                  <textarea rows="4" data-path="about.intro"></textarea>
+                </label>
+                <label class="field">
+                  <span>Заголовок темы</span>
+                  <input type="text" data-path="about.themeTitle">
+                </label>
+                <label class="field field--full">
+                  <span>Текст темы</span>
+                  <textarea rows="3" data-path="about.themeText"></textarea>
+                </label>
+                <label class="field">
+                  <span>Заголовок блока статуса</span>
+                  <input type="text" data-path="about.missionTitle">
+                </label>
+                <label class="field field--full">
+                  <span>Текст блока статуса</span>
+                  <textarea rows="4" data-path="about.missionText"></textarea>
+                </label>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h3>Достижения фестиваля</h3>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.achievements">Добавить блок</button>
+              </div>
+              <div data-list="about.achievements"></div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h3>Официальный статус</h3>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.statuses">Добавить блок</button>
+              </div>
+              <div data-list="about.statuses"></div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h3>Видео о жизни фестиваля</h3>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.lifeVideos">Добавить видео</button>
+              </div>
+              <div data-list="about.lifeVideos"></div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h3>Звезды на экране</h3>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.starVideos">Добавить видео</button>
+              </div>
+              <div data-list="about.starVideos"></div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h3>Видео-путеводители: 6 дней</h3>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.guideVideos">Добавить видео</button>
+              </div>
+              <div data-list="about.guideVideos"></div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h3>Видео с каждого основного мероприятия</h3>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.eventVideos">Добавить видео</button>
+              </div>
+              <div data-list="about.eventVideos"></div>
+            </div>
+          </section>
+
+          <section class="admin-section" data-section="documents">
+            <div class="section-card">
+              <div class="section-card__header">
+                <h2>Документы</h2>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="documents">Добавить документ</button>
+              </div>
+              <div data-list="documents"></div>
+            </div>
+          </section>
+
+          <section class="admin-section" data-section="contacts">
+            <div class="section-card">
+              <h2>Страница «Контакты»</h2>
+              <div class="form-grid">
+                <label class="field field--full">
+                  <span>Заголовок страницы</span>
+                  <input type="text" data-path="contacts.pageTitle">
+                </label>
+                <label class="field field--full">
+                  <span>Вступительный текст</span>
+                  <textarea rows="4" data-path="contacts.intro"></textarea>
+                </label>
+                <label class="field">
+                  <span>Email</span>
+                  <input type="email" data-path="contacts.email">
+                </label>
+                <label class="field">
+                  <span>Телефон</span>
+                  <input type="text" data-path="contacts.phone">
+                </label>
+                <label class="field field--full">
+                  <span>Адрес</span>
+                  <textarea rows="3" data-path="contacts.address"></textarea>
+                </label>
+                <label class="field field--full">
+                  <span>Дополнительная информация</span>
+                  <textarea rows="4" data-path="contacts.notes"></textarea>
+                </label>
+                <label class="field field--full">
+                  <span>Видео: заголовок</span>
+                  <input type="text" data-path="contacts.featuredVideoTitle">
+                </label>
+                <label class="field field--full">
+                  <span>Видео: подпись</span>
+                  <textarea rows="3" data-path="contacts.featuredVideoText"></textarea>
+                </label>
+                <div class="field field--full">
+                  <span>Видео (MP4)</span>
+                  <div class="upload-row">
+                    <input type="url" data-path="contacts.featuredVideoUrl" data-upload-target="contacts.featuredVideoUrl">
+                    <input type="file" accept=".mp4" data-upload-input="contacts.featuredVideoUrl" data-upload-kind="video">
+                    <button class="admin-button admin-button--ghost" type="button" data-upload-button="contacts.featuredVideoUrl">Загрузить видео</button>
+                  </div>
+                </div>
+                <div class="field field--full">
+                  <span>Постер видео</span>
+                  <div class="upload-row">
+                    <input type="url" data-path="contacts.featuredVideoPoster" data-upload-target="contacts.featuredVideoPoster">
+                    <input type="file" accept="image/*" data-upload-input="contacts.featuredVideoPoster" data-upload-kind="image">
+                    <button class="admin-button admin-button--ghost" type="button" data-upload-button="contacts.featuredVideoPoster">Загрузить постер</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h3>Учредители</h3>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="contacts.founders">Добавить карточку</button>
+              </div>
+              <div data-list="contacts.founders"></div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h3>Организаторы</h3>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="contacts.orgCommittee">Добавить карточку</button>
+              </div>
+              <div data-list="contacts.orgCommittee"></div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h3>Медиа-команда</h3>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="contacts.mediaTeam">Добавить карточку</button>
+              </div>
+              <div data-list="contacts.mediaTeam"></div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h3>Социальные сети</h3>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="contacts.socials">Добавить ссылку</button>
+              </div>
+              <div data-list="contacts.socials"></div>
+            </div>
+          </section>
+
+          <section class="admin-section" data-section="people">
+            <div class="section-card">
+              <div class="section-card__header">
+                <h2>Жюри</h2>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.jury">Добавить карточку</button>
+              </div>
+              <div data-list="collections.jury"></div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h2>Эксперты</h2>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.experts">Добавить карточку</button>
+              </div>
+              <div data-list="collections.experts"></div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h2>Гости</h2>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.guests">Добавить карточку</button>
+              </div>
+              <div data-list="collections.guests"></div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h2>Партнёры</h2>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.partners">Добавить карточку</button>
+              </div>
+              <div data-list="collections.partners"></div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-card__header">
+                <h2>Победители прошлых лет</h2>
+                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.winners">Добавить карточку</button>
+              </div>
+              <div data-list="collections.winners"></div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+node_modules/
+.env
+npm-debug.log*
+public/uploads/docs/*
+public/uploads/images/*
+public/uploads/videos/*
+!public/uploads/docs/.gitkeep
+!public/uploads/images/.gitkeep
+!public/uploads/videos/.gitkeep
+
+.env.local
+dist/
+build/
+.DS_Store
+old_v/
