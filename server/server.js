@@ -14,7 +14,6 @@ async function createServer() {
 
   app.disable("x-powered-by");
   app.use(express.json({ limit: "3mb" }));
-  app.use(express.urlencoded({ extended: true }));
   app.use(
     session({
       name: "tz-session",

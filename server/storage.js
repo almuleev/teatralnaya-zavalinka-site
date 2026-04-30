@@ -19,25 +19,6 @@ function getUploadUrl(type, filename) {
   return `/uploads/${type}/${filename}`;
 }
 
-function isUploadUrl(url) {
-  return typeof url === "string" && /^\/uploads\/(docs|images|videos)\//.test(url);
-}
-
-function resolveUploadPath(url) {
-  if (!isUploadUrl(url)) {
-    return null;
-  }
-
-  const relativePath = url.replace(/^\/+/, "");
-  const absolutePath = path.resolve(config.publicDir, relativePath);
-
-  if (!absolutePath.startsWith(config.publicDir)) {
-    return null;
-  }
-
-  return absolutePath;
-}
-
 async function ensureProjectStructure() {
   await Promise.all([
     fsp.mkdir(config.dataDir, { recursive: true }),
@@ -71,25 +52,6 @@ async function writeContent(content) {
   await fsp.rename(tmpPath, config.dataFile);
 
   return nextContent;
-}
-
-async function deleteUploadByUrl(url) {
-  const filePath = resolveUploadPath(url);
-
-  if (!filePath) {
-    return false;
-  }
-
-  try {
-    await fsp.unlink(filePath);
-    return true;
-  } catch (error) {
-    if (error && error.code === "ENOENT") {
-      return false;
-    }
-
-    throw error;
-  }
 }
 
 function buildUploadFilename(originalName) {
@@ -153,10 +115,8 @@ async function dedupeUploadedFile(targetDirectory, uploadedFilename) {
 module.exports = {
   buildMulterStorage,
   dedupeUploadedFile,
-  deleteUploadByUrl,
   ensureProjectStructure,
   getUploadUrl,
-  isUploadUrl,
   readContent,
   sanitizeBaseName,
   writeContent

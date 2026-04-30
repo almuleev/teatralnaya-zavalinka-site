@@ -6,7 +6,6 @@ const { requireAuth, verifyCredentials } = require("../auth");
 const {
   buildMulterStorage,
   dedupeUploadedFile,
-  deleteUploadByUrl,
   getUploadUrl,
   readContent,
   writeContent
@@ -89,21 +88,6 @@ router.post("/upload/document", requireAuth, documentUpload.single("file"), (req
 
 router.post("/upload/video", requireAuth, videoUpload.single("file"), (req, res) => {
   return handleUploadedFile(req, res, config.videosDir, "videos");
-});
-
-router.delete("/upload", requireAuth, async (req, res, next) => {
-  try {
-    const { url } = req.body || {};
-
-    if (!url) {
-      return res.status(400).json({ error: "Не указан URL файла." });
-    }
-
-    const removed = await deleteUploadByUrl(url);
-    return res.json({ ok: true, removed });
-  } catch (error) {
-    next(error);
-  }
 });
 
 module.exports = router;

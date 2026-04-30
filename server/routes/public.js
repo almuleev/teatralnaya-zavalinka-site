@@ -15,49 +15,18 @@ router.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "..", "public", "admin.html"));
 });
 
-router.get("/api/public/content", async (req, res, next) => {
+const renderWithContent = (renderer) => async (req, res, next) => {
   try {
     const content = await readContent();
-    res.json(content);
+    res.type("html").send(renderer(content));
   } catch (error) {
     next(error);
   }
-});
+};
 
-router.get(["/", "/home"], async (req, res, next) => {
-  try {
-    const content = await readContent();
-    res.type("html").send(renderHomePage(content));
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get("/info", async (req, res, next) => {
-  try {
-    const content = await readContent();
-    res.type("html").send(renderAboutPage(content));
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get("/docs", async (req, res, next) => {
-  try {
-    const content = await readContent();
-    res.type("html").send(renderDocumentsPage(content));
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get("/contacts", async (req, res, next) => {
-  try {
-    const content = await readContent();
-    res.type("html").send(renderContactsPage(content));
-  } catch (error) {
-    next(error);
-  }
-});
+router.get(["/", "/home"], renderWithContent(renderHomePage));
+router.get("/info", renderWithContent(renderAboutPage));
+router.get("/docs", renderWithContent(renderDocumentsPage));
+router.get("/contacts", renderWithContent(renderContactsPage));
 
 module.exports = router;
