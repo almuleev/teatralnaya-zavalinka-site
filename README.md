@@ -41,10 +41,6 @@ site_TZ/
       admin.js
       public.js
   .env.example
-  old_v/
-    home.fetched.html
-    info.fetched.html
-    docs.fetched.html
     Театральная Завалинка - Контакты.html
   package.json
   README.md
@@ -140,7 +136,6 @@ npm run dev
 
 ## Что было перенесено из старого сайта
 
-- Исходные HTML старого сайта сохранены в папке `old_v/`.
 - Основная информация о фестивале 2025.
 - Этапы проведения и ключевые факты участия.
 - Ссылки на положение и форму заявки.
