@@ -13,3 +13,6 @@ dist/
 build/
 .DS_Store
 old_v/
+*.log
+*.encoding-backup
+data/site-content (*).json
