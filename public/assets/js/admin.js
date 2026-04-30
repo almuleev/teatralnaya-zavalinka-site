@@ -68,10 +68,7 @@ const defaultUi = {
   docsSearchLabel: "Поиск по документам",
   docsSearchPlaceholder: "Введите название, тип, описание или год",
   docsSearchClearLabel: "Сбросить",
-  docsSearchEmptyText: "По вашему запросу документы не найдены. Попробуйте изменить формулировку или очистить поиск.",
-  contactsOgrnLabel: "ОГРН",
-  contactsPhoneLabel: "Телефон",
-  contactsAddressLabel: "Адрес"
+  docsSearchEmptyText: "По вашему запросу документы не найдены. Попробуйте изменить формулировку или очистить поиск."
 };
 
 const defaultSections = {

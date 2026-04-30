@@ -118,6 +118,5 @@ module.exports = {
   ensureProjectStructure,
   getUploadUrl,
   readContent,
-  sanitizeBaseName,
   writeContent
 };

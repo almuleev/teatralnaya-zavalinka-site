@@ -16,10 +16,8 @@ function trimTrailingSlash(value) {
 }
 
 module.exports = {
-  rootDir,
   publicDir,
   dataDir,
-  uploadsDir,
   docsDir,
   imagesDir,
   videosDir,
