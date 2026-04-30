@@ -5,6 +5,7 @@ const config = require("../config");
 const { requireAuth, verifyCredentials } = require("../auth");
 const {
   buildMulterStorage,
+  dedupeUploadedFile,
   deleteUploadByUrl,
   getUploadUrl,
   readContent,
@@ -79,39 +80,15 @@ router.put("/content", requireAuth, async (req, res, next) => {
 });
 
 router.post("/upload/image", requireAuth, imageUpload.single("file"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "Файл не был загружен." });
-  }
-
-  return res.json({
-    ok: true,
-    url: getUploadUrl("images", req.file.filename),
-    originalName: req.file.originalname
-  });
+  return handleUploadedFile(req, res, config.imagesDir, "images");
 });
 
 router.post("/upload/document", requireAuth, documentUpload.single("file"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "Файл не был загружен." });
-  }
-
-  return res.json({
-    ok: true,
-    url: getUploadUrl("docs", req.file.filename),
-    originalName: req.file.originalname
-  });
+  return handleUploadedFile(req, res, config.docsDir, "docs");
 });
 
 router.post("/upload/video", requireAuth, videoUpload.single("file"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "Файл не был загружен." });
-  }
-
-  return res.json({
-    ok: true,
-    url: getUploadUrl("videos", req.file.filename),
-    originalName: req.file.originalname
-  });
+  return handleUploadedFile(req, res, config.videosDir, "videos");
 });
 
 router.delete("/upload", requireAuth, async (req, res, next) => {
@@ -130,4 +107,22 @@ router.delete("/upload", requireAuth, async (req, res, next) => {
 });
 
 module.exports = router;
+
+async function handleUploadedFile(req, res, targetDirectory, uploadType) {
+  if (!req.file) {
+    return res.status(400).json({ error: "Файл не был загружен." });
+  }
+
+  try {
+    const deduped = await dedupeUploadedFile(targetDirectory, req.file.filename);
+    return res.json({
+      ok: true,
+      url: getUploadUrl(uploadType, deduped.filename),
+      originalName: req.file.originalname,
+      reused: deduped.reused
+    });
+  } catch (error) {
+    return res.status(500).json({ error: "Не удалось обработать загруженный файл." });
+  }
+}
 

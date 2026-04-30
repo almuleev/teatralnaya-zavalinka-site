@@ -296,6 +296,10 @@ const listSchemas = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (typeof globalThis.structuredClone !== "function") {
+    globalThis.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+  }
+
   bindBaseEvents();
   syncDirtyIndicator();
   checkSession();
@@ -326,13 +330,10 @@ function bindBaseEvents() {
     button.addEventListener("click", () => addListItem(button.dataset.addListItem));
   });
 
-  document.querySelectorAll("[data-upload-button]").forEach((button) => {
-    button.addEventListener("click", () => uploadStaticField(button.dataset.uploadButton));
-  });
-
   document.addEventListener("input", handleDynamicInput);
   document.addEventListener("change", handleDynamicInput);
   document.addEventListener("click", handleDynamicClick);
+  document.addEventListener("click", handleStaticUploadClick);
   document.addEventListener("keydown", handleRichTextShortcut);
 
   window.addEventListener("beforeunload", (event) => {
@@ -343,6 +344,17 @@ function bindBaseEvents() {
     event.preventDefault();
     event.returnValue = "";
   });
+}
+
+function handleStaticUploadClick(event) {
+  const button = event.target.closest("[data-upload-button]");
+
+  if (!button) {
+    return;
+  }
+
+  event.preventDefault();
+  uploadStaticField(button.dataset.uploadButton);
 }
 
 async function checkSession() {
@@ -684,7 +696,6 @@ function renderField(listPath, index, field, value) {
           <input type="${field.type || "url"}" value="${escapeAttribute(safeValue)}" data-item-path="${escapeAttribute(itemPath)}">
           <input type="file" accept="${escapeAttribute(field.accept || "*/*")}" data-upload-file>
           <button class="admin-button admin-button--ghost" type="button" data-action="upload">Загрузить</button>
-          <button class="admin-button admin-button--ghost" type="button" data-action="clear-upload">Очистить</button>
         </div>
       </div>
     `;
@@ -799,10 +810,6 @@ function handleDynamicClick(event) {
     uploadFromRow(button.closest("[data-upload-row]"));
     return;
   }
-
-  if (action === "clear-upload") {
-    clearUpload(button.closest("[data-upload-row]"));
-  }
 }
 
 function handleRichTextShortcut(event) {
@@ -861,6 +868,9 @@ async function uploadStaticField(path) {
   }
 
   targetInput.value = result.url;
+  if (!state.content || typeof state.content !== "object") {
+    state.content = {};
+  }
   setByPath(state.content, path, result.url);
   fileInput.value = "";
   markDirty();
@@ -889,37 +899,13 @@ async function uploadFromRow(row) {
   }
 
   targetInput.value = result.url;
+  if (!state.content || typeof state.content !== "object") {
+    state.content = {};
+  }
   setByPath(state.content, path, result.url);
   fileInput.value = "";
   markDirty();
   setMessage("[data-global-message]", "Файл загружен.", "success");
-}
-
-async function clearUpload(row) {
-  if (!row) {
-    return;
-  }
-
-  const path = row.dataset.uploadPath;
-  const targetInput = row.querySelector("[data-item-path]");
-  const currentUrl = targetInput?.value.trim();
-
-  if (!targetInput) {
-    return;
-  }
-
-  if (currentUrl && currentUrl.startsWith("/uploads/")) {
-    await fetch("/api/admin/upload", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url: currentUrl })
-    });
-  }
-
-  targetInput.value = "";
-  setByPath(state.content, path, "");
-  markDirty();
-  setMessage("[data-global-message]", "Ссылка на файл очищена.", "success");
 }
 
 async function uploadFile(file, kind) {

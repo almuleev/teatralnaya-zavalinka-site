@@ -1,6 +1,8 @@
 const fs = require("fs");
 const fsp = require("fs/promises");
 const path = require("path");
+const multer = require("multer");
+const crypto = require("crypto");
 
 const config = require("./config");
 
@@ -98,18 +100,59 @@ function buildUploadFilename(originalName) {
 }
 
 function buildMulterStorage(targetDirectory) {
-  return {
+  return multer.diskStorage({
     destination(req, file, callback) {
       fs.mkdir(targetDirectory, { recursive: true }, (error) => callback(error, targetDirectory));
     },
     filename(req, file, callback) {
       callback(null, buildUploadFilename(file.originalname));
     }
-  };
+  });
+}
+
+function hashFile(filePath) {
+  return new Promise((resolve, reject) => {
+    const hash = crypto.createHash("sha256");
+    const stream = fs.createReadStream(filePath);
+
+    stream.on("error", reject);
+    stream.on("data", (chunk) => hash.update(chunk));
+    stream.on("end", () => resolve(hash.digest("hex")));
+  });
+}
+
+async function dedupeUploadedFile(targetDirectory, uploadedFilename) {
+  const uploadedPath = path.join(targetDirectory, uploadedFilename);
+  const uploadedStat = await fsp.stat(uploadedPath);
+  const uploadedHash = await hashFile(uploadedPath);
+  const directoryEntries = await fsp.readdir(targetDirectory, { withFileTypes: true });
+
+  for (const entry of directoryEntries) {
+    if (!entry.isFile() || entry.name === uploadedFilename) {
+      continue;
+    }
+
+    const candidatePath = path.join(targetDirectory, entry.name);
+    const candidateStat = await fsp.stat(candidatePath);
+
+    if (candidateStat.size !== uploadedStat.size) {
+      continue;
+    }
+
+    const candidateHash = await hashFile(candidatePath);
+
+    if (candidateHash === uploadedHash) {
+      await fsp.unlink(uploadedPath);
+      return { filename: entry.name, reused: true };
+    }
+  }
+
+  return { filename: uploadedFilename, reused: false };
 }
 
 module.exports = {
   buildMulterStorage,
+  dedupeUploadedFile,
   deleteUploadByUrl,
   ensureProjectStructure,
   getUploadUrl,
