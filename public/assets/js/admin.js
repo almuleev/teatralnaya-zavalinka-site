@@ -327,7 +327,7 @@ function bindBaseEvents() {
   });
 
   document.querySelectorAll("[data-add-list-item]").forEach((button) => {
-    button.addEventListener("click", () => addListItem(button.dataset.addListItem));
+    button.addEventListener("click", () => insertListItem(button.dataset.addListItem));
   });
 
   document.addEventListener("input", handleDynamicInput);
@@ -737,10 +737,6 @@ function renderField(listPath, index, field, value) {
   `;
 }
 
-function addListItem(listPath) {
-  insertListItem(listPath);
-}
-
 function insertListItem(listPath, index) {
   const schema = listSchemas[listPath];
   const current = getByPath(state.content, listPath) || [];
@@ -868,11 +864,7 @@ async function uploadStaticField(path) {
     return;
   }
 
-  targetInput.value = result.url;
-  if (!state.content || typeof state.content !== "object") {
-    state.content = {};
-  }
-  setByPath(state.content, path, result.url);
+  applyUploadedUrl(path, targetInput, result.url);
   fileInput.value = "";
   markDirty();
   setMessage("[data-global-message]", "Файл загружен.", "success");
@@ -899,14 +891,20 @@ async function uploadFromRow(row) {
     return;
   }
 
-  targetInput.value = result.url;
-  if (!state.content || typeof state.content !== "object") {
-    state.content = {};
-  }
-  setByPath(state.content, path, result.url);
+  applyUploadedUrl(path, targetInput, result.url);
   fileInput.value = "";
   markDirty();
   setMessage("[data-global-message]", "Файл загружен.", "success");
+}
+
+function applyUploadedUrl(path, targetInput, url) {
+  targetInput.value = url;
+
+  if (!state.content || typeof state.content !== "object") {
+    state.content = {};
+  }
+
+  setByPath(state.content, path, url);
 }
 
 async function uploadFile(file, kind) {
