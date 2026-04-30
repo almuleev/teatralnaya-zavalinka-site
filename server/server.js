@@ -11,8 +11,12 @@ async function createServer() {
   await ensureProjectStructure();
 
   const app = express();
+  const isProduction = process.env.NODE_ENV === "production";
 
   app.disable("x-powered-by");
+  if (isProduction) {
+    app.set("trust proxy", 1);
+  }
   app.use(express.json({ limit: "3mb" }));
   app.use(
     session({
@@ -23,7 +27,7 @@ async function createServer() {
       cookie: {
         httpOnly: true,
         sameSite: "lax",
-        secure: false,
+        secure: isProduction,
         maxAge: 1000 * 60 * 60 * 12
       }
     })

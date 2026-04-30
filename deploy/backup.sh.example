@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Пример:
+#   bash deploy/backup.sh.example /var/www/teatralnaya-zavalinka/shared /var/backups/teatralnaya-zavalinka
+#
+# Аргумент 1: каталог shared (где лежат data/ и uploads/)
+# Аргумент 2: каталог для бэкапов
+
+SHARED_DIR="${1:-/var/www/teatralnaya-zavalinka/shared}"
+BACKUP_DIR="${2:-/var/backups/teatralnaya-zavalinka}"
+STAMP="$(date +%Y%m%d-%H%M%S)"
+ARCHIVE="${BACKUP_DIR}/tz-backup-${STAMP}.tar.gz"
+
+mkdir -p "${BACKUP_DIR}"
+
+if [[ ! -f "${SHARED_DIR}/data/site-content.json" ]]; then
+  echo "ERROR: ${SHARED_DIR}/data/site-content.json not found"
+  exit 1
+fi
+
+if [[ ! -d "${SHARED_DIR}/uploads" ]]; then
+  echo "ERROR: ${SHARED_DIR}/uploads not found"
+  exit 1
+fi
+
+tar -czf "${ARCHIVE}" -C "${SHARED_DIR}" data/site-content.json uploads
+echo "Backup created: ${ARCHIVE}"
