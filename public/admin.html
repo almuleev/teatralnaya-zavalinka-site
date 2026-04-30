@@ -5,17 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Админка | Театральная Завалинка</title>
     <meta name="robots" content="noindex,nofollow">
-    <link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/assets/images/festival-favicon.png" type="image/png">
     <link rel="stylesheet" href="/assets/css/admin.css">
     <script defer src="/assets/js/admin.js"></script>
   </head>
   <body class="admin-body">
     <header class="admin-header">
       <div class="admin-header__inner">
-        <div>
-          <p class="admin-kicker">Панель управления</p>
-          <h1>Театральная Завалинка</h1>
-        </div>
+        <a class="admin-brand" href="/home">
+          <span class="admin-brand__mark">
+            <img src="/assets/images/logo-main.png" alt="" width="56" height="56">
+          </span>
+          <span class="admin-brand__copy">
+            <span class="admin-kicker">Панель управления</span>
+            <span class="admin-brand__title">Театральная Завалинка</span>
+            <span class="admin-brand__subtitle">Контент, документы, карточки и медиафайлы фестиваля</span>
+          </span>
+        </a>
         <div class="admin-header__actions">
           <a class="admin-link" href="/home" target="_blank" rel="noreferrer">Открыть сайт</a>
           <button class="admin-button admin-button--ghost is-hidden" type="button" data-logout-button>Выйти</button>
@@ -26,44 +32,63 @@
     <main class="admin-shell">
       <section class="auth-card" data-auth-panel>
         <div class="auth-card__content">
-          <p class="admin-kicker">Вход для менеджера</p>
-          <h2>Редактирование сайта и документов</h2>
-          <p class="auth-card__lead">
-            Здесь можно менять тексты, ссылки, карточки людей, документы и видео без ручного редактирования кода.
-          </p>
-          <form class="auth-form" data-login-form>
-            <label class="field">
-              <span>Логин</span>
-              <input type="text" name="username" autocomplete="username" required>
-            </label>
-            <label class="field">
-              <span>Пароль</span>
-              <input type="password" name="password" autocomplete="current-password" required>
-            </label>
-            <button class="admin-button" type="submit">Войти</button>
-          </form>
-          <p class="status-message" data-auth-message></p>
+          <div class="auth-card__intro">
+            <p class="admin-kicker">Вход для менеджера</p>
+            <h1 class="auth-card__title">Редактирование сайта и документов</h1>
+            <p class="auth-card__lead">
+              Здесь можно менять тексты, ссылки, карточки людей, документы и видео без ручного редактирования кода.
+            </p>
+
+            <div class="auth-highlights">
+              <article class="auth-highlight">
+                <h3>Основные страницы</h3>
+                <p>Главная, информация о фестивале, контакты и ключевые организационные блоки.</p>
+              </article>
+              <article class="auth-highlight">
+                <h3>Документы и медиа</h3>
+                <p>Файлы, видео, постеры и внешние ссылки обновляются прямо из панели.</p>
+              </article>
+              <article class="auth-highlight">
+                <h3>Карточки участников</h3>
+                <p>Жюри, эксперты, партнёры, гости и другие подборки редактируются в одном месте.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="auth-card__form-panel">
+            <p class="admin-kicker">Авторизация</p>
+            <form class="auth-form" data-login-form>
+              <label class="field">
+                <span>Логин</span>
+                <input type="text" name="username" autocomplete="username" required>
+              </label>
+              <label class="field">
+                <span>Пароль</span>
+                <input type="password" name="password" autocomplete="current-password" required>
+              </label>
+              <button class="admin-button" type="submit">Войти</button>
+            </form>
+            <p class="status-message" data-auth-message></p>
+          </div>
         </div>
       </section>
 
       <section class="admin-app is-hidden" data-admin-app>
-        <aside class="admin-sidebar" aria-label="Разделы админки">
-          <button class="admin-nav__item is-active" type="button" data-section-link="overview">Обзор</button>
-          <button class="admin-nav__item" type="button" data-section-link="site">Основное</button>
-          <button class="admin-nav__item" type="button" data-section-link="home">Главная</button>
-          <button class="admin-nav__item" type="button" data-section-link="about">О фестивале</button>
-          <button class="admin-nav__item" type="button" data-section-link="documents">Документы</button>
-          <button class="admin-nav__item" type="button" data-section-link="contacts">Контакты</button>
-          <button class="admin-nav__item" type="button" data-section-link="people">Карточки</button>
-        </aside>
-
         <div class="admin-main">
           <section class="toolbar">
-            <div>
+            <div class="toolbar__copy">
               <p class="admin-kicker">Публикация</p>
               <p class="toolbar__text">Изменения сохраняются в JSON и сразу используются сайтом.</p>
+              <div class="toolbar__nav" aria-label="Выбор раздела для редактирования">
+                <button class="admin-nav__item is-active" type="button" data-section-link="site">Основное</button>
+                <button class="admin-nav__item" type="button" data-section-link="home">Главная</button>
+                <button class="admin-nav__item" type="button" data-section-link="about">О фестивале</button>
+                <button class="admin-nav__item" type="button" data-section-link="documents">Документы</button>
+                <button class="admin-nav__item" type="button" data-section-link="contacts">Контакты</button>
+              </div>
             </div>
             <div class="toolbar__actions">
+              <span class="admin-chip admin-chip--muted" data-dirty-indicator>Все изменения сохранены</span>
               <button class="admin-button admin-button--ghost" type="button" data-reload-button>Обновить данные</button>
               <button class="admin-button" type="button" data-save-button>Сохранить изменения</button>
             </div>
@@ -71,31 +96,7 @@
 
           <p class="status-message" data-global-message></p>
 
-          <section class="admin-section is-active" data-section="overview">
-            <div class="section-card">
-              <h2>Что можно редактировать</h2>
-              <div class="overview-grid">
-                <article class="overview-item">
-                  <h3>Тексты страниц</h3>
-                  <p>Главная, описание фестиваля, контакты и ключевые организационные блоки.</p>
-                </article>
-                <article class="overview-item">
-                  <h3>Документы</h3>
-                  <p>Список документов по годам, внешние ссылки и локальная загрузка файлов.</p>
-                </article>
-                <article class="overview-item">
-                  <h3>Карточки</h3>
-                  <p>Жюри, эксперты, гости, партнёры, победители, организаторы фестиваля и медиакоманда.</p>
-                </article>
-                <article class="overview-item">
-                  <h3>Видео</h3>
-                  <p>Отдельные видеоподборки на странице «О фестивале» с загрузкой файлов и постеров.</p>
-                </article>
-              </div>
-            </div>
-          </section>
-
-          <section class="admin-section" data-section="site">
+          <section class="admin-section is-active" data-section="site">
             <div class="section-card">
               <h2>Основные настройки</h2>
               <div class="form-grid">
@@ -103,25 +104,9 @@
                   <span>Название сайта</span>
                   <input type="text" data-path="meta.siteName">
                 </label>
-                <label class="field">
-                  <span>Короткое название</span>
-                  <input type="text" data-path="meta.siteShortName">
-                </label>
                 <label class="field field--full">
                   <span>Подзаголовок</span>
                   <input type="text" data-path="meta.tagline">
-                </label>
-                <label class="field field--full">
-                  <span>Юридическое наименование</span>
-                  <textarea rows="3" data-path="meta.organizationLegalName"></textarea>
-                </label>
-                <label class="field">
-                  <span>Наименование организации</span>
-                  <input type="text" data-path="meta.organizationName">
-                </label>
-                <label class="field">
-                  <span>ОГРН</span>
-                  <input type="text" data-path="meta.ogrn">
                 </label>
                 <label class="field field--full">
                   <span>Ссылка на форму заявки</span>
@@ -136,302 +121,861 @@
                   </div>
                 </div>
                 <label class="field">
-                  <span>Telegram</span>
-                  <input type="url" data-path="links.telegram">
+                  <span>Пункт меню: Главная</span>
+                  <input type="text" data-path="ui.navHome">
                 </label>
                 <label class="field">
-                  <span>ВКонтакте</span>
-                  <input type="url" data-path="links.vk">
+                  <span>Пункт меню: О фестивале</span>
+                  <input type="text" data-path="ui.navAbout">
                 </label>
                 <label class="field">
-                  <span>Rutube</span>
-                  <input type="url" data-path="links.rutube">
+                  <span>Пункт меню: Документы</span>
+                  <input type="text" data-path="ui.navDocs">
+                </label>
+                <label class="field">
+                  <span>Пункт меню: Контакты</span>
+                  <input type="text" data-path="ui.navContacts">
+                </label>
+                <label class="field">
+                  <span>Подпись логотипа в шапке</span>
+                  <input type="text" data-path="ui.brandSubtitle">
+                </label>
+                <label class="field">
+                  <span>Текст мобильного меню</span>
+                  <input type="text" data-path="ui.menuLabel">
+                </label>
+                <label class="field">
+                  <span>Ссылка пропуска к содержанию</span>
+                  <input type="text" data-path="ui.skipLinkLabel">
+                </label>
+                <label class="field">
+                  <span>Описание ссылки логотипа</span>
+                  <input type="text" data-path="ui.brandAriaLabel">
+                </label>
+                <label class="field">
+                  <span>Название основной навигации</span>
+                  <input type="text" data-path="ui.primaryNavLabel">
+                </label>
+                <label class="field">
+                  <span>Кнопка заявки в шапке</span>
+                  <input type="text" data-path="ui.headerApplicationLabel">
+                </label>
+                <label class="field">
+                  <span>Кнопка положения в шапке</span>
+                  <input type="text" data-path="ui.headerRegulationLabel">
+                </label>
+                <label class="field">
+                  <span>Заголовок навигации в подвале</span>
+                  <input type="text" data-path="ui.footerNavigationTitle">
+                </label>
+                <label class="field">
+                  <span>Заголовок контактов в подвале</span>
+                  <input type="text" data-path="ui.footerContactsTitle">
+                </label>
+                <label class="field">
+                  <span>Ссылка «Подробнее» в карточках</span>
+                  <input type="text" data-path="ui.personMoreLabel">
+                </label>
+                <label class="field field--full">
+                  <span>Подсказка каруселей</span>
+                  <textarea rows="2" data-path="ui.carouselHint" data-rich-text="true"></textarea>
                 </label>
               </div>
             </div>
           </section>
 
           <section class="admin-section" data-section="home">
-            <div class="section-card">
-              <h2>Главная страница</h2>
-              <div class="form-grid">
-                <label class="field field--full">
-                  <span>Hero: заголовок</span>
-                  <input type="text" data-path="home.heroTitle">
-                </label>
-                <label class="field field--full">
-                  <span>Hero: подзаголовок</span>
-                  <input type="text" data-path="home.heroSubtitle">
-                </label>
-                <label class="field field--full">
-                  <span>Hero: пояснение</span>
-                  <textarea rows="4" data-path="home.heroLead"></textarea>
-                </label>
-                <label class="field">
-                  <span>Заголовок блока описания</span>
-                  <input type="text" data-path="home.descriptionTitle">
-                </label>
-                <label class="field field--full">
-                  <span>Текст описания</span>
-                  <textarea rows="4" data-path="home.descriptionText"></textarea>
-                </label>
-                <label class="field field--full">
-                  <span>Плашка: заголовок инструкции</span>
-                  <input type="text" data-path="home.applicationGuideTitle">
-                </label>
-                <label class="field field--full">
-                  <span>Плашка: текст инструкции</span>
-                  <textarea rows="3" data-path="home.applicationGuideText"></textarea>
-                </label>
-                <label class="field">
-                  <span>Текст кнопки</span>
-                  <input type="text" data-path="home.applicationGuideButtonLabel">
-                </label>
-                <div class="field field--full">
-                  <span>Видеоинструкция (MP4)</span>
-                  <div class="upload-row">
-                    <input type="url" data-path="home.applicationGuideVideoUrl" data-upload-target="home.applicationGuideVideoUrl">
-                    <input type="file" accept=".mp4" data-upload-input="home.applicationGuideVideoUrl" data-upload-kind="video">
-                    <button class="admin-button admin-button--ghost" type="button" data-upload-button="home.applicationGuideVideoUrl">Загрузить видео</button>
+            <div class="page-shell">
+              <aside class="section-card page-nav">
+                <div class="page-nav__intro">
+                  <p class="page-nav__eyebrow">Страница</p>
+                  <h2>Главная</h2>
+                  <p class="page-nav__text">Выберите конкретный блок, который хотите редактировать.</p>
+                </div>
+                <div class="page-nav__links">
+                  <button class="admin-subnav__item is-active" type="button" data-parent-section="home" data-subsection-link="home-main">Основные настройки</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="home" data-subsection-link="home-programs" data-dynamic-text="sections.homePrograms.title" data-dynamic-fallback="Составляющие фестиваля">Составляющие фестиваля</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="home" data-subsection-link="home-stages" data-dynamic-text="sections.homeStages.title" data-dynamic-fallback="Этапы фестиваля">Этапы фестиваля</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="home" data-subsection-link="home-facts" data-dynamic-text="sections.homeParticipation.title" data-dynamic-fallback="Условия участия">Условия участия</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="home" data-subsection-link="home-star-videos" data-dynamic-text="sections.homeStarVideos.title" data-dynamic-fallback="Звезды на экране">Звезды на экране</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="home" data-subsection-link="home-jury" data-dynamic-text="sections.homeJury.title" data-dynamic-fallback="Карточки жюри">Карточки жюри</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="home" data-subsection-link="home-experts" data-dynamic-text="sections.homeWorkshops.title" data-dynamic-fallback="Карточки экспертов">Карточки экспертов</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="home" data-subsection-link="home-guests" data-dynamic-text="sections.homeGuests.title" data-dynamic-fallback="Карточки гостей">Карточки гостей</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="home" data-subsection-link="home-partners" data-dynamic-text="sections.homePartners.title" data-dynamic-fallback="Карточки партнёров">Карточки партнёров</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="home" data-subsection-link="home-winners">Победители прошлых лет</button>
+                </div>
+              </aside>
+              <div class="page-shell__content">
+                <div class="admin-subsection is-active" data-parent-section="home" data-subsection="home-main">
+                  <div class="section-card">
+                    <h3>Основные настройки главной</h3>
+                    <div class="form-grid">
+                      <label class="field field--full">
+                        <span>Hero: заголовок</span>
+                        <input type="text" data-path="home.heroTitle">
+                      </label>
+                      <label class="field field--full">
+                        <span>Hero: подзаголовок</span>
+                        <input type="text" data-path="home.heroSubtitle">
+                      </label>
+                      <label class="field field--full">
+                        <span>Hero: пояснение</span>
+                        <textarea rows="4" data-path="home.heroLead" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field">
+                        <span>Заголовок блока описания</span>
+                        <input type="text" data-path="home.descriptionTitle">
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст описания</span>
+                        <textarea rows="4" data-path="home.descriptionText" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Плашка: заголовок инструкции</span>
+                        <input type="text" data-path="home.applicationGuideTitle">
+                      </label>
+                      <label class="field field--full">
+                        <span>Плашка: текст инструкции</span>
+                        <textarea rows="3" data-path="home.applicationGuideText" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field">
+                        <span>Текст кнопки</span>
+                        <input type="text" data-path="home.applicationGuideButtonLabel">
+                      </label>
+                      <label class="field">
+                        <span>Метка над главным заголовком</span>
+                        <input type="text" data-path="ui.homeHeroEyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Кнопка заявки в первом экране</span>
+                        <input type="text" data-path="ui.heroApplicationLabel">
+                      </label>
+                      <label class="field">
+                        <span>Кнопка положения в первом экране</span>
+                        <input type="text" data-path="ui.heroRegulationLabel">
+                      </label>
+                      <label class="field">
+                        <span>Подпись быстрого контакта</span>
+                        <input type="text" data-path="ui.heroContactLabel">
+                      </label>
+                      <div class="field field--full">
+                        <span>Видеоинструкция (MP4)</span>
+                        <div class="upload-row">
+                          <input type="url" data-path="home.applicationGuideVideoUrl" data-upload-target="home.applicationGuideVideoUrl">
+                          <input type="file" accept=".mp4" data-upload-input="home.applicationGuideVideoUrl" data-upload-kind="video">
+                          <button class="admin-button admin-button--ghost" type="button" data-upload-button="home.applicationGuideVideoUrl">Загрузить видео</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="home" data-subsection="home-programs">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.homePrograms.title" data-dynamic-fallback="Составляющие фестиваля">Составляющие фестиваля</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="home.programs">Добавить программу</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.homePrograms.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.homePrograms.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.homePrograms.description" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="home.programs"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="home" data-subsection="home-stages">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.homeStages.title" data-dynamic-fallback="Этапы фестиваля">Этапы фестиваля</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="home.stages">Добавить этап</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.homeStages.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.homeStages.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.homeStages.description" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="home.stages"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="home" data-subsection="home-facts">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.homeParticipation.title" data-dynamic-fallback="Условия участия">Условия участия</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="home.facts">Добавить условие</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.homeParticipation.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.homeParticipation.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.homeParticipation.description" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="home.facts"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="home" data-subsection="home-star-videos">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.homeStarVideos.title" data-dynamic-fallback="Звезды на экране">Звезды на экране</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.starVideos">Добавить видео</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.homeStarVideos.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.homeStarVideos.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.homeStarVideos.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст пустого блока</span>
+                        <textarea rows="2" data-path="sections.homeStarVideos.emptyText" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="about.starVideos"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="home" data-subsection="home-jury">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.homeJury.title" data-dynamic-fallback="Карточки жюри">Карточки жюри</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.jury">Добавить карточку</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.homeJury.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.homeJury.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.homeJury.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст пустого блока</span>
+                        <textarea rows="2" data-path="sections.homeJury.emptyText" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="collections.jury"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="home" data-subsection="home-experts">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.homeWorkshops.title" data-dynamic-fallback="Карточки экспертов">Карточки экспертов</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.experts">Добавить карточку</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.homeWorkshops.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.homeWorkshops.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.homeWorkshops.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст пустого блока</span>
+                        <textarea rows="2" data-path="sections.homeWorkshops.emptyText" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="collections.experts"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="home" data-subsection="home-guests">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.homeGuests.title" data-dynamic-fallback="Карточки гостей">Карточки гостей</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.guests">Добавить карточку</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.homeGuests.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.homeGuests.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.homeGuests.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст пустого блока</span>
+                        <textarea rows="2" data-path="sections.homeGuests.emptyText" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="collections.guests"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="home" data-subsection="home-partners">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.homePartners.title" data-dynamic-fallback="Карточки партнёров">Карточки партнёров</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.partners">Добавить карточку</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.homePartners.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.homePartners.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.homePartners.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст пустого блока</span>
+                        <textarea rows="2" data-path="sections.homePartners.emptyText" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="collections.partners"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="home" data-subsection="home-winners">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3>Карточки победителей прошлых лет</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.winners">Добавить карточку</button>
+                    </div>
+                    <p class="section-card__hint">Подборка хранится в данных сайта и готова для будущего вывода.</p>
+                    <div data-list="collections.winners"></div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h3>Этапы фестиваля</h3>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="home.stages">Добавить этап</button>
-              </div>
-              <div data-list="home.stages"></div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h3>Факты и преимущества</h3>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="home.facts">Добавить факт</button>
-              </div>
-              <div data-list="home.facts"></div>
             </div>
           </section>
 
           <section class="admin-section" data-section="about">
-            <div class="section-card">
-              <h2>Страница «О фестивале»</h2>
-              <div class="form-grid">
-                <label class="field field--full">
-                  <span>Заголовок страницы</span>
-                  <input type="text" data-path="about.pageTitle">
-                </label>
-                <label class="field field--full">
-                  <span>Вступительный текст</span>
-                  <textarea rows="4" data-path="about.intro"></textarea>
-                </label>
-                <label class="field">
-                  <span>Заголовок темы</span>
-                  <input type="text" data-path="about.themeTitle">
-                </label>
-                <label class="field field--full">
-                  <span>Текст темы</span>
-                  <textarea rows="3" data-path="about.themeText"></textarea>
-                </label>
-                <label class="field">
-                  <span>Заголовок блока статуса</span>
-                  <input type="text" data-path="about.missionTitle">
-                </label>
-                <label class="field field--full">
-                  <span>Текст блока статуса</span>
-                  <textarea rows="4" data-path="about.missionText"></textarea>
-                </label>
+            <div class="page-shell">
+              <aside class="section-card page-nav">
+                <div class="page-nav__intro">
+                  <p class="page-nav__eyebrow">Страница</p>
+                  <h2>О фестивале</h2>
+                  <p class="page-nav__text">Каждый блок открывается отдельно, как вложенный раздел.</p>
+                </div>
+                <div class="page-nav__links">
+                  <button class="admin-subnav__item is-active" type="button" data-parent-section="about" data-subsection-link="about-main">Основные настройки</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="about" data-subsection-link="about-achievements" data-dynamic-text="sections.aboutAchievements.title" data-dynamic-fallback="Достижения фестиваля">Достижения фестиваля</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="about" data-subsection-link="about-statuses" data-dynamic-text="sections.aboutStatuses.title" data-dynamic-fallback="Официальный статус">Официальный статус</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="about" data-subsection-link="about-life-videos" data-dynamic-text="sections.aboutLifeVideos.title" data-dynamic-fallback="Видео о жизни фестиваля">Видео о жизни фестиваля</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="about" data-subsection-link="about-guide-videos" data-dynamic-text="sections.aboutGuideVideos.title" data-dynamic-fallback="Видео-путеводители">Видео-путеводители</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="about" data-subsection-link="about-event-videos" data-dynamic-text="sections.aboutEventVideos.title" data-dynamic-fallback="Видео мероприятий">Видео мероприятий</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="about" data-subsection-link="about-video-hub" data-dynamic-text="sections.aboutVideoHub.title" data-dynamic-fallback="Больше видеоматериалов">Больше видеоматериалов</button>
+                </div>
+              </aside>
+              <div class="page-shell__content">
+                <div class="admin-subsection is-active" data-parent-section="about" data-subsection="about-main">
+                  <div class="section-card">
+                    <h3>Основные настройки страницы</h3>
+                    <div class="form-grid">
+                      <label class="field field--full">
+                        <span>Заголовок страницы</span>
+                        <input type="text" data-path="about.pageTitle">
+                      </label>
+                      <label class="field field--full">
+                        <span>Вступительный текст</span>
+                        <textarea rows="4" data-path="about.intro" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field">
+                        <span>Метка первого экрана</span>
+                        <input type="text" data-path="sections.aboutHero.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Заголовок темы</span>
+                        <input type="text" data-path="about.themeTitle">
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст темы</span>
+                        <textarea rows="3" data-path="about.themeText" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field">
+                        <span>Заголовок блока статуса</span>
+                        <input type="text" data-path="about.missionTitle">
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст блока статуса</span>
+                        <textarea rows="4" data-path="about.missionText" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="about" data-subsection="about-achievements">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.aboutAchievements.title" data-dynamic-fallback="Достижения фестиваля">Достижения фестиваля</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.achievements">Добавить блок</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.aboutAchievements.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.aboutAchievements.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.aboutAchievements.description" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="about.achievements"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="about" data-subsection="about-statuses">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.aboutStatuses.title" data-dynamic-fallback="Официальный статус">Официальный статус</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.statuses">Добавить блок</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.aboutStatuses.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.aboutStatuses.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.aboutStatuses.description" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="about.statuses"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="about" data-subsection="about-life-videos">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.aboutLifeVideos.title" data-dynamic-fallback="Видео о жизни фестиваля">Видео о жизни фестиваля</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.lifeVideos">Добавить видео</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.aboutLifeVideos.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.aboutLifeVideos.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.aboutLifeVideos.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст пустого блока</span>
+                        <textarea rows="2" data-path="sections.aboutLifeVideos.emptyText" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="about.lifeVideos"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="about" data-subsection="about-guide-videos">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.aboutGuideVideos.title" data-dynamic-fallback="Видео-путеводители: 6 дней">Видео-путеводители: 6 дней</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.guideVideos">Добавить видео</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.aboutGuideVideos.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.aboutGuideVideos.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.aboutGuideVideos.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст пустого блока</span>
+                        <textarea rows="2" data-path="sections.aboutGuideVideos.emptyText" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="about.guideVideos"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="about" data-subsection="about-event-videos">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.aboutEventVideos.title" data-dynamic-fallback="Видео с каждого основного мероприятия">Видео с каждого основного мероприятия</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.eventVideos">Добавить видео</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.aboutEventVideos.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.aboutEventVideos.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.aboutEventVideos.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст пустого блока</span>
+                        <textarea rows="2" data-path="sections.aboutEventVideos.emptyText" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="about.eventVideos"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="about" data-subsection="about-video-hub">
+                  <div class="section-card">
+                    <h3 data-dynamic-text="sections.aboutVideoHub.title" data-dynamic-fallback="Больше видеоматериалов">Больше видеоматериалов</h3>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.aboutVideoHub.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.aboutVideoHub.description" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h3>Достижения фестиваля</h3>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.achievements">Добавить блок</button>
-              </div>
-              <div data-list="about.achievements"></div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h3>Официальный статус</h3>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.statuses">Добавить блок</button>
-              </div>
-              <div data-list="about.statuses"></div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h3>Видео о жизни фестиваля</h3>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.lifeVideos">Добавить видео</button>
-              </div>
-              <div data-list="about.lifeVideos"></div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h3>Звезды на экране</h3>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.starVideos">Добавить видео</button>
-              </div>
-              <div data-list="about.starVideos"></div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h3>Видео-путеводители: 6 дней</h3>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.guideVideos">Добавить видео</button>
-              </div>
-              <div data-list="about.guideVideos"></div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h3>Видео с каждого основного мероприятия</h3>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="about.eventVideos">Добавить видео</button>
-              </div>
-              <div data-list="about.eventVideos"></div>
             </div>
           </section>
 
           <section class="admin-section" data-section="documents">
-            <div class="section-card">
-              <div class="section-card__header">
-                <h2>Документы</h2>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="documents">Добавить документ</button>
+            <div class="page-shell">
+              <aside class="section-card page-nav">
+                <div class="page-nav__intro">
+                  <p class="page-nav__eyebrow">Страница</p>
+                  <h2>Документы</h2>
+                  <p class="page-nav__text">Здесь каждый блок тоже открывается как отдельный вложенный раздел.</p>
+                </div>
+                <div class="page-nav__links">
+                  <button class="admin-subnav__item is-active" type="button" data-parent-section="documents" data-subsection-link="documents-main">Список документов</button>
+                </div>
+              </aside>
+              <div class="page-shell__content">
+                <div class="admin-subsection is-active" data-parent-section="documents" data-subsection="documents-main">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3>Документы</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="documents">Добавить документ</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка первого экрана</span>
+                        <input type="text" data-path="sections.documentsHero.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название страницы</span>
+                        <input type="text" data-path="sections.documentsHero.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к странице</span>
+                        <textarea rows="3" data-path="sections.documentsHero.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field">
+                        <span>Метка текущего года</span>
+                        <input type="text" data-path="sections.documentsCurrent.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Метка архива</span>
+                        <input type="text" data-path="sections.documentsArchive.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название архива</span>
+                        <input type="text" data-path="sections.documentsArchive.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к архиву</span>
+                        <textarea rows="2" data-path="sections.documentsArchive.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field">
+                        <span>Подпись поиска</span>
+                        <input type="text" data-path="ui.docsSearchLabel">
+                      </label>
+                      <label class="field">
+                        <span>Подсказка поиска</span>
+                        <input type="text" data-path="ui.docsSearchPlaceholder">
+                      </label>
+                      <label class="field">
+                        <span>Кнопка очистки поиска</span>
+                        <input type="text" data-path="ui.docsSearchClearLabel">
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст пустого поиска</span>
+                        <textarea rows="2" data-path="ui.docsSearchEmptyText" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="documents"></div>
+                  </div>
+                </div>
               </div>
-              <div data-list="documents"></div>
             </div>
           </section>
 
           <section class="admin-section" data-section="contacts">
-            <div class="section-card">
-              <h2>Страница «Контакты»</h2>
-              <div class="form-grid">
-                <label class="field field--full">
-                  <span>Заголовок страницы</span>
-                  <input type="text" data-path="contacts.pageTitle">
-                </label>
-                <label class="field field--full">
-                  <span>Вступительный текст</span>
-                  <textarea rows="4" data-path="contacts.intro"></textarea>
-                </label>
-                <label class="field">
-                  <span>Email</span>
-                  <input type="email" data-path="contacts.email">
-                </label>
-                <label class="field">
-                  <span>Телефон</span>
-                  <input type="text" data-path="contacts.phone">
-                </label>
-                <label class="field field--full">
-                  <span>Адрес</span>
-                  <textarea rows="3" data-path="contacts.address"></textarea>
-                </label>
-                <label class="field field--full">
-                  <span>Дополнительная информация</span>
-                  <textarea rows="4" data-path="contacts.notes"></textarea>
-                </label>
-                <label class="field field--full">
-                  <span>Видео: заголовок</span>
-                  <input type="text" data-path="contacts.featuredVideoTitle">
-                </label>
-                <label class="field field--full">
-                  <span>Видео: подпись</span>
-                  <textarea rows="3" data-path="contacts.featuredVideoText"></textarea>
-                </label>
-                <div class="field field--full">
-                  <span>Видео (MP4)</span>
-                  <div class="upload-row">
-                    <input type="url" data-path="contacts.featuredVideoUrl" data-upload-target="contacts.featuredVideoUrl">
-                    <input type="file" accept=".mp4" data-upload-input="contacts.featuredVideoUrl" data-upload-kind="video">
-                    <button class="admin-button admin-button--ghost" type="button" data-upload-button="contacts.featuredVideoUrl">Загрузить видео</button>
+            <div class="page-shell">
+              <aside class="section-card page-nav">
+                <div class="page-nav__intro">
+                  <p class="page-nav__eyebrow">Страница</p>
+                  <h2>Контакты</h2>
+                  <p class="page-nav__text">Сначала открываем нужный блок, потом редактируем только его.</p>
+                </div>
+                <div class="page-nav__links">
+                  <button class="admin-subnav__item is-active" type="button" data-parent-section="contacts" data-subsection-link="contacts-main">Основные настройки</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="contacts" data-subsection-link="contacts-organization" data-dynamic-text="sections.contactsOrganization.title" data-dynamic-fallback="Организационные сведения">Организационные сведения</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="contacts" data-subsection-link="contacts-video">Видео</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="contacts" data-subsection-link="contacts-socials" data-dynamic-text="sections.contactsSocials.title" data-dynamic-fallback="Социальные сети">Социальные сети</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="contacts" data-subsection-link="contacts-founders" data-dynamic-text="sections.contactsFounders.title" data-dynamic-fallback="Карточки учредителей">Карточки учредителей</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="contacts" data-subsection-link="contacts-organizers" data-dynamic-text="sections.contactsOrganizers.title" data-dynamic-fallback="Карточки организаторов">Карточки организаторов</button>
+                  <button class="admin-subnav__item" type="button" data-parent-section="contacts" data-subsection-link="contacts-media-team" data-dynamic-text="sections.contactsMediaTeam.title" data-dynamic-fallback="Карточки медиа-команды">Карточки медиа-команды</button>
+                </div>
+              </aside>
+              <div class="page-shell__content">
+                <div class="admin-subsection is-active" data-parent-section="contacts" data-subsection="contacts-main">
+                  <div class="section-card">
+                    <h3>Основные настройки страницы</h3>
+                    <div class="form-grid">
+                      <label class="field field--full">
+                        <span>Заголовок страницы</span>
+                        <input type="text" data-path="contacts.pageTitle">
+                      </label>
+                      <label class="field field--full">
+                        <span>Вступительный текст</span>
+                        <textarea rows="4" data-path="contacts.intro" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field">
+                        <span>Метка первого экрана</span>
+                        <input type="text" data-path="sections.contactsHero.eyebrow">
+                      </label>
+                      <label class="field field--full">
+                        <span>Адрес</span>
+                        <textarea rows="3" data-path="contacts.address"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Дополнительная информация</span>
+                        <textarea rows="4" data-path="contacts.notes" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
                   </div>
                 </div>
-                <div class="field field--full">
-                  <span>Постер видео</span>
-                  <div class="upload-row">
-                    <input type="url" data-path="contacts.featuredVideoPoster" data-upload-target="contacts.featuredVideoPoster">
-                    <input type="file" accept="image/*" data-upload-input="contacts.featuredVideoPoster" data-upload-kind="image">
-                    <button class="admin-button admin-button--ghost" type="button" data-upload-button="contacts.featuredVideoPoster">Загрузить постер</button>
+                <div class="admin-subsection" data-parent-section="contacts" data-subsection="contacts-organization">
+                  <div class="section-card">
+                    <h3 data-dynamic-text="sections.contactsOrganization.title" data-dynamic-fallback="Организационные сведения">Организационные сведения</h3>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.contactsOrganization.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.contactsOrganization.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Полное наименование</span>
+                        <textarea rows="3" data-path="contacts.organizationLegalName" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field">
+                        <span>Сокращённое наименование</span>
+                        <input type="text" data-path="contacts.organizationShortName">
+                      </label>
+                      <label class="field">
+                        <span>ОГРН</span>
+                        <input type="text" data-path="contacts.ogrn">
+                      </label>
+                      <label class="field">
+                        <span>ИНН / КПП</span>
+                        <input type="text" data-path="contacts.innKpp">
+                      </label>
+                      <label class="field">
+                        <span>Телефон</span>
+                        <input type="text" data-path="contacts.phone">
+                      </label>
+                      <label class="field">
+                        <span>Email</span>
+                        <input type="email" data-path="contacts.email">
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="contacts" data-subsection="contacts-video">
+                  <div class="section-card">
+                    <h3>Видео</h3>
+                    <div class="form-grid">
+                      <label class="field field--full">
+                        <span>Заголовок видео-блока</span>
+                        <input type="text" data-path="contacts.featuredVideoTitle">
+                      </label>
+                      <label class="field field--full">
+                        <span>Подпись к видео</span>
+                        <textarea rows="3" data-path="contacts.featuredVideoText" data-rich-text="true"></textarea>
+                      </label>
+                      <div class="field field--full">
+                        <span>Видео (MP4)</span>
+                        <div class="upload-row">
+                          <input type="url" data-path="contacts.featuredVideoUrl" data-upload-target="contacts.featuredVideoUrl">
+                          <input type="file" accept=".mp4" data-upload-input="contacts.featuredVideoUrl" data-upload-kind="video">
+                          <button class="admin-button admin-button--ghost" type="button" data-upload-button="contacts.featuredVideoUrl">Загрузить видео</button>
+                        </div>
+                      </div>
+                      <div class="field field--full">
+                        <span>Постер видео</span>
+                        <div class="upload-row">
+                          <input type="url" data-path="contacts.featuredVideoPoster" data-upload-target="contacts.featuredVideoPoster">
+                          <input type="file" accept="image/*" data-upload-input="contacts.featuredVideoPoster" data-upload-kind="image">
+                          <button class="admin-button admin-button--ghost" type="button" data-upload-button="contacts.featuredVideoPoster">Загрузить постер</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="contacts" data-subsection="contacts-socials">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.contactsSocials.title" data-dynamic-fallback="Социальные сети">Социальные сети</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="contacts.socials">Добавить ссылку</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.contactsSocials.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.contactsSocials.description" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="contacts.socials"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="contacts" data-subsection="contacts-founders">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.contactsFounders.title" data-dynamic-fallback="Карточки учредителей">Карточки учредителей</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="contacts.founders">Добавить карточку</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.contactsFounders.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.contactsFounders.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.contactsFounders.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст пустого блока</span>
+                        <textarea rows="2" data-path="sections.contactsFounders.emptyText" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="contacts.founders"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="contacts" data-subsection="contacts-organizers">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.contactsOrganizers.title" data-dynamic-fallback="Карточки организаторов">Карточки организаторов</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="contacts.orgCommittee">Добавить карточку</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.contactsOrganizers.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.contactsOrganizers.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.contactsOrganizers.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст пустого блока</span>
+                        <textarea rows="2" data-path="sections.contactsOrganizers.emptyText" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="contacts.orgCommittee"></div>
+                  </div>
+                </div>
+                <div class="admin-subsection" data-parent-section="contacts" data-subsection="contacts-media-team">
+                  <div class="section-card">
+                    <div class="section-card__header">
+                      <h3 data-dynamic-text="sections.contactsMediaTeam.title" data-dynamic-fallback="Карточки медиа-команды">Карточки медиа-команды</h3>
+                      <button class="admin-button admin-button--ghost" type="button" data-add-list-item="contacts.mediaTeam">Добавить карточку</button>
+                    </div>
+                    <div class="form-grid">
+                      <label class="field">
+                        <span>Метка блока</span>
+                        <input type="text" data-path="sections.contactsMediaTeam.eyebrow">
+                      </label>
+                      <label class="field">
+                        <span>Название блока</span>
+                        <input type="text" data-path="sections.contactsMediaTeam.title">
+                      </label>
+                      <label class="field field--full">
+                        <span>Комментарий к блоку</span>
+                        <textarea rows="3" data-path="sections.contactsMediaTeam.description" data-rich-text="true"></textarea>
+                      </label>
+                      <label class="field field--full">
+                        <span>Текст пустого блока</span>
+                        <textarea rows="2" data-path="sections.contactsMediaTeam.emptyText" data-rich-text="true"></textarea>
+                      </label>
+                    </div>
+                    <div data-list="contacts.mediaTeam"></div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h3>Учредители</h3>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="contacts.founders">Добавить карточку</button>
-              </div>
-              <div data-list="contacts.founders"></div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h3>Организаторы</h3>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="contacts.orgCommittee">Добавить карточку</button>
-              </div>
-              <div data-list="contacts.orgCommittee"></div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h3>Медиа-команда</h3>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="contacts.mediaTeam">Добавить карточку</button>
-              </div>
-              <div data-list="contacts.mediaTeam"></div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h3>Социальные сети</h3>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="contacts.socials">Добавить ссылку</button>
-              </div>
-              <div data-list="contacts.socials"></div>
-            </div>
-          </section>
-
-          <section class="admin-section" data-section="people">
-            <div class="section-card">
-              <div class="section-card__header">
-                <h2>Жюри</h2>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.jury">Добавить карточку</button>
-              </div>
-              <div data-list="collections.jury"></div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h2>Эксперты</h2>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.experts">Добавить карточку</button>
-              </div>
-              <div data-list="collections.experts"></div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h2>Гости</h2>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.guests">Добавить карточку</button>
-              </div>
-              <div data-list="collections.guests"></div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h2>Партнёры</h2>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.partners">Добавить карточку</button>
-              </div>
-              <div data-list="collections.partners"></div>
-            </div>
-
-            <div class="section-card">
-              <div class="section-card__header">
-                <h2>Победители прошлых лет</h2>
-                <button class="admin-button admin-button--ghost" type="button" data-add-list-item="collections.winners">Добавить карточку</button>
-              </div>
-              <div data-list="collections.winners"></div>
             </div>
           </section>
         </div>

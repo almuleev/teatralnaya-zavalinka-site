@@ -3,12 +3,118 @@ const carouselAnimations = new WeakMap();
 document.addEventListener("DOMContentLoaded", () => {
   initMenu();
   initDocumentSearch();
+  initCopyButtons();
 
   const desktopCarouselMode = supportsDesktopCarouselMode();
 
   bindCarouselButtons(desktopCarouselMode);
   initCarousels(desktopCarouselMode);
 });
+
+function initCopyButtons() {
+  const phoneButtons = Array.from(document.querySelectorAll("[data-copy-phone]")).map((button) => ({
+    button,
+    value: button.dataset.copyPhone || "",
+    successMessage: (value) => `Номер скопирован: ${value}`
+  }));
+  const emailButtons = Array.from(document.querySelectorAll("[data-copy-email]")).map((button) => ({
+    button,
+    value: button.dataset.copyEmail || "",
+    successMessage: (value) => `Email скопирован: ${value}`
+  }));
+  const buttons = [...phoneButtons, ...emailButtons];
+
+  if (!buttons.length) {
+    return;
+  }
+
+  const toast = ensureCopyToast();
+
+  buttons.forEach(({ button, value, successMessage }) => {
+    button.addEventListener("click", async () => {
+      if (!value) {
+        return;
+      }
+
+      const copied = await copyText(value);
+      showCopyToast(
+        toast,
+        copied ? successMessage(value) : "Не удалось скопировать. Попробуйте еще раз.",
+        !copied
+      );
+    });
+  });
+}
+
+async function copyText(value) {
+  if (!value) {
+    return false;
+  }
+
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+    try {
+      await navigator.clipboard.writeText(value);
+      return true;
+    } catch (error) {
+      // Fallback below.
+    }
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = value;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  textarea.style.pointerEvents = "none";
+  document.body.appendChild(textarea);
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+
+  let copied = false;
+
+  try {
+    copied = document.execCommand("copy");
+  } catch (error) {
+    copied = false;
+  }
+
+  textarea.remove();
+  return copied;
+}
+
+function ensureCopyToast() {
+  const existing = document.querySelector("[data-copy-toast]");
+
+  if (existing) {
+    return existing;
+  }
+
+  const toast = document.createElement("div");
+  toast.className = "copy-toast";
+  toast.hidden = true;
+  toast.setAttribute("aria-live", "polite");
+  toast.setAttribute("aria-atomic", "true");
+  toast.dataset.copyToast = "true";
+  document.body.appendChild(toast);
+  return toast;
+}
+
+function showCopyToast(toast, message, isError = false) {
+  if (!toast) {
+    return;
+  }
+
+  window.clearTimeout(showCopyToast.timeoutId);
+  toast.textContent = message;
+  toast.hidden = false;
+  toast.classList.toggle("is-error", Boolean(isError));
+  toast.classList.add("is-visible");
+
+  showCopyToast.timeoutId = window.setTimeout(() => {
+    toast.classList.remove("is-visible");
+    toast.hidden = true;
+  }, 2200);
+}
 
 function initMenu() {
   const toggle = document.querySelector("[data-menu-toggle]");

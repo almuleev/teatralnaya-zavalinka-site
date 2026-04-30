@@ -1,7 +1,13 @@
 const state = {
   content: null,
   dirty: false,
-  activeSection: "overview"
+  activeSection: "site",
+  activeSubsections: {
+    home: "home-main",
+    about: "about-main",
+    documents: "documents-main",
+    contacts: "contacts-main"
+  }
 };
 
 const personFields = [
@@ -20,7 +26,164 @@ const videoFields = [
   { name: "poster", label: "Постер", type: "url", uploadKind: "image", accept: "image/*", full: true }
 ];
 
+const defaultPrograms = [
+  {
+    id: "program-competitive",
+    title: "Конкурсная программа",
+    description: "Конкурсные показы спектаклей, экспертная оценка заявок и подведение итогов фестиваля-конкурса."
+  },
+  {
+    id: "program-educational",
+    title: "Учебная программа",
+    description: "Мастер-классы, творческие встречи, профессиональные разборы и обмен опытом для участников и руководителей коллективов."
+  },
+  {
+    id: "program-cultural",
+    title: "Культурно-досуговая программа",
+    description: "Творческие встречи, специальные события фестиваля и культурная программа для участников и гостей."
+  }
+];
+
+const defaultUi = {
+  navHome: "Главная",
+  navAbout: "О фестивале",
+  navDocs: "Документы",
+  navContacts: "Контакты",
+  skipLinkLabel: "Перейти к содержанию",
+  brandAriaLabel: "На главную",
+  brandSubtitle: "Официальный сайт фестиваля",
+  menuLabel: "Меню",
+  primaryNavLabel: "Основная навигация",
+  headerRegulationLabel: "Положение",
+  headerApplicationLabel: "Подать заявку",
+  footerNavigationTitle: "Навигация",
+  footerContactsTitle: "Связь",
+  footerCreatorPrefix: "Сайт разработал",
+  homeHeroEyebrow: "Фестиваль 2025",
+  heroApplicationLabel: "Подать заявку",
+  heroRegulationLabel: "Положение о фестивале",
+  heroContactLabel: "Быстрый контакт:",
+  personMoreLabel: "Подробнее",
+  carouselHint: "Листайте карточки или используйте стрелки, чтобы посмотреть все видео подборки.",
+  docsSearchLabel: "Поиск по документам",
+  docsSearchPlaceholder: "Введите название, тип, описание или год",
+  docsSearchClearLabel: "Сбросить",
+  docsSearchEmptyText: "По вашему запросу документы не найдены. Попробуйте изменить формулировку или очистить поиск.",
+  contactsOgrnLabel: "ОГРН",
+  contactsPhoneLabel: "Телефон",
+  contactsAddressLabel: "Адрес"
+};
+
+const defaultSections = {
+  homePrograms: {
+    eyebrow: "Составляющие фестиваля",
+    title: "Три программы фестиваля",
+    description: "Фестиваль объединяет конкурсную, учебную и культурно-досуговую программы, которые вместе формируют его основную структуру."
+  },
+  homeStages: {
+    eyebrow: "Этапы фестиваля",
+    title: "Календарь участия",
+    description: "Основные сроки и формат проведения фестиваля «Театральная Завалинка 2025»."
+  },
+  homeParticipation: {
+    eyebrow: "Условия участия",
+    title: "Что важно знать участникам",
+    description: ""
+  },
+  homeStarVideos: {
+    eyebrow: "",
+    title: "Звезды на экране",
+    description: "Интервью, обращения, встречи и видеоматериалы со звёздными гостями фестиваля.",
+    emptyText: "Подборка «Звезды на экране» находится в подготовке."
+  },
+  homeJury: {
+    eyebrow: "",
+    title: "Жюри фестиваля",
+    description: "Экспертный состав конкурсной программы фестиваля «Театральная Завалинка».",
+    emptyText: "Состав жюри можно добавить и обновить в админке."
+  },
+  homeWorkshops: {
+    eyebrow: "",
+    title: "Ведущие мастер-классов",
+    description: "Педагоги, режиссёры и представители театрального сообщества, формирующие учебную программу фестиваля.",
+    emptyText: "Список ведущих мастер-классов можно добавить и обновить в админке."
+  },
+  homeGuests: {
+    eyebrow: "",
+    title: "Гости и звёзды",
+    description: "Специальные гости, приглашённые артисты и участники культурно-досуговой программы фестиваля.",
+    emptyText: "Список гостей можно добавить и обновить в админке."
+  },
+  homePartners: {
+    eyebrow: "",
+    title: "Партнёры",
+    description: "Организации и площадки, поддерживающие фестиваль.",
+    emptyText: "Партнёры пока не опубликованы. Их можно добавить в админке."
+  },
+  aboutHero: { eyebrow: "О фестивале" },
+  aboutAchievements: { eyebrow: "", title: "Достижения фестиваля", description: "" },
+  aboutStatuses: { eyebrow: "", title: "Официальный статус", description: "" },
+  aboutLifeVideos: {
+    eyebrow: "",
+    title: "Видео о жизни фестиваля",
+    description: "Ролики о фестивальной атмосфере, участниках, программе и событиях фестивальных дней.",
+    emptyText: "Подборка видеоматериалов о жизни фестиваля находится в подготовке."
+  },
+  aboutGuideVideos: {
+    eyebrow: "",
+    title: "Видео-путеводители: 6 дней",
+    description: "Серия роликов по дням фестиваля, помогающая быстро ориентироваться в программе и активности каждой даты.",
+    emptyText: "Видео-путеводители по дням фестиваля находятся в подготовке."
+  },
+  aboutEventVideos: {
+    eyebrow: "",
+    title: "Видео с каждого основного мероприятия",
+    description: "Отдельные ролики по ключевым мероприятиям фестиваля: показы, встречи, церемонии и специальные события.",
+    emptyText: "Подборка видео с основных мероприятий находится в подготовке."
+  },
+  aboutVideoHub: {
+    title: "Больше видеоматериалов",
+    description: "Следите за новыми публикациями фестиваля в социальных сетях."
+  },
+  documentsHero: {
+    eyebrow: "Документы",
+    title: "Документы фестиваля",
+    description: "Актуальные документы и архив публикаций по годам. Материалы отсортированы по убыванию года."
+  },
+  documentsCurrent: { eyebrow: "Текущий год" },
+  documentsArchive: { eyebrow: "Архив", title: "Предыдущие публикации", description: "" },
+  contactsHero: { eyebrow: "" },
+  contactsOrganization: { title: "Организационные сведения", description: "" },
+  contactsSocials: { title: "Социальные сети", description: "" },
+  contactsFounders: {
+    eyebrow: "",
+    title: "Учредители",
+    description: "Контакты учредителей и ключевых представителей фестиваля.",
+    emptyText: "Карточки учредителей можно дополнить в админке."
+  },
+  contactsOrganizers: {
+    eyebrow: "",
+    title: "Организаторы",
+    description: "Рабочие контакты организаторов фестиваля по вопросам организации, программы и сопровождения.",
+    emptyText: "Карточки организаторов фестиваля пока не опубликованы."
+  },
+  contactsMediaTeam: {
+    eyebrow: "",
+    title: "Медиа-команда",
+    description: "Контакты для визуального сопровождения, публикаций и медийной координации.",
+    emptyText: "Карточки медиакоманды пока не заполнены. Их можно добавить в админке."
+  }
+};
+
 const listSchemas = {
+  "home.programs": {
+    idPrefix: "program",
+    itemLabel: "Программа",
+    fields: [
+      { name: "title", label: "Название", full: true },
+      { name: "description", label: "Описание", type: "textarea", rows: 3, full: true }
+    ]
+  },
   "home.stages": {
     idPrefix: "stage",
     itemLabel: "Этап",
@@ -32,7 +195,7 @@ const listSchemas = {
   },
   "home.facts": {
     idPrefix: "fact",
-    itemLabel: "Факт",
+    itemLabel: "Условие",
     fields: [
       { name: "title", label: "Заголовок", full: true },
       { name: "text", label: "Текст", type: "textarea", rows: 3, full: true }
@@ -85,7 +248,7 @@ const listSchemas = {
     ]
   },
   "contacts.founders": {
-    idPrefix: "person",
+    idPrefix: "founder",
     itemLabel: "Карточка",
     fields: [
       { name: "name", label: "Имя", full: true },
@@ -96,7 +259,7 @@ const listSchemas = {
     ]
   },
   "contacts.orgCommittee": {
-    idPrefix: "org",
+    idPrefix: "organizer",
     itemLabel: "Карточка",
     fields: [
       { name: "name", label: "Имя", full: true },
@@ -128,12 +291,13 @@ const listSchemas = {
   "collections.jury": { idPrefix: "jury", itemLabel: "Жюри", fields: personFields },
   "collections.experts": { idPrefix: "expert", itemLabel: "Эксперт", fields: personFields },
   "collections.guests": { idPrefix: "guest", itemLabel: "Гость", fields: personFields },
-  "collections.partners": { idPrefix: "partner", itemLabel: "Партнёр", fields: personFields },
+  "collections.partners": { idPrefix: "partner", itemLabel: "Партнер", fields: personFields },
   "collections.winners": { idPrefix: "winner", itemLabel: "Победитель", fields: personFields }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
   bindBaseEvents();
+  syncDirtyIndicator();
   checkSession();
 });
 
@@ -145,6 +309,12 @@ function bindBaseEvents() {
 
   document.querySelectorAll("[data-section-link]").forEach((button) => {
     button.addEventListener("click", () => setActiveSection(button.dataset.sectionLink));
+  });
+
+  document.querySelectorAll("[data-subsection-link]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setActiveSubsection(button.dataset.parentSection, button.dataset.subsectionLink);
+    });
   });
 
   document.querySelectorAll("[data-path]").forEach((field) => {
@@ -163,6 +333,7 @@ function bindBaseEvents() {
   document.addEventListener("input", handleDynamicInput);
   document.addEventListener("change", handleDynamicInput);
   document.addEventListener("click", handleDynamicClick);
+  document.addEventListener("keydown", handleRichTextShortcut);
 
   window.addEventListener("beforeunload", (event) => {
     if (!state.dirty) {
@@ -194,6 +365,7 @@ async function checkSession() {
 
 async function handleLogin(event) {
   event.preventDefault();
+
   const form = event.currentTarget;
   const username = form.elements.username.value.trim();
   const password = form.elements.password.value;
@@ -205,7 +377,6 @@ async function handleLogin(event) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password })
     });
-
     const payload = await response.json();
 
     if (!response.ok) {
@@ -225,7 +396,7 @@ async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
   } finally {
     state.content = null;
-    state.dirty = false;
+    updateDirtyState(false);
     showLogin();
   }
 }
@@ -241,8 +412,9 @@ async function loadContent() {
     }
 
     state.content = normalizeContentShape(payload);
-    state.dirty = false;
+    updateDirtyState(false);
     syncSimpleFields();
+    syncDynamicText();
     renderAllLists();
     setActiveSection(state.activeSection);
     setMessage("[data-global-message]", "Данные загружены.", "success");
@@ -272,8 +444,9 @@ async function saveContent() {
     }
 
     state.content = normalizeContentShape(payload);
-    state.dirty = false;
+    updateDirtyState(false);
     syncSimpleFields();
+    syncDynamicText();
     renderAllLists();
     setMessage("[data-global-message]", "Изменения сохранены.", "success");
   } catch (error) {
@@ -292,17 +465,69 @@ function showAdmin() {
   document.querySelector("[data-admin-app]")?.classList.remove("is-hidden");
   document.querySelector("[data-logout-button]")?.classList.remove("is-hidden");
   setMessage("[data-auth-message]", "");
+  syncDirtyIndicator();
 }
 
 function setActiveSection(sectionName) {
   state.activeSection = sectionName;
 
   document.querySelectorAll("[data-section-link]").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.sectionLink === sectionName);
+    const isActive = button.dataset.sectionLink === sectionName;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
   });
 
   document.querySelectorAll("[data-section]").forEach((section) => {
     section.classList.toggle("is-active", section.dataset.section === sectionName);
+  });
+
+  ensureActiveSubsection(sectionName);
+  syncSubsections();
+}
+
+function setActiveSubsection(parentSection, subsectionName) {
+  if (!parentSection || !subsectionName) {
+    return;
+  }
+
+  state.activeSubsections[parentSection] = subsectionName;
+  syncSubsections();
+}
+
+function ensureActiveSubsection(sectionName) {
+  const firstSubsection = getFirstSubsection(sectionName);
+
+  if (!firstSubsection) {
+    return;
+  }
+
+  if (!state.activeSubsections[sectionName]) {
+    state.activeSubsections[sectionName] = firstSubsection;
+  }
+}
+
+function getFirstSubsection(sectionName) {
+  return document.querySelector(`[data-subsection-link][data-parent-section="${sectionName}"]`)?.dataset.subsectionLink || null;
+}
+
+function syncSubsections() {
+  document.querySelectorAll("[data-subsection-link]").forEach((button) => {
+    const parentSection = button.dataset.parentSection;
+    const isActive =
+      parentSection === state.activeSection &&
+      button.dataset.subsectionLink === state.activeSubsections[parentSection];
+
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+
+  document.querySelectorAll("[data-subsection]").forEach((section) => {
+    const parentSection = section.dataset.parentSection;
+    const isActive =
+      parentSection === state.activeSection &&
+      section.dataset.subsection === state.activeSubsections[parentSection];
+
+    section.classList.toggle("is-active", isActive);
   });
 }
 
@@ -312,6 +537,7 @@ function updateSimpleField(field) {
   }
 
   setByPath(state.content, field.dataset.path, field.value);
+  syncDynamicText();
   markDirty();
 }
 
@@ -322,10 +548,35 @@ function syncSimpleFields() {
   });
 }
 
+function syncDynamicText() {
+  document.querySelectorAll("[data-dynamic-text]").forEach((element) => {
+    const value = getByPath(state.content, element.dataset.dynamicText);
+    const fallback = element.dataset.dynamicFallback || "";
+    element.textContent = value == null || value === "" ? fallback : value;
+  });
+}
+
 function normalizeContentShape(content) {
   const next = content || {};
   const legacyVideos = Array.isArray(next.about?.videos) ? next.about.videos : [];
+
+  next.ui = { ...defaultUi, ...(next.ui || {}) };
+  next.sections = mergeDefaults(defaultSections, next.sections || {});
+
+  if (next.contacts == null) {
+    next.contacts = {};
+  }
+
+  if (!next.contacts.organizationLegalName && next.meta?.organizationLegalName) {
+    next.contacts.organizationLegalName = next.meta.organizationLegalName;
+  }
+
+  if (!next.contacts.ogrn && next.meta?.ogrn) {
+    next.contacts.ogrn = next.meta.ogrn;
+  }
+
   const paths = [
+    "home.programs",
     "home.stages",
     "home.facts",
     "about.achievements",
@@ -351,10 +602,21 @@ function normalizeContentShape(content) {
       return;
     }
 
-    setByPath(next, path, path === "about.lifeVideos" ? legacyVideos : []);
+    setByPath(next, path, path === "about.lifeVideos" ? legacyVideos : path === "home.programs" ? structuredClone(defaultPrograms) : []);
   });
 
   return next;
+}
+
+function mergeDefaults(defaults, value) {
+  return Object.entries(defaults).reduce((result, [key, defaultValue]) => {
+    const currentValue = value[key];
+    result[key] =
+      defaultValue && typeof defaultValue === "object" && !Array.isArray(defaultValue)
+        ? { ...defaultValue, ...(currentValue || {}) }
+        : currentValue ?? defaultValue;
+    return result;
+  }, { ...value });
 }
 
 function renderAllLists() {
@@ -374,14 +636,12 @@ function renderList(listPath) {
 
   if (!items.length) {
     container.className = "";
-    container.innerHTML = `<div class="empty-state">Пока ничего нет. Используйте кнопку «Добавить».</div>`;
+    container.innerHTML = '<div class="empty-state">Пока ничего нет. Используйте кнопку «Добавить».</div>';
     return;
   }
 
   container.className = "list-stack";
-  container.innerHTML = items
-    .map((item, index) => renderItemCard(listPath, schema, item, index))
-    .join("");
+  container.innerHTML = items.map((item, index) => renderItemCard(listPath, schema, item, index)).join("");
 }
 
 function renderItemCard(listPath, schema, item, index) {
@@ -397,6 +657,8 @@ function renderItemCard(listPath, schema, item, index) {
           ${meta ? `<p class="item-card__meta">${escapeHtml(meta)}</p>` : ""}
         </div>
         <div class="item-card__actions">
+          <button class="admin-button admin-button--ghost" type="button" data-action="insert-before" data-list-path="${escapeAttribute(listPath)}" data-index="${index}">Добавить выше</button>
+          <button class="admin-button admin-button--ghost" type="button" data-action="insert-after" data-list-path="${escapeAttribute(listPath)}" data-index="${index}">Добавить ниже</button>
           <button class="admin-button admin-button--ghost" type="button" data-action="move-up" data-list-path="${escapeAttribute(listPath)}" data-index="${index}">Вверх</button>
           <button class="admin-button admin-button--ghost" type="button" data-action="move-down" data-list-path="${escapeAttribute(listPath)}" data-index="${index}">Вниз</button>
           <button class="admin-button admin-button--danger" type="button" data-action="remove-item" data-list-path="${escapeAttribute(listPath)}" data-index="${index}">Удалить</button>
@@ -432,7 +694,7 @@ function renderField(listPath, index, field, value) {
     return `
       <label class="${fieldClass}">
         <span>${escapeHtml(field.label)}</span>
-        <textarea rows="${field.rows || 3}" data-item-path="${escapeAttribute(itemPath)}">${escapeHtml(safeValue)}</textarea>
+        <textarea rows="${field.rows || 3}" data-item-path="${escapeAttribute(itemPath)}" data-rich-text="true">${escapeHtml(safeValue)}</textarea>
       </label>
     `;
   }
@@ -464,6 +726,10 @@ function renderField(listPath, index, field, value) {
 }
 
 function addListItem(listPath) {
+  insertListItem(listPath);
+}
+
+function insertListItem(listPath, index) {
   const schema = listSchemas[listPath];
   const current = getByPath(state.content, listPath) || [];
 
@@ -471,7 +737,8 @@ function addListItem(listPath) {
     return;
   }
 
-  current.push(buildItem(schema));
+  const insertIndex = Number.isInteger(index) ? Math.max(0, Math.min(index, current.length)) : current.length;
+  current.splice(insertIndex, 0, buildItem(schema));
   setByPath(state.content, listPath, current);
   renderList(listPath);
   markDirty();
@@ -483,11 +750,6 @@ function buildItem(schema) {
   };
 
   (schema.fields || []).forEach((field) => {
-    if (field.type === "number") {
-      item[field.name] = "";
-      return;
-    }
-
     item[field.name] = "";
   });
 
@@ -522,6 +784,12 @@ function handleDynamicClick(event) {
     return;
   }
 
+  if (action === "insert-before" || action === "insert-after") {
+    const offset = action === "insert-before" ? 0 : 1;
+    insertListItem(button.dataset.listPath, Number(button.dataset.index) + offset);
+    return;
+  }
+
   if (action === "remove-item") {
     removeItem(button.dataset.listPath, Number(button.dataset.index));
     return;
@@ -535,6 +803,18 @@ function handleDynamicClick(event) {
   if (action === "clear-upload") {
     clearUpload(button.closest("[data-upload-row]"));
   }
+}
+
+function handleRichTextShortcut(event) {
+  const target = event.target;
+  const isBoldShortcut = (event.ctrlKey || event.metaKey) && !event.shiftKey && event.key.toLowerCase() === "b";
+
+  if (!isBoldShortcut || !target.matches("textarea[data-rich-text='true']")) {
+    return;
+  }
+
+  event.preventDefault();
+  wrapSelectionWithBold(target);
 }
 
 function moveItem(listPath, index, direction) {
@@ -628,7 +908,7 @@ async function clearUpload(row) {
     return;
   }
 
-  if (currentUrl.startsWith("/uploads/")) {
+  if (currentUrl && currentUrl.startsWith("/uploads/")) {
     await fetch("/api/admin/upload", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -695,7 +975,23 @@ function castValue(value, field) {
 }
 
 function markDirty() {
-  state.dirty = true;
+  updateDirtyState(true);
+}
+
+function updateDirtyState(isDirty) {
+  state.dirty = isDirty;
+  syncDirtyIndicator();
+}
+
+function syncDirtyIndicator() {
+  const labels = document.querySelectorAll("[data-dirty-indicator]");
+
+  document.body.classList.toggle("is-dirty", state.dirty);
+  labels.forEach((label) => {
+    label.textContent = state.dirty ? "Есть несохраненные изменения" : "Все изменения сохранены";
+    label.classList.toggle("is-dirty", state.dirty);
+    label.classList.toggle("admin-chip--muted", !state.dirty);
+  });
 }
 
 function setMessage(selector, text, type = "") {
@@ -739,4 +1035,25 @@ function escapeHtml(value = "") {
 
 function escapeAttribute(value = "") {
   return escapeHtml(value);
+}
+
+function wrapSelectionWithBold(textarea) {
+  const start = textarea.selectionStart || 0;
+  const end = textarea.selectionEnd || 0;
+  const value = textarea.value || "";
+  const selected = value.slice(start, end);
+  const content = selected || "жирный текст";
+  const wrapped = `**${content}**`;
+
+  textarea.focus();
+  textarea.setRangeText(wrapped, start, end, "end");
+
+  if (!selected) {
+    const innerStart = start + 2;
+    const innerEnd = innerStart + content.length;
+    textarea.setSelectionRange(innerStart, innerEnd);
+  }
+
+  textarea.dispatchEvent(new Event("input", { bubbles: true }));
+  textarea.dispatchEvent(new Event("change", { bubbles: true }));
 }
