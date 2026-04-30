@@ -697,6 +697,13 @@ img {
   background: rgba(255, 255, 255, 0.96);
 }
 
+.upload-note {
+  color: var(--admin-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+  flex: 1 1 260px;
+}
+
 .empty-state {
   padding: 20px;
   border: 1px dashed var(--admin-border);

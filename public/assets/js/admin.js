@@ -696,6 +696,7 @@ function renderField(listPath, index, field, value) {
           <input type="${field.type || "url"}" value="${escapeAttribute(safeValue)}" data-item-path="${escapeAttribute(itemPath)}">
           <input type="file" accept="${escapeAttribute(field.accept || "*/*")}" data-upload-file>
           <button class="admin-button admin-button--ghost" type="button" data-action="upload">Загрузить</button>
+          <span class="upload-note">Если загружаете файл с компьютера, сначала нажмите «Загрузить», затем «Сохранить изменения».</span>
         </div>
       </div>
     `;
