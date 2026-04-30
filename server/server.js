@@ -27,7 +27,7 @@ async function createServer() {
       cookie: {
         httpOnly: true,
         sameSite: "lax",
-        secure: isProduction,
+        secure: isProduction ? "auto" : false,
         maxAge: 1000 * 60 * 60 * 12
       }
     })
