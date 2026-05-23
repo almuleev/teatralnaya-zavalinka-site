@@ -39,6 +39,26 @@ function initVideoPlayers() {
       video.controls = false;
     };
 
+    let suppressToggleUntil = 0;
+    let suppressPauseUiUntil = 0;
+    let wasPlayingBeforeSeek = false;
+    const isNativeControlsClick = (event) => {
+      if (!video.controls) {
+        return false;
+      }
+
+      const rect = video.getBoundingClientRect();
+      const offsetX = event.clientX - rect.left;
+      const offsetY = event.clientY - rect.top;
+
+      if (offsetX < 0 || offsetX > rect.width || offsetY < 0 || offsetY > rect.height) {
+        return false;
+      }
+
+      const controlsBarHeight = Math.min(72, Math.max(36, Math.round(rect.height * 0.18)));
+      return offsetY >= rect.height - controlsBarHeight;
+    };
+
     setPausedState();
 
     const startPlayback = async () => {
@@ -59,7 +79,11 @@ function initVideoPlayers() {
       startPlayback();
     });
 
-    video.addEventListener("click", () => {
+    video.addEventListener("click", (event) => {
+      if (Date.now() < suppressToggleUntil || video.seeking || isNativeControlsClick(event)) {
+        return;
+      }
+
       if (video.paused || video.ended) {
         startPlayback();
         return;
@@ -68,11 +92,34 @@ function initVideoPlayers() {
       video.pause();
     });
 
+    video.addEventListener("seeking", () => {
+      wasPlayingBeforeSeek = !video.paused || shell.classList.contains("is-playing");
+      suppressToggleUntil = Date.now() + 450;
+      suppressPauseUiUntil = Date.now() + 450;
+    });
+
+    video.addEventListener("seeked", () => {
+      suppressToggleUntil = Date.now() + 320;
+      suppressPauseUiUntil = Date.now() + 320;
+      const shouldResume = wasPlayingBeforeSeek && video.paused && !video.ended;
+      wasPlayingBeforeSeek = false;
+
+      if (!shouldResume) {
+        return;
+      }
+
+      video.play().catch(() => {});
+    });
+
     video.addEventListener("play", () => {
       setPlayingState();
     });
 
     video.addEventListener("pause", () => {
+      if (!video.ended && (video.seeking || Date.now() < suppressPauseUiUntil)) {
+        return;
+      }
+
       setPausedState();
     });
 
