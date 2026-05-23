@@ -39,27 +39,6 @@ function initVideoPlayers() {
       video.controls = false;
     };
 
-    let pressState = null;
-    const isControlsInteraction = (event) => {
-      if (!video.controls) {
-        return false;
-      }
-
-      const rect = video.getBoundingClientRect();
-      const offsetX = event.clientX - rect.left;
-      const offsetY = event.clientY - rect.top;
-      const isInsideVideoBounds =
-        offsetX >= 0 && offsetX <= rect.width && offsetY >= 0 && offsetY <= rect.height;
-
-      if (!isInsideVideoBounds) {
-        return false;
-      }
-
-      // Native control bar usually lives in the lower strip of the player.
-      const controlsBarHeight = Math.min(72, Math.max(38, Math.round(rect.height * 0.18)));
-      return offsetY >= rect.height - controlsBarHeight;
-    };
-
     setPausedState();
 
     const startPlayback = async () => {
@@ -80,59 +59,14 @@ function initVideoPlayers() {
       startPlayback();
     });
 
-    shell.addEventListener(
-      "pointerdown",
-      (event) => {
-        if (event.button !== 0) {
-          return;
-        }
+    video.addEventListener("click", () => {
+      if (video.paused || video.ended) {
+        startPlayback();
+        return;
+      }
 
-        pressState = {
-          pointerId: event.pointerId,
-          startX: event.clientX,
-          startY: event.clientY
-        };
-      },
-      true
-    );
-
-    shell.addEventListener(
-      "pointerup",
-      (event) => {
-        if (!pressState || pressState.pointerId !== event.pointerId) {
-          return;
-        }
-
-        const moved =
-          Math.abs(event.clientX - pressState.startX) > 6 ||
-          Math.abs(event.clientY - pressState.startY) > 6;
-        pressState = null;
-
-        if (moved) {
-          return;
-        }
-
-        if (video.paused || video.ended) {
-          startPlayback();
-          return;
-        }
-
-        if (isControlsInteraction(event)) {
-          return;
-        }
-
-        video.pause();
-      },
-      true
-    );
-
-    shell.addEventListener(
-      "pointercancel",
-      () => {
-        pressState = null;
-      },
-      true
-    );
+      video.pause();
+    });
 
     video.addEventListener("play", () => {
       setPlayingState();
