@@ -34,7 +34,10 @@ async function createServer() {
   );
 
   app.use("/assets", express.static(path.join(config.publicDir, "assets")));
-  app.use("/uploads", express.static(path.join(config.publicDir, "uploads")));
+  app.use("/uploads", express.static(path.join(config.publicDir, "uploads"))); //вместо этого можно использовать строчки ниже
+  //if (!isProduction) { 
+  //  app.use("/uploads", express.static(path.join(config.publicDir, "uploads")));
+  //}
   app.use("/api/admin", adminRoutes);
   app.use(publicRoutes);
 

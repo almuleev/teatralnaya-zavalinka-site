@@ -10,6 +10,12 @@ const state = {
   }
 };
 
+const uploadLimits = {
+  image: { bytes: 10 * 1000 * 1000, label: "10 МБ" },
+  document: { bytes: 100 * 1000 * 1000, label: "100 МБ" },
+  video: { bytes: 1500 * 1000 * 1000, label: "1,5 ГБ" }
+};
+
 const personFields = [
   { name: "name", label: "Имя или заголовок", full: true },
   { name: "role", label: "Роль / подпись", full: true },
@@ -306,6 +312,7 @@ function bindBaseEvents() {
   document.querySelector("[data-login-form]")?.addEventListener("submit", handleLogin);
   document.querySelector("[data-save-button]")?.addEventListener("click", saveContent);
   document.querySelector("[data-reload-button]")?.addEventListener("click", loadContent);
+  document.querySelector("[data-cleanup-media-button]")?.addEventListener("click", cleanupUnusedMedia);
   document.querySelector("[data-logout-button]")?.addEventListener("click", handleLogout);
 
   document.querySelectorAll("[data-section-link]").forEach((button) => {
@@ -439,6 +446,22 @@ async function saveContent() {
     return;
   }
 
+  if (document.querySelector(".upload-row.is-uploading")) {
+    setMessage("[data-global-message]", "Дождитесь завершения загрузки файла, затем сохраните изменения.", "error");
+    return;
+  }
+
+  const pendingFileInput = Array.from(document.querySelectorAll(".upload-row input[type=\"file\"]")).find(
+    (input) => input instanceof HTMLInputElement && input.files && input.files.length > 0
+  );
+
+  if (pendingFileInput) {
+    const pendingRow = pendingFileInput.closest(".upload-row");
+    setUploadRowStatus(pendingRow, "Сначала загрузите выбранный файл.", "error");
+    setMessage("[data-global-message]", "Есть выбранный файл без загрузки. Нажмите «Загрузить» рядом с ним.", "error");
+    return;
+  }
+
   try {
     setMessage("[data-global-message]", "Сохраняем изменения...");
     const response = await fetch("/api/admin/content", {
@@ -463,6 +486,79 @@ async function saveContent() {
   }
 }
 
+async function cleanupUnusedMedia() {
+  if (document.querySelector(".upload-row.is-uploading")) {
+    setMessage("[data-global-message]", "Дождитесь завершения загрузки файла перед очисткой медиа.", "error");
+    return;
+  }
+
+  try {
+    setMessage("[data-global-message]", "Проверяем неиспользуемые фото и видео...");
+
+    const previewResponse = await fetch("/api/admin/uploads/cleanup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dryRun: true })
+    });
+    const previewPayload = await previewResponse.json();
+
+    if (!previewResponse.ok) {
+      throw new Error(previewPayload.error || "Не удалось проверить неиспользуемые файлы.");
+    }
+
+    const summary = previewPayload.summary || {};
+    const orphanCount = Number(summary.totalOrphanFiles || 0);
+
+    if (orphanCount === 0) {
+      setMessage("[data-global-message]", "Неиспользуемые фото и видео не найдены.", "success");
+      return;
+    }
+
+    const previewMessage = [
+      `Найдено неиспользуемых файлов: ${orphanCount}.`,
+      `Фото: ${summary.images?.orphan || 0}`,
+      `Видео: ${summary.videos?.orphan || 0}`,
+      "",
+      "Удалить эти файлы? Действие необратимо."
+    ].join("\n");
+
+    if (!window.confirm(previewMessage)) {
+      setMessage("[data-global-message]", "Очистка отменена.", "success");
+      return;
+    }
+
+    setMessage("[data-global-message]", "Удаляем неиспользуемые файлы...");
+
+    const cleanupResponse = await fetch("/api/admin/uploads/cleanup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dryRun: false })
+    });
+    const cleanupPayload = await cleanupResponse.json();
+
+    if (!cleanupResponse.ok) {
+      throw new Error(cleanupPayload.error || "Не удалось удалить неиспользуемые файлы.");
+    }
+
+    const cleanupSummary = cleanupPayload.summary || {};
+    const deletedCount = Number(cleanupSummary.totalDeletedFiles || 0);
+    const failedCount = Number(cleanupSummary.totalFailedFiles || 0);
+
+    if (failedCount > 0) {
+      setMessage(
+        "[data-global-message]",
+        `Удалено файлов: ${deletedCount}. Не удалось удалить: ${failedCount}.`,
+        "error"
+      );
+      return;
+    }
+
+    setMessage("[data-global-message]", `Удалено неиспользуемых файлов: ${deletedCount}.`, "success");
+  } catch (error) {
+    setMessage("[data-global-message]", error.message, "error");
+  }
+}
+
 function showLogin() {
   document.querySelector("[data-auth-panel]")?.classList.remove("is-hidden");
   document.querySelector("[data-admin-app]")?.classList.add("is-hidden");
@@ -475,6 +571,7 @@ function showAdmin() {
   document.querySelector("[data-logout-button]")?.classList.remove("is-hidden");
   setMessage("[data-auth-message]", "");
   syncDirtyIndicator();
+  syncSaveButtonState();
 }
 
 function setActiveSection(sectionName) {
@@ -849,13 +946,15 @@ async function uploadStaticField(path) {
   const fileInput = document.querySelector(`[data-upload-input="${path}"]`);
   const targetInput = document.querySelector(`[data-upload-target="${path}"]`);
   const kind = fileInput?.dataset.uploadKind;
+  const row = fileInput?.closest("[data-upload-row], .upload-row");
 
   if (!fileInput || !targetInput || !fileInput.files?.length) {
     setMessage("[data-global-message]", "Сначала выберите файл для загрузки.", "error");
+    setUploadRowStatus(row, "Сначала выберите файл для загрузки.", "error");
     return;
   }
 
-  const result = await uploadFile(fileInput.files[0], kind);
+  const result = await uploadFile(fileInput.files[0], kind, row);
 
   if (!result) {
     return;
@@ -879,10 +978,11 @@ async function uploadFromRow(row) {
 
   if (!fileInput?.files?.length || !targetInput) {
     setMessage("[data-global-message]", "Сначала выберите файл для загрузки.", "error");
+    setUploadRowStatus(row, "Сначала выберите файл для загрузки.", "error");
     return;
   }
 
-  const result = await uploadFile(fileInput.files[0], kind);
+  const result = await uploadFile(fileInput.files[0], kind, row);
 
   if (!result) {
     return;
@@ -904,8 +1004,19 @@ function applyUploadedUrl(path, targetInput, url) {
   setByPath(state.content, path, url);
 }
 
-async function uploadFile(file, kind) {
+async function uploadFile(file, kind, row = null) {
+  const limit = uploadLimits[kind];
+
+  if (limit && file.size > limit.bytes) {
+    const errorText = `Файл слишком большой. Максимум: ${limit.label}.`;
+    setMessage("[data-global-message]", errorText, "error");
+    setUploadRowStatus(row, errorText, "error");
+    return null;
+  }
+
   try {
+    setUploadRowBusy(row, true);
+    setUploadRowStatus(row, "Ожидайте, файл загружается", "loading");
     setMessage("[data-global-message]", "Загружаем файл...");
     const formData = new FormData();
     formData.append("file", file);
@@ -920,16 +1031,107 @@ async function uploadFile(file, kind) {
       method: "POST",
       body: formData
     });
-    const payload = await response.json();
+    const contentType = response.headers.get("content-type") || "";
+    const payload = contentType.includes("application/json") ? await response.json() : null;
 
     if (!response.ok) {
-      throw new Error(payload.error || "Не удалось загрузить файл.");
+      if (response.status === 413 && limit) {
+        throw new Error(`Файл слишком большой. Максимум: ${limit.label}.`);
+      }
+
+      throw new Error((payload && payload.error) || "Не удалось загрузить файл.");
     }
 
+    setUploadRowStatus(row, "");
     return payload;
   } catch (error) {
     setMessage("[data-global-message]", error.message, "error");
+    setUploadRowStatus(row, error.message || "Не удалось загрузить файл.", "error");
     return null;
+  } finally {
+    setUploadRowBusy(row, false);
+  }
+}
+
+function ensureUploadStatusElement(row) {
+  if (!row) {
+    return null;
+  }
+
+  let status = row.querySelector("[data-upload-status]");
+
+  if (status) {
+    return status;
+  }
+
+  status = document.createElement("span");
+  status.className = "upload-status";
+  status.dataset.uploadStatus = "true";
+  status.hidden = true;
+  status.setAttribute("aria-live", "polite");
+  status.setAttribute("aria-atomic", "true");
+
+  const fileInput = row.querySelector("[data-upload-file], input[type=\"file\"]");
+
+  if (fileInput && fileInput.nextSibling) {
+    row.insertBefore(status, fileInput.nextSibling);
+  } else if (fileInput) {
+    fileInput.insertAdjacentElement("afterend", status);
+  } else {
+    row.appendChild(status);
+  }
+
+  return status;
+}
+
+function setUploadRowStatus(row, text = "", type = "") {
+  const status = ensureUploadStatusElement(row);
+
+  if (!status) {
+    return;
+  }
+
+  status.textContent = text || "";
+  status.hidden = !text;
+  status.classList.toggle("is-loading", type === "loading");
+  status.classList.toggle("is-error", type === "error");
+}
+
+function setUploadRowBusy(row, isBusy) {
+  if (!row) {
+    syncSaveButtonState();
+    return;
+  }
+
+  row.classList.toggle("is-uploading", Boolean(isBusy));
+
+  const button = row.querySelector("[data-action=\"upload\"], [data-upload-button]");
+  const fileInput = row.querySelector("[data-upload-file], input[type=\"file\"]");
+
+  if (button instanceof HTMLButtonElement) {
+    button.disabled = Boolean(isBusy);
+  }
+
+  if (fileInput instanceof HTMLInputElement) {
+    fileInput.disabled = Boolean(isBusy);
+  }
+
+  syncSaveButtonState();
+}
+
+function syncSaveButtonState() {
+  const saveButton = document.querySelector("[data-save-button]");
+  const cleanupButton = document.querySelector("[data-cleanup-media-button]");
+  const hasActiveUpload = Boolean(document.querySelector(".upload-row.is-uploading"));
+
+  if (saveButton instanceof HTMLButtonElement) {
+    saveButton.disabled = hasActiveUpload;
+    saveButton.setAttribute("aria-disabled", String(hasActiveUpload));
+  }
+
+  if (cleanupButton instanceof HTMLButtonElement) {
+    cleanupButton.disabled = hasActiveUpload;
+    cleanupButton.setAttribute("aria-disabled", String(hasActiveUpload));
   }
 }
 

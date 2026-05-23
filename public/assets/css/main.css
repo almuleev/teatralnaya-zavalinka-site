@@ -719,6 +719,9 @@ select:focus-visible {
 }
 
 .carousel-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 42px;
   height: 42px;
   border: 1px solid var(--color-border);
@@ -742,15 +745,32 @@ select:focus-visible {
   transform: none;
 }
 
+.carousel-button__icon {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+}
+
+.carousel-button--prev .carousel-button__icon {
+  transform: rotate(135deg);
+  margin-left: 3px;
+}
+
+.carousel-button--next .carousel-button__icon {
+  transform: rotate(-45deg);
+  margin-right: 3px;
+}
+
 .carousel-button--overlay {
   position: absolute;
   top: calc(50% - 18px);
   z-index: 4;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-color: rgba(15, 23, 39, 0.08);
-  background: rgba(255, 255, 255, 0.72);
-  color: rgba(7, 22, 40, 0.82);
+  background: rgba(255, 255, 255, 0.8);
+  color: rgba(7, 22, 40, 0.88);
   box-shadow: 0 10px 24px rgba(7, 36, 71, 0.08);
   backdrop-filter: blur(10px);
   opacity: 0;
@@ -985,8 +1005,10 @@ select:focus-visible {
 }
 
 .video-card__frame {
+  position: relative;
   aspect-ratio: 16 / 9;
   background: #0d1827;
+  overflow: hidden;
 }
 
 .video-card__frame iframe {
@@ -995,11 +1017,88 @@ select:focus-visible {
   border: 0;
 }
 
+.video-card__video-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .video-card__frame video {
   width: 100%;
   height: 100%;
   object-fit: cover;
   background: #0d1827;
+  cursor: pointer;
+}
+
+.video-card__missing {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  padding: 20px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.08), transparent 34%),
+    linear-gradient(160deg, #162739, #0d1827 56%, #0a1522);
+  color: rgba(255, 255, 255, 0.92);
+  text-align: center;
+}
+
+.video-card__missing p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.video-card__missing-mark {
+  position: relative;
+  width: 48px;
+  height: 34px;
+  margin: 0 auto;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  border-radius: 9px;
+}
+
+.video-card__missing-mark::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1.5px solid rgba(255, 255, 255, 0.62);
+  border-radius: 5px;
+}
+
+.video-card__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 999px;
+  background: rgba(7, 22, 40, 0.72);
+  color: #ffffff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(7, 22, 40, 0.28);
+  transform: translate(-50%, -50%);
+  transition: transform var(--transition), background var(--transition), border-color var(--transition), opacity var(--transition);
+}
+
+.video-card__play:hover {
+  background: rgba(0, 128, 255, 0.82);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%) scale(1.03);
+}
+
+.video-card__play[hidden],
+.video-card__video-shell.is-playing .video-card__play {
+  display: none;
 }
 
 .video-card__body {
@@ -1144,6 +1243,18 @@ select:focus-visible {
 .contact-list dd {
   margin: 0;
   font-weight: 600;
+}
+
+.contact-list__static-number {
+  color: var(--color-text);
+}
+
+.contact-list__static-number a,
+.contact-list__static-number a[x-apple-data-detectors] {
+  color: var(--color-text) !important;
+  text-decoration: none !important;
+  pointer-events: none;
+  cursor: default;
 }
 
 .contact-list a {
@@ -1521,6 +1632,12 @@ select:focus-visible {
 
   .carousel-button--next {
     right: 6px;
+  }
+
+  .video-card__play {
+    width: 56px;
+    height: 56px;
+    font-size: 1.22rem;
   }
 
   .brand__subtitle {

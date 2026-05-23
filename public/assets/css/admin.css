@@ -707,6 +707,22 @@ img {
   flex: 1 1 260px;
 }
 
+.upload-status {
+  color: var(--admin-brand-dark);
+  font-size: 0.82rem;
+  line-height: 1.35;
+  font-weight: 600;
+  flex: 0 1 auto;
+}
+
+.upload-status.is-error {
+  color: #b42318;
+}
+
+.upload-row.is-uploading .upload-status.is-loading {
+  color: var(--admin-brand-dark);
+}
+
 .empty-state {
   padding: 20px;
   border: 1px dashed var(--admin-border);

@@ -4,12 +4,149 @@ document.addEventListener("DOMContentLoaded", () => {
   initMenu();
   initDocumentSearch();
   initCopyButtons();
+  initVideoPlayers();
 
   const desktopCarouselMode = supportsDesktopCarouselMode();
 
   bindCarouselButtons(desktopCarouselMode);
   initCarousels(desktopCarouselMode);
 });
+
+function initVideoPlayers() {
+  const shells = Array.from(document.querySelectorAll("[data-video-shell]"));
+
+  if (!shells.length) {
+    return;
+  }
+
+  shells.forEach((shell) => {
+    const video = shell.querySelector("[data-video-player]");
+    const playButton = shell.querySelector("[data-video-play]");
+
+    if (!(video instanceof HTMLVideoElement) || !(playButton instanceof HTMLButtonElement)) {
+      return;
+    }
+
+    const setPlayingState = () => {
+      shell.classList.add("is-playing");
+      playButton.hidden = true;
+      video.controls = true;
+    };
+
+    const setPausedState = () => {
+      shell.classList.remove("is-playing");
+      playButton.hidden = false;
+      video.controls = false;
+    };
+
+    let pressState = null;
+    const isControlsInteraction = (event) => {
+      if (!video.controls) {
+        return false;
+      }
+
+      const rect = video.getBoundingClientRect();
+      const offsetX = event.clientX - rect.left;
+      const offsetY = event.clientY - rect.top;
+      const isInsideVideoBounds =
+        offsetX >= 0 && offsetX <= rect.width && offsetY >= 0 && offsetY <= rect.height;
+
+      if (!isInsideVideoBounds) {
+        return false;
+      }
+
+      // Native control bar usually lives in the lower strip of the player.
+      const controlsBarHeight = Math.min(72, Math.max(38, Math.round(rect.height * 0.18)));
+      return offsetY >= rect.height - controlsBarHeight;
+    };
+
+    setPausedState();
+
+    const startPlayback = async () => {
+      if (!video.paused && !video.ended) {
+        return;
+      }
+
+      setPlayingState();
+
+      try {
+        await video.play();
+      } catch (error) {
+        setPausedState();
+      }
+    };
+
+    playButton.addEventListener("click", () => {
+      startPlayback();
+    });
+
+    shell.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (event.button !== 0) {
+          return;
+        }
+
+        pressState = {
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          startY: event.clientY
+        };
+      },
+      true
+    );
+
+    shell.addEventListener(
+      "pointerup",
+      (event) => {
+        if (!pressState || pressState.pointerId !== event.pointerId) {
+          return;
+        }
+
+        const moved =
+          Math.abs(event.clientX - pressState.startX) > 6 ||
+          Math.abs(event.clientY - pressState.startY) > 6;
+        pressState = null;
+
+        if (moved) {
+          return;
+        }
+
+        if (video.paused || video.ended) {
+          startPlayback();
+          return;
+        }
+
+        if (isControlsInteraction(event)) {
+          return;
+        }
+
+        video.pause();
+      },
+      true
+    );
+
+    shell.addEventListener(
+      "pointercancel",
+      () => {
+        pressState = null;
+      },
+      true
+    );
+
+    video.addEventListener("play", () => {
+      setPlayingState();
+    });
+
+    video.addEventListener("pause", () => {
+      setPausedState();
+    });
+
+    video.addEventListener("ended", () => {
+      setPausedState();
+    });
+  });
+}
 
 function initCopyButtons() {
   const phoneButtons = Array.from(document.querySelectorAll("[data-copy-phone]")).map((button) => ({
@@ -319,6 +456,7 @@ function updateCarouselState(track) {
 }
 
 function bindPointerDrag(track) {
+  const interactiveSelector = "a, button, input, textarea, select, label, iframe";
   let dragState = null;
   let suppressClick = false;
 
@@ -346,6 +484,11 @@ function bindPointerDrag(track) {
 
   track.addEventListener("pointerdown", (event) => {
     if (event.pointerType !== "mouse" || event.button !== 0) {
+      return;
+    }
+
+    const eventTarget = event.target instanceof Element ? event.target : null;
+    if (eventTarget && eventTarget.closest(interactiveSelector)) {
       return;
     }
 
@@ -392,6 +535,12 @@ function bindPointerDrag(track) {
   track.addEventListener(
     "click",
     (event) => {
+      const eventTarget = event.target instanceof Element ? event.target : null;
+      if (eventTarget && eventTarget.closest(interactiveSelector)) {
+        suppressClick = false;
+        return;
+      }
+
       if (suppressClick) {
         event.preventDefault();
         event.stopPropagation();

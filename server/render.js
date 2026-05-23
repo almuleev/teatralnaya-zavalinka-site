@@ -47,6 +47,40 @@ function normalizePhoneCopy(value = "") {
   return digits;
 }
 
+function isLikelyEmail(value = "") {
+  const trimmed = String(value || "").trim();
+
+  if (!trimmed) {
+    return false;
+  }
+
+  const normalized = /^mailto:/i.test(trimmed) ? trimmed.replace(/^mailto:/i, "") : trimmed;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized);
+}
+
+function isLikelyPhone(value = "") {
+  const trimmed = String(value || "").trim();
+
+  if (!trimmed) {
+    return false;
+  }
+
+  if (/^tel:/i.test(trimmed)) {
+    return true;
+  }
+
+  if (/^(https?:\/\/|\/\/|www\.|\/)/i.test(trimmed) || trimmed.includes("@")) {
+    return false;
+  }
+
+  if (/[a-zа-я]/i.test(trimmed)) {
+    return false;
+  }
+
+  const digitsOnly = trimmed.replace(/\D/g, "");
+  return digitsOnly.length >= 5 && /^[+\d()\s.-]+$/.test(trimmed);
+}
+
 function normalizeActionLink(value = "") {
   const trimmed = String(value || "").trim();
 
@@ -54,7 +88,23 @@ function normalizeActionLink(value = "") {
     return "";
   }
 
-  if (/^(https?:\/\/|mailto:|tel:)/i.test(trimmed)) {
+  if (/^(javascript:|data:|vbscript:)/i.test(trimmed)) {
+    return "";
+  }
+
+  if (/^(mailto:|tel:)/i.test(trimmed)) {
+    return "";
+  }
+
+  if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) {
+    return trimmed;
+  }
+
+  if (/^\/\//.test(trimmed)) {
+    return `https:${trimmed}`;
+  }
+
+  if (trimmed.startsWith("/")) {
     return trimmed;
   }
 
@@ -62,7 +112,11 @@ function normalizeActionLink(value = "") {
     return `https://${trimmed}`;
   }
 
-  if (!trimmed.includes("@") && !/\s/.test(trimmed) && /^[a-z0-9.-]+\.[a-z]{2,}(?:[/?#].*)?$/i.test(trimmed)) {
+  if (isLikelyEmail(trimmed) || isLikelyPhone(trimmed)) {
+    return "";
+  }
+
+  if (!/\s/.test(trimmed) && (trimmed.includes(".") || trimmed.includes("/"))) {
     return `https://${trimmed}`;
   }
 
@@ -82,15 +136,17 @@ function renderPhoneAction(phone = "", className = "contact-action") {
     return "";
   }
 
-  const actionLink = normalizeActionLink(phone);
+  const phoneText = String(phone || "").trim();
+  const actionLink = isLikelyPhone(phoneText) || isLikelyEmail(phoneText) ? "" : normalizeActionLink(phoneText);
   if (actionLink) {
-    return renderActionLink(phone, actionLink, className);
+    return renderActionLink(phoneText, actionLink, className);
   }
 
-  const normalizedPhone = normalizePhoneCopy(phone);
+  const normalizedPhone = normalizePhoneCopy(phoneText);
+  const phoneToCopy = normalizedPhone || phoneText;
   const classes = String(className || "contact-action").trim();
 
-  return `<button type="button" class="${escapeAttribute(classes)}" data-copy-phone="${escapeAttribute(normalizedPhone)}" aria-label="${escapeAttribute(`Скопировать номер ${normalizedPhone}`)}">${escapeHtml(phone)}</button>`;
+  return `<button type="button" class="${escapeAttribute(classes)}" data-copy-phone="${escapeAttribute(phoneToCopy)}" aria-label="${escapeAttribute(`Скопировать номер ${phoneToCopy}`)}">${escapeHtml(phoneText)}</button>`;
 }
 
 function renderEmailAction(email = "", className = "contact-action") {
@@ -98,14 +154,15 @@ function renderEmailAction(email = "", className = "contact-action") {
     return "";
   }
 
-  const actionLink = normalizeActionLink(email);
+  const emailText = String(email || "").trim();
+  const actionLink = isLikelyEmail(emailText) || isLikelyPhone(emailText) ? "" : normalizeActionLink(emailText);
   if (actionLink) {
-    return renderActionLink(email, actionLink, className);
+    return renderActionLink(emailText, actionLink, className);
   }
 
   const classes = String(className || "contact-action").trim();
 
-  return `<button type="button" class="${escapeAttribute(classes)}" data-copy-email="${escapeAttribute(email)}" aria-label="${escapeAttribute(`Скопировать email ${email}`)}">${escapeHtml(email)}</button>`;
+  return `<button type="button" class="${escapeAttribute(classes)}" data-copy-email="${escapeAttribute(emailText)}" aria-label="${escapeAttribute(`Скопировать email ${emailText}`)}">${escapeHtml(emailText)}</button>`;
 }
 
 function initials(value = "") {
@@ -320,7 +377,7 @@ function renderLayout(content, options) {
   <head>
     ${renderHead(content, pageTitle, description, activePath)}
     <link rel="stylesheet" href="/assets/css/main.css">
-    <script defer src="/assets/js/site.js"></script>
+    <script defer src="/assets/js/site.js?v=20260523-3"></script>
   </head>
   <body class="${bodyClass}">
     ${renderNavigation(content, activePath)}
@@ -549,8 +606,8 @@ function renderPeopleSection(id, title, description, items, emptyText, options =
                 ${
                   showCarouselUi
                     ? `
-                <button class="carousel-button carousel-button--overlay carousel-button--prev" type="button" data-carousel-prev="${escapeAttribute(id)}" aria-label="Прокрутить влево">‹</button>
-                <button class="carousel-button carousel-button--overlay carousel-button--next" type="button" data-carousel-next="${escapeAttribute(id)}" aria-label="Прокрутить вправо">›</button>
+                <button class="carousel-button carousel-button--overlay carousel-button--prev" type="button" data-carousel-prev="${escapeAttribute(id)}" aria-label="Прокрутить влево"><span class="carousel-button__icon" aria-hidden="true"></span></button>
+                <button class="carousel-button carousel-button--overlay carousel-button--next" type="button" data-carousel-next="${escapeAttribute(id)}" aria-label="Прокрутить вправо"><span class="carousel-button__icon" aria-hidden="true"></span></button>
                 `
                     : ""
                 }
@@ -646,16 +703,30 @@ function isDirectVideoFile(url = "") {
 }
 
 function renderVideoCard(video) {
+  const videoUrl = String(video.url || "").trim();
   const poster = video.poster ? ` poster="${safeUrl(video.poster)}"` : "";
+  const playLabel = escapeAttribute(video.title ? `Воспроизвести: ${video.title}` : "Воспроизвести видео");
   const hasBody = !video.hideBody && (video.title || video.description);
-  const frame = isDirectVideoFile(video.url)
+  const frame = !videoUrl
     ? `
-      <video controls preload="metadata"${poster}>
-          <source src="${safeUrl(video.url)}">
-          Ваш браузер не поддерживает встроенное воспроизведение видео.
-      </video>
+      <div class="video-card__missing" role="status" aria-live="polite">
+        <span class="video-card__missing-mark" aria-hidden="true"></span>
+        <p>Видео не загружено</p>
+      </div>
     `
-    : `<iframe src="${safeUrl(video.url)}" title="${escapeAttribute(video.title)}" loading="lazy" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+    : isDirectVideoFile(videoUrl)
+    ? `
+      <div class="video-card__video-shell" data-video-shell>
+        <video controls preload="metadata" playsinline data-video-player${poster}>
+            <source src="${safeUrl(videoUrl)}">
+            Ваш браузер не поддерживает встроенное воспроизведение видео.
+        </video>
+        <button class="video-card__play" type="button" data-video-play aria-label="${playLabel}">
+          <span aria-hidden="true">▶</span>
+        </button>
+      </div>
+    `
+    : `<iframe src="${safeUrl(videoUrl)}" title="${escapeAttribute(video.title)}" loading="lazy" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
 
     return `
       <article class="video-card">
@@ -710,8 +781,8 @@ function renderVideoCarouselSection(id, eyebrow, title, description, videos, emp
                 ${
                   showCarouselUi
                     ? `
-                <button class="carousel-button carousel-button--overlay carousel-button--prev" type="button" data-carousel-prev="${escapeAttribute(id)}" aria-label="Прокрутить видеоподборку влево">‹</button>
-                <button class="carousel-button carousel-button--overlay carousel-button--next" type="button" data-carousel-next="${escapeAttribute(id)}" aria-label="Прокрутить видеоподборку вправо">›</button>
+                <button class="carousel-button carousel-button--overlay carousel-button--prev" type="button" data-carousel-prev="${escapeAttribute(id)}" aria-label="Прокрутить видеоподборку влево"><span class="carousel-button__icon" aria-hidden="true"></span></button>
+                <button class="carousel-button carousel-button--overlay carousel-button--next" type="button" data-carousel-next="${escapeAttribute(id)}" aria-label="Прокрутить видеоподборку вправо"><span class="carousel-button__icon" aria-hidden="true"></span></button>
                 `
                     : ""
                 }
@@ -901,8 +972,8 @@ function renderContactCarouselSection(id, eyebrow, title, description, items, em
                   ${
                     showCarouselUi
                       ? `
-                  <button class="carousel-button carousel-button--overlay carousel-button--prev" type="button" data-carousel-prev="${escapeAttribute(id)}" aria-label="Прокрутить влево">‹</button>
-                  <button class="carousel-button carousel-button--overlay carousel-button--next" type="button" data-carousel-next="${escapeAttribute(id)}" aria-label="Прокрутить вправо">›</button>
+                  <button class="carousel-button carousel-button--overlay carousel-button--prev" type="button" data-carousel-prev="${escapeAttribute(id)}" aria-label="Прокрутить влево"><span class="carousel-button__icon" aria-hidden="true"></span></button>
+                  <button class="carousel-button carousel-button--overlay carousel-button--next" type="button" data-carousel-next="${escapeAttribute(id)}" aria-label="Прокрутить вправо"><span class="carousel-button__icon" aria-hidden="true"></span></button>
                   `
                       : ""
                   }
@@ -991,11 +1062,11 @@ function renderContactsBody(content) {
             </div>` : ""}
             ${ogrn ? `<div>
               <dt>ОГРН</dt>
-              <dd>${escapeHtml(ogrn)}</dd>
+              <dd class="contact-list__static-number">${escapeHtml(ogrn)}</dd>
             </div>` : ""}
             ${innKpp ? `<div>
               <dt>ИНН / КПП</dt>
-              <dd>${escapeHtml(innKpp)}</dd>
+              <dd class="contact-list__static-number">${escapeHtml(innKpp)}</dd>
             </div>` : ""}
             ${content.contacts.phone ? `<div>
               <dt>Телефон</dt>
