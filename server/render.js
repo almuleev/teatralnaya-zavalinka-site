@@ -377,7 +377,7 @@ function renderLayout(content, options) {
   <head>
     ${renderHead(content, pageTitle, description, activePath)}
     <link rel="stylesheet" href="/assets/css/main.css">
-    <script defer src="/assets/js/site.js?v=20260523-5"></script>
+    <script defer src="/assets/js/site.js?v=20260523-7"></script>
   </head>
   <body class="${bodyClass}">
     ${renderNavigation(content, activePath)}
@@ -721,6 +721,7 @@ function renderVideoCard(video) {
             <source src="${safeUrl(videoUrl)}">
             Ваш браузер не поддерживает встроенное воспроизведение видео.
         </video>
+        <button class="video-card__tap-layer" type="button" data-video-toggle aria-label="${playLabel}"></button>
         <button class="video-card__play" type="button" data-video-play aria-label="${playLabel}">
           <span aria-hidden="true">▶</span>
         </button>

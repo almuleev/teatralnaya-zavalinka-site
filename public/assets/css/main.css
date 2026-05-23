@@ -1031,6 +1031,26 @@ select:focus-visible {
   cursor: pointer;
 }
 
+.video-card__tap-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.video-card__video-shell.is-playing .video-card__tap-layer {
+  bottom: 72px;
+}
+
+.video-card__tap-layer:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.56);
+  outline-offset: -2px;
+}
+
 .video-card__missing {
   width: 100%;
   height: 100%;
@@ -1638,6 +1658,10 @@ select:focus-visible {
     width: 56px;
     height: 56px;
     font-size: 1.22rem;
+  }
+
+  .video-card__video-shell.is-playing .video-card__tap-layer {
+    bottom: 84px;
   }
 
   .brand__subtitle {

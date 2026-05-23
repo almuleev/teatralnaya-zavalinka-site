@@ -39,23 +39,24 @@ function initVideoPlayers() {
       video.controls = false;
     };
 
+    let pressState = null;
     let suppressToggleUntil = 0;
     let suppressPauseUiUntil = 0;
     let wasPlayingBeforeSeek = false;
-    const isNativeControlsClick = (event) => {
-      if (!video.controls) {
+    const isControlsBarPoint = (clientX, clientY) => {
+      if (!video.controls || !shell.classList.contains("is-playing")) {
         return false;
       }
 
       const rect = video.getBoundingClientRect();
-      const offsetX = event.clientX - rect.left;
-      const offsetY = event.clientY - rect.top;
+      const offsetX = clientX - rect.left;
+      const offsetY = clientY - rect.top;
 
       if (offsetX < 0 || offsetX > rect.width || offsetY < 0 || offsetY > rect.height) {
         return false;
       }
 
-      const controlsBarHeight = Math.min(72, Math.max(36, Math.round(rect.height * 0.18)));
+      const controlsBarHeight = Math.min(86, Math.max(42, Math.round(rect.height * 0.2)));
       return offsetY >= rect.height - controlsBarHeight;
     };
 
@@ -79,18 +80,66 @@ function initVideoPlayers() {
       startPlayback();
     });
 
-    video.addEventListener("click", (event) => {
-      if (Date.now() < suppressToggleUntil || video.seeking || isNativeControlsClick(event)) {
-        return;
-      }
+    shell.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (event.pointerType === "mouse" && event.button !== 0) {
+          return;
+        }
 
-      if (video.paused || video.ended) {
-        startPlayback();
-        return;
-      }
+        pressState = {
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          startY: event.clientY,
+          startedOnControls: isControlsBarPoint(event.clientX, event.clientY)
+        };
+      },
+      true
+    );
 
-      video.pause();
-    });
+    shell.addEventListener(
+      "pointerup",
+      (event) => {
+        if (!pressState || pressState.pointerId !== event.pointerId) {
+          return;
+        }
+
+        const eventTarget = event.target instanceof Element ? event.target : null;
+        const moved =
+          Math.abs(event.clientX - pressState.startX) > 8 ||
+          Math.abs(event.clientY - pressState.startY) > 8;
+        const startedOnControls = pressState.startedOnControls;
+        pressState = null;
+
+        if (eventTarget && eventTarget.closest("[data-video-play]")) {
+          return;
+        }
+
+        if (moved || Date.now() < suppressToggleUntil || video.seeking) {
+          return;
+        }
+
+        if (startedOnControls || isControlsBarPoint(event.clientX, event.clientY)) {
+          return;
+        }
+
+        if (video.paused || video.ended) {
+          startPlayback();
+          return;
+        }
+
+        video.pause();
+      },
+      true
+    );
+
+    shell.addEventListener(
+      "pointercancel",
+      () => {
+        pressState = null;
+      },
+      true
+    );
 
     video.addEventListener("seeking", () => {
       wasPlayingBeforeSeek = !video.paused || shell.classList.contains("is-playing");
