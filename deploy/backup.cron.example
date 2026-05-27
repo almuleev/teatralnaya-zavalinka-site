@@ -1,0 +1,5 @@
+# Run both backups daily; the script itself skips until each interval is due.
+# Adjust paths if the project lives somewhere else on the server.
+
+0 3 * * * /bin/bash /var/www/teatralnaya-zavalinka/app/deploy/backup.sh biweekly >/var/log/tz-backup-biweekly.log 2>&1
+10 3 * * * /bin/bash /var/www/teatralnaya-zavalinka/app/deploy/backup.sh bimonthly >/var/log/tz-backup-bimonthly.log 2>&1

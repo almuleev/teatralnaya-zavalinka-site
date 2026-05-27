@@ -4,7 +4,7 @@
 
 ```bash
 sudo apt update
-sudo apt install -y nginx certbot python3-certbot-nginx curl git
+sudo apt install -y nginx certbot python3-certbot-nginx curl git ffmpeg rclone
 ```
 
 Node.js 20 LTS + PM2:
@@ -114,6 +114,8 @@ sudo systemctl reload nginx
 - API: `/api/admin`
 - загрузки: `/uploads`
 
+В production `/uploads` отдает Nginx напрямую через `alias`, а Node.js использует эту раздачу только локально.
+
 ## 8) Выпуск SSL (Let's Encrypt)
 
 ```bash
@@ -136,3 +138,28 @@ pm2 restart teatralnaya-zavalinka
 ```
 
 `data/site-content.json` и `public/uploads` сохраняются, потому что это симлинки на `/shared`.
+
+## 10) Бэкап на Яндекс.Диск
+
+Для бэкапа используется `deploy/backup.sh` и `rclone` с remote `yadisk`.
+
+Есть две линии резервных копий:
+- `biweekly` - обновляется раз в 2 недели
+- `bimonthly` - обновляется раз в 2 месяца
+
+Они сохраняются раздельно:
+- локально: `/var/backups/teatralnaya-zavalinka/biweekly/backup-latest.tar.gz`
+- локально: `/var/backups/teatralnaya-zavalinka/bimonthly/backup-latest.tar.gz`
+- на Яндекс.Диске: `teatralnaya-zavalinka-backups/biweekly/backup-latest.tar.gz`
+- на Яндекс.Диске: `teatralnaya-zavalinka-backups/bimonthly/backup-latest.tar.gz`
+
+Проверка вручную:
+
+```bash
+bash deploy/backup.sh biweekly
+bash deploy/backup.sh bimonthly
+```
+
+Рекомендуемый cron-файл: `deploy/backup.cron.example`.
+
+Важно: cron можно запускать каждый день, а сам скрипт будет пропускать запуск, пока интервал еще не наступил.

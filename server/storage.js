@@ -3,8 +3,10 @@ const fsp = require("fs/promises");
 const path = require("path");
 const multer = require("multer");
 const crypto = require("crypto");
+const { spawn } = require("child_process");
 
 const config = require("./config");
+const IMAGE_VARIANT_DIR = "webp";
 
 function sanitizeBaseName(input) {
   return (input || "file")
@@ -24,6 +26,7 @@ async function ensureProjectStructure() {
     fsp.mkdir(config.dataDir, { recursive: true }),
     fsp.mkdir(config.docsDir, { recursive: true }),
     fsp.mkdir(config.imagesDir, { recursive: true }),
+    fsp.mkdir(path.join(config.imagesDir, IMAGE_VARIANT_DIR), { recursive: true }),
     fsp.mkdir(config.videosDir, { recursive: true })
   ]);
 }
@@ -72,6 +75,112 @@ function buildMulterStorage(targetDirectory) {
   });
 }
 
+function getImageVariantFilename(filename = "") {
+  return `${path.basename(String(filename || ""))}.webp`;
+}
+
+function getImageVariantPath(filename = "") {
+  return path.join(config.imagesDir, IMAGE_VARIANT_DIR, getImageVariantFilename(filename));
+}
+
+function getOptimizedImageUrl(url = "") {
+  const normalizedUrl = String(url || "").trim();
+
+  if (!/^\/uploads\/images\//.test(normalizedUrl)) {
+    return normalizedUrl;
+  }
+
+  const sourceFilename = path.basename(normalizedUrl);
+  const variantPath = getImageVariantPath(sourceFilename);
+  if (!fs.existsSync(variantPath)) {
+    return normalizedUrl;
+  }
+
+  return `/uploads/images/${IMAGE_VARIANT_DIR}/${getImageVariantFilename(sourceFilename)}`;
+}
+
+async function ensureOptimizedImageVariant(filename = "") {
+  const sourceFilename = path.basename(String(filename || ""));
+
+  if (!sourceFilename) {
+    return { created: false, skipped: true };
+  }
+
+  const sourcePath = path.join(config.imagesDir, sourceFilename);
+  const variantPath = getImageVariantPath(sourceFilename);
+
+  try {
+    const [sourceStat, variantStat] = await Promise.all([
+      fsp.stat(sourcePath),
+      fsp.stat(variantPath).catch(() => null)
+    ]);
+
+    if (variantStat && variantStat.mtimeMs >= sourceStat.mtimeMs) {
+      return { created: false, reused: true, path: variantPath };
+    }
+
+    await fsp.mkdir(path.dirname(variantPath), { recursive: true });
+    await convertImageToWebp(sourcePath, variantPath);
+    return { created: true, path: variantPath };
+  } catch (error) {
+    return { created: false, path: variantPath, error };
+  }
+}
+
+async function deleteOptimizedImageVariant(filename = "") {
+  const variantPath = getImageVariantPath(filename);
+
+  try {
+    await fsp.unlink(variantPath);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+function convertImageToWebp(sourcePath, targetPath) {
+  return new Promise((resolve, reject) => {
+    const ffmpegPath = process.env.FFMPEG_PATH || "ffmpeg";
+    const child = spawn(
+      ffmpegPath,
+      [
+        "-y",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-i",
+        sourcePath,
+        "-vf",
+        "scale='min(1600,iw)':-2",
+        "-c:v",
+        "libwebp",
+        "-compression_level",
+        "6",
+        "-q:v",
+        "78",
+        targetPath
+      ],
+      { stdio: ["ignore", "ignore", "pipe"] }
+    );
+
+    let stderr = "";
+
+    child.stderr.on("data", (chunk) => {
+      stderr += chunk.toString("utf8");
+    });
+
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code === 0) {
+        resolve();
+        return;
+      }
+
+      reject(new Error(stderr.trim() || `ffmpeg exited with code ${code}`));
+    });
+  });
+}
+
 function hashFile(filePath) {
   return new Promise((resolve, reject) => {
     const hash = crypto.createHash("sha256");
@@ -116,7 +225,10 @@ module.exports = {
   buildMulterStorage,
   dedupeUploadedFile,
   ensureProjectStructure,
+  ensureOptimizedImageVariant,
   getUploadUrl,
+  getOptimizedImageUrl,
+  deleteOptimizedImageVariant,
   readContent,
   writeContent
 };

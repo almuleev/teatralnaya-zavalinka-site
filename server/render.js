@@ -176,9 +176,20 @@ function initials(value = "") {
   return escapeHtml(letters || "ТЗ");
 }
 
+const { getOptimizedImageUrl } = require("./storage");
+
 function renderImage(item, className = "card__image") {
   if (item && item.image) {
-    return `<img class="${className}" src="${safeUrl(item.image)}" alt="${escapeAttribute(item.name || item.title || "Изображение")}" loading="lazy">`;
+    const originalUrl = String(item.image || "").trim();
+    const optimizedUrl = getOptimizedImageUrl(originalUrl);
+    const altText = escapeAttribute(item.name || item.title || "Изображение");
+    const imgMarkup = `<img class="${className}" src="${safeUrl(originalUrl)}" alt="${altText}" loading="lazy" decoding="async" fetchpriority="low">`;
+
+    if (optimizedUrl !== originalUrl) {
+      return `<picture class="${className}"><source srcset="${safeUrl(optimizedUrl)}" type="image/webp">${imgMarkup}</picture>`;
+    }
+
+    return imgMarkup;
   }
 
   return `<div class="${className} ${className}--placeholder" aria-hidden="true">${initials(item && (item.name || item.title))}</div>`;
@@ -588,6 +599,7 @@ function renderPeopleSection(id, title, description, items, emptyText, options =
   const eyebrow = options.eyebrow === undefined ? title : options.eyebrow;
   const sectionId = options.sectionId ? ` id="${escapeAttribute(options.sectionId)}"` : "";
   const showCarouselUi = hasItems && items.length > 1;
+  const showCarouselHint = hasItems && items.length > 3;
 
   return `
     <section class="section section--people"${sectionId}>
@@ -597,6 +609,7 @@ function renderPeopleSection(id, title, description, items, emptyText, options =
             ${eyebrow ? `<span class="eyebrow">${escapeHtml(eyebrow)}</span>` : ""}
             <h2>${escapeHtml(title)}</h2>
             <p>${renderFormattedText(description)}</p>
+            ${showCarouselHint ? `<p class="carousel-hint">${escapeHtml(text(options.content || {}, "ui.carouselHint", ""))}</p>` : ""}
           </div>
         </div>
         ${
@@ -704,7 +717,8 @@ function isDirectVideoFile(url = "") {
 
 function renderVideoCard(video) {
   const videoUrl = String(video.url || "").trim();
-  const poster = video.poster ? ` poster="${safeUrl(video.poster)}"` : "";
+  const posterUrl = getOptimizedImageUrl(String(video.poster || "").trim());
+  const poster = posterUrl ? ` poster="${safeUrl(posterUrl)}"` : "";
   const playLabel = escapeAttribute(video.title ? `Воспроизвести: ${video.title}` : "Воспроизвести видео");
   const hasBody = !video.hideBody && (video.title || video.description);
   const frame = !videoUrl
@@ -762,6 +776,7 @@ function getAboutVideoCollections(about = {}) {
 function renderVideoCarouselSection(id, eyebrow, title, description, videos, emptyText, options = {}) {
   const hasItems = Array.isArray(videos) && videos.length > 0;
   const showCarouselUi = hasItems && videos.length > 1;
+  const showCarouselHint = hasItems && videos.length > 3;
   const sectionClass = options.light ? "section section--light" : "section";
 
   return `
@@ -772,7 +787,7 @@ function renderVideoCarouselSection(id, eyebrow, title, description, videos, emp
             ${eyebrow ? `<span class="eyebrow">${escapeHtml(eyebrow)}</span>` : ""}
             <h2>${escapeHtml(title)}</h2>
             <p>${renderFormattedText(description)}</p>
-            ${showCarouselUi ? `<p class="carousel-hint">${escapeHtml(text(options.content || {}, "ui.carouselHint", "Листайте карточки или используйте стрелки, чтобы посмотреть все видео подборки."))}</p>` : ""}
+            ${showCarouselHint ? `<p class="carousel-hint">${escapeHtml(text(options.content || {}, "ui.carouselHint", ""))}</p>` : ""}
           </div>
         </div>
         ${
@@ -952,9 +967,10 @@ function renderDocumentsBody(content) {
   `;
 }
 
-function renderContactCarouselSection(id, eyebrow, title, description, items, emptyText) {
+function renderContactCarouselSection(id, eyebrow, title, description, items, emptyText, content = null) {
   const hasItems = Array.isArray(items) && items.length > 0;
   const showCarouselUi = hasItems && items.length > 1;
+  const showCarouselHint = hasItems && items.length > 3;
 
   return `
     <section class="section section--light">
@@ -964,6 +980,7 @@ function renderContactCarouselSection(id, eyebrow, title, description, items, em
             ${eyebrow ? `<span class="eyebrow">${escapeHtml(eyebrow)}</span>` : ""}
             <h2>${escapeHtml(title)}</h2>
             <p>${renderFormattedText(description)}</p>
+            ${showCarouselHint ? `<p class="carousel-hint">${escapeHtml(text(content || {}, "ui.carouselHint", ""))}</p>` : ""}
           </div>
         </div>
         ${
@@ -1105,7 +1122,8 @@ function renderContactsBody(content) {
         sectionText(content, "contactsFounders", "title", "Учредители"),
       sectionText(content, "contactsFounders", "description", "Контакты учредителей и ключевых представителей фестиваля."),
       content.contacts.founders || [],
-      sectionText(content, "contactsFounders", "emptyText", "Карточки учредителей можно дополнить в админке.")
+      sectionText(content, "contactsFounders", "emptyText", "Карточки учредителей можно дополнить в админке."),
+      content
     )}
     ${renderContactCarouselSection(
       "orgcommittee-track",
@@ -1113,7 +1131,8 @@ function renderContactsBody(content) {
       sectionText(content, "contactsOrganizers", "title", "Организаторы"),
       sectionText(content, "contactsOrganizers", "description", "Рабочие контакты организаторов фестиваля по вопросам организации, программы и сопровождения."),
       content.contacts.orgCommittee || [],
-      sectionText(content, "contactsOrganizers", "emptyText", "Карточки организаторов фестиваля пока не опубликованы.")
+      sectionText(content, "contactsOrganizers", "emptyText", "Карточки организаторов фестиваля пока не опубликованы."),
+      content
     )}
       ${renderContactCarouselSection(
         "media-team-track",
@@ -1121,7 +1140,8 @@ function renderContactsBody(content) {
         sectionText(content, "contactsMediaTeam", "title", "Медиа-команда"),
         sectionText(content, "contactsMediaTeam", "description", "Контакты для визуального сопровождения, публикаций и медийной координации."),
         content.contacts.mediaTeam || [],
-        sectionText(content, "contactsMediaTeam", "emptyText", "Карточки медиакоманды пока не заполнены. Их можно добавить в админке.")
+        sectionText(content, "contactsMediaTeam", "emptyText", "Карточки медиакоманды пока не заполнены. Их можно добавить в админке."),
+        content
       )}
       ${renderContactsVideoSection(content.contacts)}
     `;

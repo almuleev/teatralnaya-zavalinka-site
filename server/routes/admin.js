@@ -8,6 +8,8 @@ const { requireAuth, verifyCredentials } = require("../auth");
 const {
   buildMulterStorage,
   dedupeUploadedFile,
+  deleteOptimizedImageVariant,
+  ensureOptimizedImageVariant,
   getUploadUrl,
   readContent,
   writeContent
@@ -218,6 +220,14 @@ async function handleUploadedFile(req, res, targetDirectory, uploadType) {
 
   try {
     const deduped = await dedupeUploadedFile(targetDirectory, req.file.filename);
+
+    if (uploadType === "images") {
+      const optimizationResult = await ensureOptimizedImageVariant(deduped.filename);
+      if (optimizationResult.error) {
+        console.warn("Image optimization failed:", optimizationResult.error.message);
+      }
+    }
+
     return res.json({
       ok: true,
       url: getUploadUrl(uploadType, deduped.filename),
@@ -311,18 +321,21 @@ async function deleteOrphanFiles(orphanImageFiles, orphanVideoFiles) {
     videos: { deleted: 0, failed: 0, deletedFiles: [], failedFiles: [] }
   };
 
-  await deleteFilesByType(config.imagesDir, orphanImageFiles, deletionResult.images);
+  await deleteFilesByType(config.imagesDir, orphanImageFiles, deletionResult.images, deleteOptimizedImageVariant);
   await deleteFilesByType(config.videosDir, orphanVideoFiles, deletionResult.videos);
 
   return deletionResult;
 }
 
-async function deleteFilesByType(directoryPath, filenames, resultBucket) {
+async function deleteFilesByType(directoryPath, filenames, resultBucket, afterDelete) {
   for (const filename of filenames) {
     const filePath = path.join(directoryPath, filename);
 
     try {
       await fsp.unlink(filePath);
+      if (typeof afterDelete === "function") {
+        await afterDelete(filename);
+      }
       resultBucket.deleted += 1;
       resultBucket.deletedFiles.push(filename);
     } catch (error) {

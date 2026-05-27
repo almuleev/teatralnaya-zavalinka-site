@@ -70,7 +70,7 @@ const defaultUi = {
   heroRegulationLabel: "Положение о фестивале",
   heroContactLabel: "Быстрый контакт:",
   personMoreLabel: "Подробнее",
-  carouselHint: "Листайте карточки или используйте стрелки, чтобы посмотреть все видео подборки.",
+  carouselHint: "",
   docsSearchLabel: "Поиск по документам",
   docsSearchPlaceholder: "Введите название, тип, описание или год",
   docsSearchClearLabel: "Сбросить",
