@@ -22,8 +22,13 @@ function initVideoPlayers() {
   shells.forEach((shell) => {
     const video = shell.querySelector("[data-video-player]");
     const playButton = shell.querySelector("[data-video-play]");
+    const toggleLayer = shell.querySelector("[data-video-toggle]");
 
-    if (!(video instanceof HTMLVideoElement) || !(playButton instanceof HTMLButtonElement)) {
+    if (
+      !(video instanceof HTMLVideoElement) ||
+      !(playButton instanceof HTMLButtonElement) ||
+      !(toggleLayer instanceof HTMLButtonElement)
+    ) {
       return;
     }
 
@@ -39,7 +44,6 @@ function initVideoPlayers() {
       video.controls = false;
     };
 
-    let pressState = null;
     let fullscreenPressState = null;
     let suppressToggleUntil = 0;
     let suppressPauseUiUntil = 0;
@@ -112,61 +116,15 @@ function initVideoPlayers() {
       startPlayback();
     });
 
-    shell.addEventListener(
-      "pointerdown",
-      (event) => {
-        if (event.pointerType === "mouse" && event.button !== 0) {
-          return;
-        }
+    toggleLayer.addEventListener("click", (event) => {
+      event.preventDefault();
 
-        pressState = {
-          pointerId: event.pointerId,
-          startX: event.clientX,
-          startY: event.clientY,
-          startedOnControls: isControlsBarPoint(event.clientX, event.clientY)
-        };
-      },
-      true
-    );
+      if (Date.now() < suppressToggleUntil || video.seeking) {
+        return;
+      }
 
-    shell.addEventListener(
-      "pointerup",
-      (event) => {
-        if (!pressState || pressState.pointerId !== event.pointerId) {
-          return;
-        }
-
-        const eventTarget = event.target instanceof Element ? event.target : null;
-        const moved =
-          Math.abs(event.clientX - pressState.startX) > 8 ||
-          Math.abs(event.clientY - pressState.startY) > 8;
-        const startedOnControls = pressState.startedOnControls;
-        pressState = null;
-
-        if (eventTarget && eventTarget.closest("[data-video-play]")) {
-          return;
-        }
-
-        if (moved || Date.now() < suppressToggleUntil || video.seeking) {
-          return;
-        }
-
-        if (startedOnControls || isControlsBarPoint(event.clientX, event.clientY)) {
-          return;
-        }
-
-        togglePlayback();
-      },
-      true
-    );
-
-    shell.addEventListener(
-      "pointercancel",
-      () => {
-        pressState = null;
-      },
-      true
-    );
+      togglePlayback();
+    });
 
     video.addEventListener(
       "pointerdown",
