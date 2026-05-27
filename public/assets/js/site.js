@@ -40,9 +40,11 @@ function initVideoPlayers() {
     };
 
     let pressState = null;
+    let fullscreenPressState = null;
     let suppressToggleUntil = 0;
     let suppressPauseUiUntil = 0;
     let wasPlayingBeforeSeek = false;
+    let lastToggleAt = 0;
     const isControlsBarPoint = (clientX, clientY) => {
       if (!video.controls || !shell.classList.contains("is-playing")) {
         return false;
@@ -58,6 +60,36 @@ function initVideoPlayers() {
 
       const controlsBarHeight = Math.min(86, Math.max(42, Math.round(rect.height * 0.2)));
       return offsetY >= rect.height - controlsBarHeight;
+    };
+    const isVideoFullscreenMode = () => {
+      const fullscreenElement =
+        document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+
+      if (fullscreenElement instanceof Element) {
+        return (
+          fullscreenElement === video ||
+          fullscreenElement === shell ||
+          fullscreenElement.contains(video)
+        );
+      }
+
+      return video.webkitDisplayingFullscreen === true;
+    };
+    const togglePlayback = () => {
+      const now = Date.now();
+      if (now - lastToggleAt < 120) {
+        return;
+      }
+
+      lastToggleAt = now;
+      suppressToggleUntil = now + 120;
+
+      if (video.paused || video.ended) {
+        startPlayback();
+        return;
+      }
+
+      video.pause();
     };
 
     setPausedState();
@@ -123,12 +155,7 @@ function initVideoPlayers() {
           return;
         }
 
-        if (video.paused || video.ended) {
-          startPlayback();
-          return;
-        }
-
-        video.pause();
+        togglePlayback();
       },
       true
     );
@@ -137,6 +164,65 @@ function initVideoPlayers() {
       "pointercancel",
       () => {
         pressState = null;
+      },
+      true
+    );
+
+    video.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (!isVideoFullscreenMode()) {
+          return;
+        }
+
+        if (event.pointerType === "mouse" && event.button !== 0) {
+          return;
+        }
+
+        fullscreenPressState = {
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          startY: event.clientY,
+          startedOnControls: isControlsBarPoint(event.clientX, event.clientY)
+        };
+      },
+      true
+    );
+
+    video.addEventListener(
+      "pointerup",
+      (event) => {
+        if (!isVideoFullscreenMode()) {
+          return;
+        }
+
+        if (!fullscreenPressState || fullscreenPressState.pointerId !== event.pointerId) {
+          return;
+        }
+
+        const moved =
+          Math.abs(event.clientX - fullscreenPressState.startX) > 8 ||
+          Math.abs(event.clientY - fullscreenPressState.startY) > 8;
+        const startedOnControls = fullscreenPressState.startedOnControls;
+        fullscreenPressState = null;
+
+        if (moved || Date.now() < suppressToggleUntil || video.seeking) {
+          return;
+        }
+
+        if (startedOnControls || isControlsBarPoint(event.clientX, event.clientY)) {
+          return;
+        }
+
+        togglePlayback();
+      },
+      true
+    );
+
+    video.addEventListener(
+      "pointercancel",
+      () => {
+        fullscreenPressState = null;
       },
       true
     );

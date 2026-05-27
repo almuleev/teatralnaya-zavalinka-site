@@ -377,7 +377,7 @@ function renderLayout(content, options) {
   <head>
     ${renderHead(content, pageTitle, description, activePath)}
     <link rel="stylesheet" href="/assets/css/main.css">
-    <script defer src="/assets/js/site.js?v=20260523-7"></script>
+    <script defer src="/assets/js/site.js?v=20260523-8"></script>
   </head>
   <body class="${bodyClass}">
     ${renderNavigation(content, activePath)}
