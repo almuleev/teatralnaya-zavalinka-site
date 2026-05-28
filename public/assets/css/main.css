@@ -1032,6 +1032,10 @@ select:focus-visible {
   cursor: pointer;
 }
 
+.video-card__video-shell.is-playing video {
+  touch-action: none;
+}
+
 .video-card__tap-layer {
   position: absolute;
   inset: 0;
@@ -1048,6 +1052,14 @@ select:focus-visible {
 
 .video-card__video-shell.is-playing .video-card__tap-layer {
   bottom: 72px;
+}
+
+.video-card__video-shell.is-touch-device .video-card__tap-layer {
+  display: none;
+}
+
+.video-card__video-shell.is-touch-device.is-playing .video-card__tap-layer {
+  display: none;
 }
 
 .video-card__tap-layer:focus-visible {
@@ -1112,6 +1124,17 @@ select:focus-visible {
   box-shadow: 0 12px 30px rgba(7, 22, 40, 0.28);
   transform: translate(-50%, -50%);
   transition: transform var(--transition), background var(--transition), border-color var(--transition), opacity var(--transition);
+}
+
+.video-card__play-icon {
+  position: relative;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 4px;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 18px solid currentColor;
 }
 
 .video-card__play:hover {
@@ -1661,7 +1684,13 @@ select:focus-visible {
   .video-card__play {
     width: 56px;
     height: 56px;
-    font-size: 1.22rem;
+  }
+
+  .video-card__play-icon {
+    margin-left: 3px;
+    border-top-width: 10px;
+    border-bottom-width: 10px;
+    border-left-width: 14px;
   }
 
   .video-card__video-shell.is-playing .video-card__tap-layer {

@@ -387,8 +387,8 @@ function renderLayout(content, options) {
 <html lang="ru">
   <head>
     ${renderHead(content, pageTitle, description, activePath)}
-    <link rel="stylesheet" href="/assets/css/main.css">
-    <script defer src="/assets/js/site.js?v=20260527-1"></script>
+    <link rel="stylesheet" href="/assets/css/main.css?v=20260528-1">
+    <script defer src="/assets/js/site.js?v=20260528-1"></script>
   </head>
   <body class="${bodyClass}">
     ${renderNavigation(content, activePath)}
@@ -737,7 +737,7 @@ function renderVideoCard(video) {
         </video>
         <button class="video-card__tap-layer" type="button" data-video-toggle aria-label="${playLabel}"></button>
         <button class="video-card__play" type="button" data-video-play aria-label="${playLabel}">
-          <span aria-hidden="true">▶</span>
+          <span class="video-card__play-icon" aria-hidden="true"></span>
         </button>
       </div>
     `

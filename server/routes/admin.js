@@ -20,21 +20,30 @@ const router = express.Router();
 const IMAGE_UPLOAD_LIMIT_BYTES = 10 * 1000 * 1000;
 const DOCUMENT_UPLOAD_LIMIT_BYTES = 100 * 1000 * 1000;
 const VIDEO_UPLOAD_LIMIT_BYTES = 1500 * 1000 * 1000;
-const UPLOAD_REFERENCE_REGEX = /\/uploads\/(images|videos)\/([^"'\s?#)]+)/gi;
+const UPLOAD_REFERENCE_RE = /\/uploads\/(images|videos)\/([^"'\s?#)]+)/gi;
 
 const imageUpload = multer({
   storage: buildMulterStorage(config.imagesDir),
-  limits: { fileSize: IMAGE_UPLOAD_LIMIT_BYTES }
+  limits: { fileSize: IMAGE_UPLOAD_LIMIT_BYTES },
+  fileFilter(req, file, cb) {
+    cb(null, /^image\//i.test(file.mimetype));
+  }
 });
 
 const documentUpload = multer({
   storage: buildMulterStorage(config.docsDir),
-  limits: { fileSize: DOCUMENT_UPLOAD_LIMIT_BYTES }
+  limits: { fileSize: DOCUMENT_UPLOAD_LIMIT_BYTES },
+  fileFilter(req, file, cb) {
+    cb(null, /^(application\/(pdf|msword|vnd\.|zip|x-zip-compressed)|text\/(plain|csv))$/i.test(file.mimetype));
+  }
 });
 
 const videoUpload = multer({
   storage: buildMulterStorage(config.videosDir),
-  limits: { fileSize: VIDEO_UPLOAD_LIMIT_BYTES }
+  limits: { fileSize: VIDEO_UPLOAD_LIMIT_BYTES },
+  fileFilter(req, file, cb) {
+    cb(null, /^video\//i.test(file.mimetype));
+  }
 });
 
 router.post("/login", (req, res) => {
@@ -250,19 +259,12 @@ function collectUsedUploadFilenames(content) {
       return;
     }
 
-    UPLOAD_REFERENCE_REGEX.lastIndex = 0;
-    let match = UPLOAD_REFERENCE_REGEX.exec(value);
+    for (const match of value.matchAll(UPLOAD_REFERENCE_RE)) {
+      const filename = normalizeUploadFilename(match[2]);
 
-    while (match) {
-      const uploadType = match[1];
-      const rawFilename = match[2];
-      const filename = normalizeUploadFilename(rawFilename);
-
-      if (filename && usedUploads[uploadType]) {
-        usedUploads[uploadType].add(filename);
+      if (filename && usedUploads[match[1]]) {
+        usedUploads[match[1]].add(filename);
       }
-
-      match = UPLOAD_REFERENCE_REGEX.exec(value);
     }
   });
 

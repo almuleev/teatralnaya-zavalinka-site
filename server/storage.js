@@ -8,6 +8,9 @@ const { spawn } = require("child_process");
 const config = require("./config");
 const IMAGE_VARIANT_DIR = "webp";
 
+let cachedContent = null;
+const knownWebpVariants = new Set();
+
 function sanitizeBaseName(input) {
   return (input || "file")
     .normalize("NFKD")
@@ -29,19 +32,21 @@ async function ensureProjectStructure() {
     fsp.mkdir(path.join(config.imagesDir, IMAGE_VARIANT_DIR), { recursive: true }),
     fsp.mkdir(config.videosDir, { recursive: true })
   ]);
+
+  try {
+    const entries = await fsp.readdir(path.join(config.imagesDir, IMAGE_VARIANT_DIR));
+    entries.forEach((name) => knownWebpVariants.add(name));
+  } catch {}
 }
 
 async function readContent() {
-  await ensureProjectStructure();
-
+  if (cachedContent) return cachedContent;
   const raw = await fsp.readFile(config.dataFile, "utf8");
-  const normalized = raw.replace(/^\uFEFF/, "");
-  return JSON.parse(normalized);
+  cachedContent = JSON.parse(raw.replace(/^\uFEFF/, ""));
+  return cachedContent;
 }
 
 async function writeContent(content) {
-  await ensureProjectStructure();
-
   const nextContent = {
     ...content,
     meta: {
@@ -53,6 +58,7 @@ async function writeContent(content) {
   const tmpPath = `${config.dataFile}.tmp`;
   await fsp.writeFile(tmpPath, JSON.stringify(nextContent, null, 2), "utf8");
   await fsp.rename(tmpPath, config.dataFile);
+  cachedContent = nextContent;
 
   return nextContent;
 }
@@ -67,7 +73,7 @@ function buildUploadFilename(originalName) {
 function buildMulterStorage(targetDirectory) {
   return multer.diskStorage({
     destination(req, file, callback) {
-      fs.mkdir(targetDirectory, { recursive: true }, (error) => callback(error, targetDirectory));
+      callback(null, targetDirectory);
     },
     filename(req, file, callback) {
       callback(null, buildUploadFilename(file.originalname));
@@ -91,12 +97,13 @@ function getOptimizedImageUrl(url = "") {
   }
 
   const sourceFilename = path.basename(normalizedUrl);
-  const variantPath = getImageVariantPath(sourceFilename);
-  if (!fs.existsSync(variantPath)) {
+  const variantFilename = getImageVariantFilename(sourceFilename);
+
+  if (!knownWebpVariants.has(variantFilename)) {
     return normalizedUrl;
   }
 
-  return `/uploads/images/${IMAGE_VARIANT_DIR}/${getImageVariantFilename(sourceFilename)}`;
+  return `/uploads/images/${IMAGE_VARIANT_DIR}/${variantFilename}`;
 }
 
 async function ensureOptimizedImageVariant(filename = "") {
@@ -116,11 +123,13 @@ async function ensureOptimizedImageVariant(filename = "") {
     ]);
 
     if (variantStat && variantStat.mtimeMs >= sourceStat.mtimeMs) {
+      knownWebpVariants.add(getImageVariantFilename(sourceFilename));
       return { created: false, reused: true, path: variantPath };
     }
 
     await fsp.mkdir(path.dirname(variantPath), { recursive: true });
     await convertImageToWebp(sourcePath, variantPath);
+    knownWebpVariants.add(getImageVariantFilename(sourceFilename));
     return { created: true, path: variantPath };
   } catch (error) {
     return { created: false, path: variantPath, error };
@@ -132,6 +141,7 @@ async function deleteOptimizedImageVariant(filename = "") {
 
   try {
     await fsp.unlink(variantPath);
+    knownWebpVariants.delete(getImageVariantFilename(filename));
     return true;
   } catch (error) {
     return false;

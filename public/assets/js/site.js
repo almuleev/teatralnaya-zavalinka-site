@@ -19,6 +19,8 @@ function initVideoPlayers() {
     return;
   }
 
+  const isTouchDevice = window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
+
   shells.forEach((shell) => {
     const video = shell.querySelector("[data-video-player]");
     const playButton = shell.querySelector("[data-video-play]");
@@ -30,6 +32,10 @@ function initVideoPlayers() {
       !(toggleLayer instanceof HTMLButtonElement)
     ) {
       return;
+    }
+
+    if (isTouchDevice) {
+      shell.classList.add("is-touch-device");
     }
 
     const setPlayingState = () => {
@@ -49,6 +55,7 @@ function initVideoPlayers() {
     let suppressPauseUiUntil = 0;
     let wasPlayingBeforeSeek = false;
     let lastToggleAt = 0;
+    let pauseHideTimer = 0;
     const isControlsBarPoint = (clientX, clientY) => {
       if (!video.controls || !shell.classList.contains("is-playing")) {
         return false;
@@ -119,6 +126,10 @@ function initVideoPlayers() {
     toggleLayer.addEventListener("click", (event) => {
       event.preventDefault();
 
+      if (isTouchDevice && shell.classList.contains("is-playing")) {
+        return;
+      }
+
       if (Date.now() < suppressToggleUntil || video.seeking) {
         return;
       }
@@ -186,6 +197,7 @@ function initVideoPlayers() {
     );
 
     video.addEventListener("seeking", () => {
+      clearTimeout(pauseHideTimer);
       wasPlayingBeforeSeek = !video.paused || shell.classList.contains("is-playing");
       suppressToggleUntil = Date.now() + 450;
       suppressPauseUiUntil = Date.now() + 450;
@@ -209,11 +221,19 @@ function initVideoPlayers() {
     });
 
     video.addEventListener("pause", () => {
-      if (!video.ended && (video.seeking || Date.now() < suppressPauseUiUntil)) {
+      if (video.ended) {
+        clearTimeout(pauseHideTimer);
+        setPausedState();
         return;
       }
 
-      setPausedState();
+      clearTimeout(pauseHideTimer);
+      pauseHideTimer = setTimeout(() => {
+        if (video.seeking || Date.now() < suppressPauseUiUntil || !video.paused) {
+          return;
+        }
+        setPausedState();
+      }, 150);
     });
 
     video.addEventListener("ended", () => {
