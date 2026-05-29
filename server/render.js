@@ -519,35 +519,8 @@ function renderFactsSection(content) {
   `;
 }
 
-function normalizeLookup(value = "") {
-  return String(value).trim().toLowerCase();
-}
-
-function dedupePeopleByName(items) {
-  const seen = new Set();
-
-  return (items || []).filter((item) => {
-    const key = normalizeLookup(item && (item.name || item.id));
-
-    if (!key || seen.has(key)) {
-      return false;
-    }
-
-    seen.add(key);
-    return true;
-  });
-}
-
-function isWorkshopLeader(item) {
-  const text = normalizeLookup(`${item && item.meta ? item.meta : ""} ${item && item.description ? item.description : ""}`);
-  return text.includes("мастер-класс") || text.includes("курс мастер-классов");
-}
-
 function buildWorkshopLeaders(content) {
-  const experts = (content.collections && content.collections.experts) || [];
-  const guestLeaders = ((content.collections && content.collections.guests) || []).filter(isWorkshopLeader);
-
-  return dedupePeopleByName([...guestLeaders, ...experts]);
+  return (content.collections && content.collections.experts) || [];
 }
 
 function renderProgramsOverviewSection(content) {
