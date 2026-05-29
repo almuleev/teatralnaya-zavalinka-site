@@ -736,10 +736,8 @@ function renderVideoCard(video) {
   }
 
 function getAboutVideoCollections(about = {}) {
-  const legacyVideos = Array.isArray(about.videos) ? about.videos : [];
-
   return {
-    lifeVideos: Array.isArray(about.lifeVideos) ? about.lifeVideos : legacyVideos,
+    lifeVideos: Array.isArray(about.lifeVideos) ? about.lifeVideos : [],
     starVideos: Array.isArray(about.starVideos) ? about.starVideos : [],
     guideVideos: Array.isArray(about.guideVideos) ? about.guideVideos : [],
     eventVideos: Array.isArray(about.eventVideos) ? about.eventVideos : []
