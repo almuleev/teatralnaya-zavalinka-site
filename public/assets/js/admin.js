@@ -740,6 +740,8 @@ function renderList(listPath) {
     return;
   }
 
+  updateListCounter(listPath, items.length);
+
   if (!items.length) {
     container.className = "";
     container.innerHTML = '<div class="empty-state">Пока ничего нет. Используйте кнопку «Добавить».</div>';
@@ -748,6 +750,34 @@ function renderList(listPath) {
 
   container.className = "list-stack";
   container.innerHTML = items.map((item, index) => renderItemCard(listPath, schema, item, index)).join("");
+}
+
+function updateListCounter(listPath, count) {
+  const addButton = document.querySelector(`[data-add-list-item="${listPath}"]`);
+
+  if (!addButton) {
+    return;
+  }
+
+  let counter = addButton.parentElement?.querySelector("[data-list-counter]");
+
+  if (!counter) {
+    counter = document.createElement("span");
+    counter.className = "admin-chip admin-chip--muted";
+    counter.setAttribute("data-list-counter", "true");
+    addButton.insertAdjacentElement("afterend", counter);
+  }
+
+  counter.textContent = `${count} ${pluralizeCards(count)}`;
+}
+
+function pluralizeCards(count) {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+
+  if (mod10 === 1 && mod100 !== 11) return "карточка";
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return "карточки";
+  return "карточек";
 }
 
 function renderItemCard(listPath, schema, item, index) {
@@ -839,11 +869,18 @@ function insertListItem(listPath, index) {
     return;
   }
 
-  const insertIndex = Number.isInteger(index) ? Math.max(0, Math.min(index, current.length)) : current.length;
+  const isMainAdd = !Number.isInteger(index);
+  const insertIndex = isMainAdd ? 0 : Math.max(0, Math.min(index, current.length));
   current.splice(insertIndex, 0, buildItem(schema));
   setByPath(state.content, listPath, current);
   renderList(listPath);
   markDirty();
+  setMessage("[data-global-message]", `Добавлено: ${schema.itemLabel}.`, "success");
+
+  if (isMainAdd) {
+    const container = document.querySelector(`[data-list="${listPath}"]`);
+    container?.querySelector(".item-card")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
 }
 
 function buildItem(schema) {
