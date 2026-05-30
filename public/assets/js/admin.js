@@ -493,7 +493,7 @@ async function cleanupUnusedMedia() {
   }
 
   try {
-    setMessage("[data-global-message]", "Проверяем неиспользуемые фото и видео...");
+    setMessage("[data-global-message]", "Проверяем неиспользуемые файлы...");
 
     const previewResponse = await fetch("/api/admin/uploads/cleanup", {
       method: "POST",
@@ -510,7 +510,7 @@ async function cleanupUnusedMedia() {
     const orphanCount = Number(summary.totalOrphanFiles || 0);
 
     if (orphanCount === 0) {
-      setMessage("[data-global-message]", "Неиспользуемые фото и видео не найдены.", "success");
+      setMessage("[data-global-message]", "Неиспользуемые файлы не найдены.", "success");
       return;
     }
 
@@ -518,6 +518,7 @@ async function cleanupUnusedMedia() {
       `Найдено неиспользуемых файлов: ${orphanCount}.`,
       `Фото: ${summary.images?.orphan || 0}`,
       `Видео: ${summary.videos?.orphan || 0}`,
+      `Документы: ${summary.docs?.orphan || 0}`,
       "",
       "Удалить эти файлы? Действие необратимо."
     ].join("\n");

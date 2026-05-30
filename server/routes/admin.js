@@ -11,6 +11,7 @@ const {
   deleteOptimizedImageVariant,
   ensureOptimizedImageVariant,
   getUploadUrl,
+  imageVariantSubdir,
   readContent,
   writeContent
 } = require("../storage");
@@ -20,7 +21,7 @@ const router = express.Router();
 const IMAGE_UPLOAD_LIMIT_BYTES = 10 * 1000 * 1000;
 const DOCUMENT_UPLOAD_LIMIT_BYTES = 100 * 1000 * 1000;
 const VIDEO_UPLOAD_LIMIT_BYTES = 1500 * 1000 * 1000;
-const UPLOAD_REFERENCE_RE = /\/uploads\/(images|videos)\/([^"'\s?#)]+)/gi;
+const UPLOAD_REFERENCE_RE = /\/uploads\/(images|videos|docs)\/([^"'\s?#)]+)/gi;
 
 const imageUpload = multer({
   storage: buildMulterStorage(config.imagesDir),
@@ -135,13 +136,23 @@ router.post("/uploads/cleanup", requireAuth, async (req, res) => {
     const content = await readContent();
     const usedUploads = collectUsedUploadFilenames(content);
 
-    const [imageFiles, videoFiles] = await Promise.all([
+    const webpDir = path.join(config.imagesDir, imageVariantSubdir);
+    const [imageFiles, videoFiles, docFiles, webpFiles] = await Promise.all([
       listDirectoryFiles(config.imagesDir),
-      listDirectoryFiles(config.videosDir)
+      listDirectoryFiles(config.videosDir),
+      listDirectoryFiles(config.docsDir),
+      listDirectoryFiles(webpDir).catch(() => [])
     ]);
 
     const orphanImageFiles = imageFiles.filter((filename) => !usedUploads.images.has(filename));
     const orphanVideoFiles = videoFiles.filter((filename) => !usedUploads.videos.has(filename));
+    const orphanDocFiles = docFiles.filter((filename) => !usedUploads.docs.has(filename));
+
+    const imageFileSet = new Set(imageFiles);
+    const orphanWebpFiles = webpFiles.filter((webpFilename) => {
+      const sourceFilename = webpFilename.replace(/\.webp$/i, "");
+      return !imageFileSet.has(sourceFilename);
+    });
 
     const responsePayload = {
       ok: true,
@@ -161,35 +172,61 @@ router.post("/uploads/cleanup", requireAuth, async (req, res) => {
           deleted: 0,
           failed: 0
         },
-        totalOrphanFiles: orphanImageFiles.length + orphanVideoFiles.length,
+        docs: {
+          used: usedUploads.docs.size,
+          total: docFiles.length,
+          orphan: orphanDocFiles.length,
+          deleted: 0,
+          failed: 0
+        },
+        totalOrphanFiles: orphanImageFiles.length + orphanVideoFiles.length + orphanDocFiles.length,
         totalDeletedFiles: 0,
         totalFailedFiles: 0
       },
       orphanFiles: {
         images: orphanImageFiles.map((filename) => getUploadUrl("images", filename)),
-        videos: orphanVideoFiles.map((filename) => getUploadUrl("videos", filename))
+        videos: orphanVideoFiles.map((filename) => getUploadUrl("videos", filename)),
+        docs: orphanDocFiles.map((filename) => getUploadUrl("docs", filename))
       }
     };
 
-    if (dryRun || responsePayload.summary.totalOrphanFiles === 0) {
+    if (dryRun) {
       return res.json(responsePayload);
     }
 
-    const deletionResult = await deleteOrphanFiles(orphanImageFiles, orphanVideoFiles);
+    const hasAnythingToDelete =
+      responsePayload.summary.totalOrphanFiles > 0 || orphanWebpFiles.length > 0;
+
+    if (!hasAnythingToDelete) {
+      return res.json(responsePayload);
+    }
+
+    const deletionResult = await deleteOrphanFiles(
+      orphanImageFiles,
+      orphanVideoFiles,
+      orphanDocFiles,
+      orphanWebpFiles
+    );
 
     responsePayload.summary.images.deleted = deletionResult.images.deleted;
     responsePayload.summary.images.failed = deletionResult.images.failed;
     responsePayload.summary.videos.deleted = deletionResult.videos.deleted;
     responsePayload.summary.videos.failed = deletionResult.videos.failed;
-    responsePayload.summary.totalDeletedFiles = deletionResult.images.deleted + deletionResult.videos.deleted;
-    responsePayload.summary.totalFailedFiles = deletionResult.images.failed + deletionResult.videos.failed;
+    responsePayload.summary.docs.deleted = deletionResult.docs.deleted;
+    responsePayload.summary.docs.failed = deletionResult.docs.failed;
+    responsePayload.summary.totalDeletedFiles =
+      deletionResult.images.deleted + deletionResult.videos.deleted + deletionResult.docs.deleted;
+    responsePayload.summary.totalFailedFiles =
+      deletionResult.images.failed + deletionResult.videos.failed + deletionResult.docs.failed;
     responsePayload.deletedFiles = {
       images: deletionResult.images.deletedFiles.map((filename) => getUploadUrl("images", filename)),
-      videos: deletionResult.videos.deletedFiles.map((filename) => getUploadUrl("videos", filename))
+      videos: deletionResult.videos.deletedFiles.map((filename) => getUploadUrl("videos", filename)),
+      docs: deletionResult.docs.deletedFiles.map((filename) => getUploadUrl("docs", filename))
     };
     responsePayload.failedFiles = {
       images: deletionResult.images.failedFiles.map((filename) => getUploadUrl("images", filename)),
-      videos: deletionResult.videos.failedFiles.map((filename) => getUploadUrl("videos", filename))
+      videos: deletionResult.videos.failedFiles.map((filename) => getUploadUrl("videos", filename)),
+      docs: deletionResult.docs.failedFiles.map((filename) => getUploadUrl("docs", filename))
     };
 
     return res.json(responsePayload);
@@ -251,7 +288,8 @@ async function handleUploadedFile(req, res, targetDirectory, uploadType) {
 function collectUsedUploadFilenames(content) {
   const usedUploads = {
     images: new Set(),
-    videos: new Set()
+    videos: new Set(),
+    docs: new Set()
   };
 
   walkContentTree(content, (value) => {
@@ -317,14 +355,20 @@ async function listDirectoryFiles(directoryPath) {
     .map((entry) => entry.name);
 }
 
-async function deleteOrphanFiles(orphanImageFiles, orphanVideoFiles) {
+async function deleteOrphanFiles(orphanImageFiles, orphanVideoFiles, orphanDocFiles, orphanWebpFiles) {
   const deletionResult = {
     images: { deleted: 0, failed: 0, deletedFiles: [], failedFiles: [] },
-    videos: { deleted: 0, failed: 0, deletedFiles: [], failedFiles: [] }
+    videos: { deleted: 0, failed: 0, deletedFiles: [], failedFiles: [] },
+    docs: { deleted: 0, failed: 0, deletedFiles: [], failedFiles: [] }
   };
+
+  for (const webpFilename of orphanWebpFiles) {
+    await deleteOptimizedImageVariant(webpFilename.replace(/\.webp$/i, ""));
+  }
 
   await deleteFilesByType(config.imagesDir, orphanImageFiles, deletionResult.images, deleteOptimizedImageVariant);
   await deleteFilesByType(config.videosDir, orphanVideoFiles, deletionResult.videos);
+  await deleteFilesByType(config.docsDir, orphanDocFiles, deletionResult.docs);
 
   return deletionResult;
 }

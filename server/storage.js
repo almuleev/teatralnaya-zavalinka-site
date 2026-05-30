@@ -239,6 +239,7 @@ module.exports = {
   getUploadUrl,
   getOptimizedImageUrl,
   deleteOptimizedImageVariant,
+  imageVariantSubdir: IMAGE_VARIANT_DIR,
   readContent,
   writeContent
 };
