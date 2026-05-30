@@ -93,6 +93,7 @@
                 <button class="admin-nav__item" type="button" data-section-link="about">О фестивале</button>
                 <button class="admin-nav__item" type="button" data-section-link="documents">Документы</button>
                 <button class="admin-nav__item" type="button" data-section-link="contacts">Контакты</button>
+                <button class="admin-nav__item" type="button" data-section-link="backup">Бэкап</button>
               </div>
             </div>
             <div class="toolbar__actions">
@@ -988,6 +989,32 @@
                     <div data-list="contacts.mediaTeam"></div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="admin-section" data-section="backup">
+            <div class="section-card">
+              <div>
+                <h2>Резервная копия</h2>
+                <p class="section-card__hint">Контент сайта (JSON) всегда включён в архив. Выберите что ещё добавить. Видео по умолчанию выключены — они могут весить несколько гигабайт.</p>
+              </div>
+              <div class="backup-options">
+                <label class="backup-option">
+                  <input type="checkbox" data-backup-include="images" checked>
+                  <span>Фотографии</span>
+                </label>
+                <label class="backup-option">
+                  <input type="checkbox" data-backup-include="docs" checked>
+                  <span>Документы</span>
+                </label>
+                <label class="backup-option">
+                  <input type="checkbox" data-backup-include="videos">
+                  <span>Видео (тяжёлые файлы)</span>
+                </label>
+              </div>
+              <div>
+                <button class="admin-button" type="button" data-backup-button>Скачать бэкап</button>
               </div>
             </div>
           </section>

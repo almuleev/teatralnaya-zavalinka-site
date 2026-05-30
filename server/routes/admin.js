@@ -1,5 +1,6 @@
 ﻿const express = require("express");
 const fsp = require("fs/promises");
+const { spawn } = require("child_process");
 const multer = require("multer");
 const path = require("path");
 
@@ -233,6 +234,42 @@ router.post("/uploads/cleanup", requireAuth, async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Не удалось выполнить очистку медиафайлов." });
   }
+});
+
+router.get("/backup", requireAuth, (req, res) => {
+  const date = new Date().toISOString().slice(0, 10);
+  const filename = `backup-${date}.tar.gz`;
+
+  const targets = ["data"];
+  if (req.query.images === "true") targets.push("public/uploads/images");
+  if (req.query.docs === "true") targets.push("public/uploads/docs");
+  if (req.query.videos === "true") targets.push("public/uploads/videos");
+
+  res.setHeader("Content-Type", "application/gzip");
+  res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+
+  const tar = spawn(
+    "tar",
+    ["-czf", "-", ...targets],
+    { cwd: config.rootDir, stdio: ["ignore", "pipe", "pipe"] }
+  );
+
+  tar.stdout.pipe(res);
+
+  tar.stderr.on("data", (chunk) => {
+    console.error("[backup]", chunk.toString().trim());
+  });
+
+  tar.on("error", (err) => {
+    console.error("[backup] spawn error:", err.message);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Не удалось создать архив." });
+    }
+  });
+
+  req.on("close", () => {
+    if (!tar.killed) tar.kill();
+  });
 });
 
 module.exports = router;

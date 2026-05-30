@@ -313,6 +313,7 @@ function bindBaseEvents() {
   document.querySelector("[data-save-button]")?.addEventListener("click", saveContent);
   document.querySelector("[data-reload-button]")?.addEventListener("click", loadContent);
   document.querySelector("[data-cleanup-media-button]")?.addEventListener("click", cleanupUnusedMedia);
+  document.querySelector("[data-backup-button]")?.addEventListener("click", downloadBackup);
   document.querySelector("[data-logout-button]")?.addEventListener("click", handleLogout);
 
   document.querySelectorAll("[data-section-link]").forEach((button) => {
@@ -555,6 +556,36 @@ async function cleanupUnusedMedia() {
     }
 
     setMessage("[data-global-message]", `Удалено неиспользуемых файлов: ${deletedCount}.`, "success");
+  } catch (error) {
+    setMessage("[data-global-message]", error.message, "error");
+  }
+}
+
+async function downloadBackup() {
+  const params = new URLSearchParams();
+  document.querySelectorAll("[data-backup-include]").forEach((cb) => {
+    params.set(cb.dataset.backupInclude, cb.checked ? "true" : "false");
+  });
+
+  try {
+    setMessage("[data-global-message]", "Создаём архив, подождите...");
+    const response = await fetch(`/api/admin/backup?${params}`);
+
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      throw new Error(payload.error || "Не удалось создать архив.");
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const date = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `backup-${date}.tar.gz`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    setMessage("[data-global-message]", "Бэкап скачан.", "success");
   } catch (error) {
     setMessage("[data-global-message]", error.message, "error");
   }

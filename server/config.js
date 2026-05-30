@@ -16,6 +16,7 @@ function trimTrailingSlash(value) {
 }
 
 module.exports = {
+  rootDir,
   publicDir,
   dataDir,
   docsDir,
