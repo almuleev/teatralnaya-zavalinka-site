@@ -36,7 +36,7 @@ const documentUpload = multer({
   storage: buildMulterStorage(config.docsDir),
   limits: { fileSize: DOCUMENT_UPLOAD_LIMIT_BYTES },
   fileFilter(req, file, cb) {
-    cb(null, /^(application\/(pdf|msword|vnd\.|zip|x-zip-compressed)|text\/(plain|csv))$/i.test(file.mimetype));
+    cb(null, /^(application\/(pdf|msword|vnd\..+|zip|x-zip-compressed)|text\/(plain|csv))$/i.test(file.mimetype));
   }
 });
 
