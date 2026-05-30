@@ -13,11 +13,10 @@ const knownWebpVariants = new Set();
 
 function sanitizeBaseName(input) {
   return (input || "file")
-    .normalize("NFKD")
-    .replace(/[^\w.\-]+/g, "-")
+    .replace(/[<>:"/\\|?*\x00-\x1f]+/g, "-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "")
-    .toLowerCase() || "file";
+    .trim() || "file";
 }
 
 function getUploadUrl(type, filename) {

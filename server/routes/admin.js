@@ -259,7 +259,7 @@ router.get("/backup", requireAuth, (req, res) => {
 
   const tar = spawn(
     "tar",
-    ["-czf", "-", ...targets],
+    ["--dereference", "-czf", "-", ...targets],
     { cwd: config.rootDir, stdio: ["ignore", "pipe", "pipe"] }
   );
 
