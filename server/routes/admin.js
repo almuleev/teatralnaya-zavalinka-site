@@ -3,9 +3,18 @@ const fsp = require("fs/promises");
 const { spawn } = require("child_process");
 const multer = require("multer");
 const path = require("path");
+const { rateLimit } = require("express-rate-limit");
 
 const config = require("../config");
 const { requireAuth, verifyCredentials } = require("../auth");
+
+const loginRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  message: { error: "Слишком много попыток входа. Попробуйте через 15 минут." },
+  standardHeaders: true,
+  legacyHeaders: false
+});
 const {
   buildMulterStorage,
   dedupeUploadedFile,
@@ -48,7 +57,7 @@ const videoUpload = multer({
   }
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", loginRateLimit, (req, res) => {
   const { username, password } = req.body || {};
 
   if (!verifyCredentials(username, password)) {
