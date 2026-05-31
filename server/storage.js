@@ -75,7 +75,10 @@ function buildMulterStorage(targetDirectory) {
       callback(null, targetDirectory);
     },
     filename(req, file, callback) {
-      callback(null, buildUploadFilename(file.originalname));
+      // busboy парсит имя файла как latin-1, но браузер шлёт UTF-8 байты —
+      // переконвертируем обратно, чтобы восстановить кириллицу и другие символы
+      const originalName = Buffer.from(file.originalname, "latin1").toString("utf8");
+      callback(null, buildUploadFilename(originalName));
     }
   });
 }
