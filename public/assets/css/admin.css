@@ -758,6 +758,22 @@ body.admin-body.is-dirty [data-save-button] {
   accent-color: #1a2333;
 }
 
+.char-counter {
+  font-size: 0.78rem;
+  color: var(--admin-muted);
+  text-align: right;
+  margin-top: 4px;
+}
+
+.char-counter[data-char-state="warn"] {
+  color: #c07000;
+}
+
+.char-counter[data-char-state="over"] {
+  color: #c0392b;
+  font-weight: 600;
+}
+
 @media (max-width: 1180px) {
   .auth-highlights {
     grid-template-columns: 1fr;

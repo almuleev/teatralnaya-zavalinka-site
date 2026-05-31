@@ -18,8 +18,8 @@ const uploadLimits = {
 
 const personFields = [
   { name: "name", label: "Имя или заголовок", full: true },
-  { name: "role", label: "Роль / подпись", full: true },
-  { name: "description", label: "Описание", type: "textarea", rows: 3, full: true },
+  { name: "role", label: "Роль / подпись", full: true, charLinked: true },
+  { name: "description", label: "Описание", type: "textarea", rows: 3, full: true, charCountMax: 250 },
   { name: "image", label: "Изображение", type: "url", uploadKind: "image", accept: "image/*", full: true },
   { name: "link", label: "Внешняя ссылка", type: "url" },
   { name: "meta", label: "Короткая пометка" }
@@ -782,6 +782,7 @@ function renderList(listPath) {
 
   container.className = "list-stack";
   container.innerHTML = items.map((item, index) => renderItemCard(listPath, schema, item, index)).join("");
+  container.querySelectorAll(".char-counter").forEach(updateCharCounter);
 }
 
 function updateListCounter(listPath, count) {
@@ -859,10 +860,14 @@ function renderField(listPath, index, field, value) {
   }
 
   if (field.type === "textarea") {
+    const counterHtml = field.charCountMax
+      ? `<span class="char-counter" data-char-max="${field.charCountMax}"></span>`
+      : "";
     return `
       <label class="${fieldClass}">
         <span>${escapeHtml(field.label)}</span>
         <textarea rows="${field.rows || 3}" data-item-path="${escapeAttribute(itemPath)}" data-rich-text="true">${escapeHtml(safeValue)}</textarea>
+        ${counterHtml}
       </label>
     `;
   }
@@ -888,7 +893,7 @@ function renderField(listPath, index, field, value) {
   return `
     <label class="${fieldClass}">
       <span>${escapeHtml(field.label)}</span>
-      <input type="${field.type || "text"}" value="${escapeAttribute(safeValue)}" data-item-path="${escapeAttribute(itemPath)}">
+      <input type="${field.type || "text"}" value="${escapeAttribute(safeValue)}" data-item-path="${escapeAttribute(itemPath)}"${field.charLinked ? ' data-char-linked' : ''}>
     </label>
   `;
 }
@@ -927,6 +932,18 @@ function buildItem(schema) {
   return { ...item, ...(schema.defaults || {}) };
 }
 
+function updateCharCounter(counterEl) {
+  const max = Number(counterEl.dataset.charMax);
+  const card = counterEl.closest(".item-card");
+  if (!card) return;
+  const roleEl = card.querySelector("[data-char-linked]");
+  const textarea = counterEl.closest("label")?.querySelector("textarea");
+  const total = (roleEl?.value || "").length + (textarea?.value || "").length;
+  const remaining = max - total;
+  counterEl.textContent = `${total} / ${max} — осталось: ${Math.max(0, remaining)}`;
+  counterEl.dataset.charState = remaining < 0 ? "over" : remaining <= 30 ? "warn" : "ok";
+}
+
 function handleDynamicInput(event) {
   const target = event.target;
 
@@ -938,6 +955,12 @@ function handleDynamicInput(event) {
   const field = getFieldSchema(path);
   setByPath(state.content, path, castValue(target.value, field));
   markDirty();
+
+  const card = target.closest(".item-card");
+  if (card) {
+    const counter = card.querySelector(".char-counter");
+    if (counter) updateCharCounter(counter);
+  }
 }
 
 function handleDynamicClick(event) {
