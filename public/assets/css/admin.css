@@ -896,7 +896,6 @@ body.admin-body.is-dirty [data-save-button] {
   }
 
   .admin-warning {
-    font-size: 0.96rem;
-    opacity: 0.92;
+    display: none;
   }
 }
