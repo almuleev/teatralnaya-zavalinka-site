@@ -934,6 +934,15 @@ select:focus-visible {
   font-size: 1.4rem;
 }
 
+/* Партнёры: квадратное фото с логотипом */
+#partners-track .person-card__media {
+  aspect-ratio: 1;
+}
+
+#partners-track .card__image {
+  object-fit: contain;
+}
+
 .person-card__body {
   display: grid;
   gap: 10px;
