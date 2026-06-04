@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function bindBaseEvents() {
   document.querySelector("[data-login-form]")?.addEventListener("submit", handleLogin);
   document.querySelectorAll("[data-save-button]").forEach((btn) => btn.addEventListener("click", saveContent));
-  document.querySelector("[data-reload-button]")?.addEventListener("click", loadContent);
+  document.querySelectorAll("[data-reload-button]").forEach((btn) => btn.addEventListener("click", loadContent));
   document.querySelector("[data-cleanup-media-button]")?.addEventListener("click", cleanupUnusedMedia);
   document.querySelector("[data-backup-button]")?.addEventListener("click", downloadBackup);
   document.querySelector("[data-logout-button]")?.addEventListener("click", handleLogout);
