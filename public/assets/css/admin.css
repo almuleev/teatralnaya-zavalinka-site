@@ -672,7 +672,41 @@ img {
 }
 
 .list-stack {
-  gap: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.list-gap {
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 5;
+}
+
+.list-gap__btn {
+  white-space: nowrap;
+  padding: 2px 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--admin-brand);
+  background: var(--admin-surface-strong);
+  color: var(--admin-brand);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s, color 0.15s;
+}
+
+.list-gap:hover .list-gap__btn {
+  opacity: 1;
+}
+
+.list-gap__btn:hover {
+  background: var(--admin-brand);
+  color: #fff;
 }
 
 .item-card {
@@ -716,34 +750,6 @@ img {
   min-width: 0;
 }
 
-/* Кнопка добавить ниже — в правом нижнем углу карточки */
-.item-card__add-below {
-  position: absolute;
-  bottom: -18px;
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
-  padding: 3px 14px;
-  border-radius: 999px;
-  border: 1.5px solid var(--admin-brand);
-  background: var(--admin-surface-strong);
-  color: var(--admin-brand);
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.15s, background 0.15s, color 0.15s;
-  z-index: 2;
-}
-
-.item-card:hover .item-card__add-below {
-  opacity: 1;
-}
-
-.item-card__add-below:hover {
-  background: var(--admin-brand);
-  color: #fff;
-}
 
 .drag-handle {
   font-size: 1.2rem;

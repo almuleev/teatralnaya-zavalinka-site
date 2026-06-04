@@ -804,8 +804,16 @@ function renderList(listPath) {
     return;
   }
 
+  const gap = (index) =>
+    `<div class="list-gap"><button class="list-gap__btn" type="button" data-action="insert-after" data-list-path="${escapeAttribute(listPath)}" data-index="${index}">+ Добавить</button></div>`;
+
   container.className = "list-stack";
-  container.innerHTML = items.map((item, index) => renderItemCard(listPath, schema, item, index)).join("");
+  container.innerHTML = items
+    .map((item, index) =>
+      renderItemCard(listPath, schema, item, index) +
+      (index < items.length - 1 ? gap(index) : "")
+    )
+    .join("");
   container.querySelectorAll(".char-counter").forEach(updateCharCounter);
   updateCollapseButtons(listPath, items);
 }
@@ -971,7 +979,6 @@ function renderItemCard(listPath, schema, item, index) {
       <div class="item-card__grid">
         ${fieldsHtml}
       </div>
-      <button class="item-card__add-below" type="button" data-action="insert-after" data-list-path="${escapeAttribute(listPath)}" data-index="${index}" title="Добавить карточку ниже">+ Добавить</button>
     </article>
   `;
 }
