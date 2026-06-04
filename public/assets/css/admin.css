@@ -719,21 +719,18 @@ img {
 /* Кнопка добавить ниже — в правом нижнем углу карточки */
 .item-card__add-below {
   position: absolute;
-  bottom: -13px;
-  right: 16px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 2px solid var(--admin-brand);
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 3px 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--admin-brand);
   background: var(--admin-surface-strong);
   color: var(--admin-brand);
-  font-size: 1rem;
-  line-height: 1;
+  font-size: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
   opacity: 0;
   transition: opacity 0.15s, background 0.15s, color 0.15s;
   z-index: 2;

@@ -1008,7 +1008,7 @@ function renderContactsVideoSection(contacts) {
           <h2>${escapeHtml(contacts.featuredVideoTitle || "Видео")}</h2>
           ${contacts.featuredVideoText ? `<p>${renderFormattedText(contacts.featuredVideoText)}</p>` : ""}
         </div>
-        <div class="video-grid">
+        <div class="video-grid video-grid--single">
           ${renderVideoCard({
             url: contacts.featuredVideoUrl,
             poster: contacts.featuredVideoPoster || "",

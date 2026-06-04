@@ -971,7 +971,7 @@ function renderItemCard(listPath, schema, item, index) {
       <div class="item-card__grid">
         ${fieldsHtml}
       </div>
-      <button class="item-card__add-below" type="button" data-action="insert-after" data-list-path="${escapeAttribute(listPath)}" data-index="${index}" title="Добавить карточку ниже">⊕</button>
+      <button class="item-card__add-below" type="button" data-action="insert-after" data-list-path="${escapeAttribute(listPath)}" data-index="${index}" title="Добавить карточку ниже">+ Добавить</button>
     </article>
   `;
 }

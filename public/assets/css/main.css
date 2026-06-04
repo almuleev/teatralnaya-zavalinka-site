@@ -999,8 +999,7 @@ select:focus-visible {
 }
 
 .video-grid--single {
-  grid-template-columns: minmax(0, 720px);
-  justify-content: center;
+  grid-template-columns: 1fr;
 }
 
 .video-card {
