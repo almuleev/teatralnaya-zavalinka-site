@@ -7,7 +7,8 @@ const state = {
     about: "about-main",
     documents: "documents-main",
     contacts: "contacts-main"
-  }
+  },
+  collapsedCards: new Set()
 };
 
 const uploadLimits = {
@@ -339,6 +340,7 @@ function bindBaseEvents() {
   document.addEventListener("change", handleDynamicInput);
   document.addEventListener("change", handleFileSelect);
   document.addEventListener("click", handleDynamicClick);
+  initDragDrop();
   document.addEventListener("click", handleStaticUploadClick);
   document.addEventListener("keydown", handleRichTextShortcut);
 
@@ -805,6 +807,114 @@ function renderList(listPath) {
   container.className = "list-stack";
   container.innerHTML = items.map((item, index) => renderItemCard(listPath, schema, item, index)).join("");
   container.querySelectorAll(".char-counter").forEach(updateCharCounter);
+  updateCollapseButtons(listPath, items);
+}
+
+function initDragDrop() {
+  let dragSourceList = null;
+  let dragSourceIndex = null;
+  let dragTargetIndex = null;
+  let dragInsertBefore = true;
+
+  function clearPositionIndicators() {
+    document.querySelectorAll(".is-drag-before, .is-drag-after").forEach((el) => {
+      el.classList.remove("is-drag-before", "is-drag-after");
+    });
+  }
+
+  document.addEventListener("dragstart", (e) => {
+    const card = e.target.closest("[data-drag-index]");
+    if (!card) return;
+    dragSourceList = card.dataset.dragList;
+    dragSourceIndex = Number(card.dataset.dragIndex);
+    dragTargetIndex = null;
+    card.classList.add("is-dragging");
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", String(dragSourceIndex));
+  });
+
+  document.addEventListener("dragend", () => {
+    document.querySelectorAll(".is-dragging").forEach((el) => el.classList.remove("is-dragging"));
+    clearPositionIndicators();
+    dragSourceList = null;
+    dragSourceIndex = null;
+    dragTargetIndex = null;
+  });
+
+  document.addEventListener("dragover", (e) => {
+    if (dragSourceIndex === null) return;
+    e.preventDefault();
+    const card = e.target.closest("[data-drag-index]");
+    if (!card || card.dataset.dragList !== dragSourceList) return;
+
+    const idx = Number(card.dataset.dragIndex);
+    if (idx === dragSourceIndex) return;
+
+    const rect = card.getBoundingClientRect();
+    const insertBefore = e.clientY < rect.top + rect.height / 2;
+
+    if (idx === dragTargetIndex && insertBefore === dragInsertBefore) return;
+
+    clearPositionIndicators();
+    dragTargetIndex = idx;
+    dragInsertBefore = insertBefore;
+    card.classList.add(insertBefore ? "is-drag-before" : "is-drag-after");
+  });
+
+  document.addEventListener("drop", (e) => {
+    if (dragSourceIndex === null || dragTargetIndex === null || !dragSourceList) return;
+    e.preventDefault();
+
+    const items = [...(getByPath(state.content, dragSourceList) || [])];
+    const [moved] = items.splice(dragSourceIndex, 1);
+
+    let insertAt = dragTargetIndex;
+    if (dragSourceIndex < dragTargetIndex) insertAt--;
+    if (!dragInsertBefore) insertAt++;
+
+    insertAt = Math.max(0, Math.min(insertAt, items.length));
+    items.splice(insertAt, 0, moved);
+
+    setByPath(state.content, dragSourceList, items);
+    renderList(dragSourceList);
+    markDirty();
+  });
+}
+
+function updateCollapseButtons(listPath, items) {
+  const addBtn = document.querySelector(`[data-add-list-item="${listPath}"]`);
+  if (!addBtn || !items.length) return;
+
+  const header = addBtn.closest(".section-card__header");
+  if (!header) return;
+
+  let collapseBtn = header.querySelector(`[data-action="collapse-all"]`);
+  let expandBtn = header.querySelector(`[data-action="expand-all"]`);
+
+  if (!collapseBtn) {
+    collapseBtn = document.createElement("button");
+    collapseBtn.className = "admin-button admin-button--ghost";
+    collapseBtn.type = "button";
+    collapseBtn.dataset.action = "collapse-all";
+    collapseBtn.dataset.listPath = listPath;
+    collapseBtn.textContent = "Свернуть все";
+    addBtn.insertAdjacentElement("afterend", collapseBtn);
+  }
+
+  if (!expandBtn) {
+    expandBtn = document.createElement("button");
+    expandBtn.className = "admin-button admin-button--ghost";
+    expandBtn.type = "button";
+    expandBtn.dataset.action = "expand-all";
+    expandBtn.dataset.listPath = listPath;
+    expandBtn.textContent = "Развернуть все";
+    collapseBtn.insertAdjacentElement("afterend", expandBtn);
+  }
+
+  const allCollapsed = items.every((item, i) => state.collapsedCards.has(item.id || `${listPath}.${i}`));
+  const allExpanded = items.every((item, i) => !state.collapsedCards.has(item.id || `${listPath}.${i}`));
+  collapseBtn.disabled = allCollapsed;
+  expandBtn.disabled = allExpanded;
 }
 
 function updateListCounter(listPath, count) {
@@ -840,24 +950,28 @@ function renderItemCard(listPath, schema, item, index) {
   const meta = item.role || item.meta || item.type || "";
   const fieldsHtml = schema.fields.map((field) => renderField(listPath, index, field, item[field.name])).join("");
 
+  const cardId = item.id || `${listPath}.${index}`;
+  const isCollapsed = state.collapsedCards.has(cardId);
+
   return `
-    <article class="item-card">
+    <article class="item-card${isCollapsed ? " is-collapsed" : ""}" draggable="true" data-drag-index="${index}" data-drag-list="${escapeAttribute(listPath)}" data-card-id="${escapeAttribute(cardId)}">
       <div class="item-card__header">
-        <div>
+        <span class="drag-handle" title="Перетащить для изменения порядка" aria-hidden="true">⠿</span>
+        <button class="item-card__toggle" type="button" data-action="toggle-card" data-card-id="${escapeAttribute(cardId)}" aria-expanded="${isCollapsed ? "false" : "true"}" title="${isCollapsed ? "Развернуть" : "Свернуть"}">
+          ${isCollapsed ? "▶" : "▼"}
+        </button>
+        <div class="item-card__summary">
           <h4 class="item-card__title">${title}</h4>
           ${meta ? `<p class="item-card__meta">${escapeHtml(meta)}</p>` : ""}
         </div>
         <div class="item-card__actions">
-          <button class="admin-button admin-button--ghost" type="button" data-action="insert-before" data-list-path="${escapeAttribute(listPath)}" data-index="${index}">Добавить выше</button>
-          <button class="admin-button admin-button--ghost" type="button" data-action="insert-after" data-list-path="${escapeAttribute(listPath)}" data-index="${index}">Добавить ниже</button>
-          <button class="admin-button admin-button--ghost" type="button" data-action="move-up" data-list-path="${escapeAttribute(listPath)}" data-index="${index}">Вверх</button>
-          <button class="admin-button admin-button--ghost" type="button" data-action="move-down" data-list-path="${escapeAttribute(listPath)}" data-index="${index}">Вниз</button>
           <button class="admin-button admin-button--danger" type="button" data-action="remove-item" data-list-path="${escapeAttribute(listPath)}" data-index="${index}">Удалить</button>
         </div>
       </div>
       <div class="item-card__grid">
         ${fieldsHtml}
       </div>
+      <button class="item-card__add-below" type="button" data-action="insert-after" data-list-path="${escapeAttribute(listPath)}" data-index="${index}" title="Добавить карточку ниже">⊕</button>
     </article>
   `;
 }
@@ -1011,6 +1125,43 @@ function handleDynamicClick(event) {
 
   if (action === "upload") {
     uploadFromRow(button.closest("[data-upload-row]"));
+    return;
+  }
+
+  if (action === "toggle-card") {
+    const cardId = button.dataset.cardId;
+    const card = button.closest(".item-card");
+    if (!cardId || !card) return;
+    if (state.collapsedCards.has(cardId)) {
+      state.collapsedCards.delete(cardId);
+      card.classList.remove("is-collapsed");
+      button.textContent = "▼";
+      button.title = "Свернуть";
+      button.setAttribute("aria-expanded", "true");
+    } else {
+      state.collapsedCards.add(cardId);
+      card.classList.add("is-collapsed");
+      button.textContent = "▶";
+      button.title = "Развернуть";
+      button.setAttribute("aria-expanded", "false");
+    }
+    updateCollapseButtons(card.dataset.dragList, getByPath(state.content, card.dataset.dragList) || []);
+    return;
+  }
+
+  if (action === "collapse-all") {
+    const listPath = button.dataset.listPath;
+    const items = getByPath(state.content, listPath) || [];
+    items.forEach((item, i) => state.collapsedCards.add(item.id || `${listPath}.${i}`));
+    renderList(listPath);
+    return;
+  }
+
+  if (action === "expand-all") {
+    const listPath = button.dataset.listPath;
+    const items = getByPath(state.content, listPath) || [];
+    items.forEach((item, i) => state.collapsedCards.delete(item.id || `${listPath}.${i}`));
+    renderList(listPath);
     return;
   }
 }
