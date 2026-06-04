@@ -413,6 +413,7 @@ img {
 
 .toolbar__text {
   margin: 0;
+  white-space: nowrap;
 }
 
 .toolbar__nav {
@@ -499,11 +500,6 @@ img {
   border-color: rgba(0, 128, 255, 0.22);
 }
 
-/* Фиксируем ширину чипа в тулбаре — текст меняется, но размер не прыгает */
-.toolbar [data-dirty-indicator] {
-  min-width: 230px;
-  justify-content: center;
-}
 
 .status-message {
   min-height: 24px;
