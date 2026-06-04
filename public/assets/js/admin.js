@@ -310,7 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function bindBaseEvents() {
   document.querySelector("[data-login-form]")?.addEventListener("submit", handleLogin);
-  document.querySelector("[data-save-button]")?.addEventListener("click", saveContent);
+  document.querySelectorAll("[data-save-button]").forEach((btn) => btn.addEventListener("click", saveContent));
   document.querySelector("[data-reload-button]")?.addEventListener("click", loadContent);
   document.querySelector("[data-cleanup-media-button]")?.addEventListener("click", cleanupUnusedMedia);
   document.querySelector("[data-backup-button]")?.addEventListener("click", downloadBackup);
@@ -1074,6 +1074,18 @@ async function uploadFromRow(row) {
     return;
   }
 
+  if (kind === "image" && path && path.startsWith("collections.partners")) {
+    const dims = await getImageDimensions(fileInput.files[0]);
+    if (dims && dims.width !== dims.height) {
+      const ok = window.confirm(
+        `Логотип не квадратный: ${dims.width}×${dims.height} px.\n` +
+        `Рекомендуется формат 1:1 — иначе изображение будет обрезано.\n\n` +
+        `Загрузить всё равно?`
+      );
+      if (!ok) return;
+    }
+  }
+
   const result = await uploadFile(fileInput.files[0], kind, row);
 
   if (!result) {
@@ -1084,6 +1096,16 @@ async function uploadFromRow(row) {
   fileInput.value = "";
   markDirty();
   setMessage("[data-global-message]", "Файл загружен.", "success");
+}
+
+function getImageDimensions(file) {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => { URL.revokeObjectURL(url); resolve({ width: img.naturalWidth, height: img.naturalHeight }); };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
 }
 
 function applyUploadedUrl(path, targetInput, url) {
@@ -1212,14 +1234,15 @@ function setUploadRowBusy(row, isBusy) {
 }
 
 function syncSaveButtonState() {
-  const saveButton = document.querySelector("[data-save-button]");
   const cleanupButton = document.querySelector("[data-cleanup-media-button]");
   const hasActiveUpload = Boolean(document.querySelector(".upload-row.is-uploading"));
 
-  if (saveButton instanceof HTMLButtonElement) {
-    saveButton.disabled = hasActiveUpload;
-    saveButton.setAttribute("aria-disabled", String(hasActiveUpload));
-  }
+  document.querySelectorAll("[data-save-button]").forEach((saveButton) => {
+    if (saveButton instanceof HTMLButtonElement) {
+      saveButton.disabled = hasActiveUpload;
+      saveButton.setAttribute("aria-disabled", String(hasActiveUpload));
+    }
+  });
 
   if (cleanupButton instanceof HTMLButtonElement) {
     cleanupButton.disabled = hasActiveUpload;

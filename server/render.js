@@ -1168,11 +1168,7 @@ function renderHomePage(content) {
       sectionText(content, "homePartners", "description", "Организации и площадки, поддерживающие фестиваль."),
       content.collections.partners,
       sectionText(content, "homePartners", "emptyText", "Партнёры пока не опубликованы. Их можно добавить в админке."),
-      {
-        eyebrow: sectionText(content, "homePartners", "eyebrow"),
-        content,
-        getMediaStyle: (item) => item.image ? `--card-bg: url(${JSON.stringify(String(item.image))})` : ""
-      }
+      { eyebrow: sectionText(content, "homePartners", "eyebrow"), content }
     )
   ].join("");
 
