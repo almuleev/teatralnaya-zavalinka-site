@@ -920,6 +920,10 @@ body.admin-body.is-dirty [data-save-button] {
   display: flex;
 }
 
+.is-dirty .admin-shell {
+  padding-bottom: 96px;
+}
+
 @media (max-width: 760px) {
   .save-float [data-dirty-indicator] {
     display: none;

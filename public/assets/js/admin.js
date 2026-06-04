@@ -337,6 +337,7 @@ function bindBaseEvents() {
 
   document.addEventListener("input", handleDynamicInput);
   document.addEventListener("change", handleDynamicInput);
+  document.addEventListener("change", handleFileSelect);
   document.addEventListener("click", handleDynamicClick);
   document.addEventListener("click", handleStaticUploadClick);
   document.addEventListener("keydown", handleRichTextShortcut);
@@ -349,6 +350,27 @@ function bindBaseEvents() {
     event.preventDefault();
     event.returnValue = "";
   });
+}
+
+function handleFileSelect(event) {
+  const input = event.target;
+  if (!(input instanceof HTMLInputElement) || input.type !== "file") return;
+
+  const file = input.files?.[0];
+  if (!file) return;
+
+  const row = input.closest("[data-upload-row]");
+  if (!row) return;
+
+  const kind = row.dataset.uploadKind;
+  const limit = uploadLimits[kind];
+  if (!limit || file.size <= limit.bytes) {
+    setUploadRowStatus(row, "", "");
+    return;
+  }
+
+  setUploadRowStatus(row, `Файл слишком большой. Максимум: ${limit.label}.`, "error");
+  input.value = "";
 }
 
 function handleStaticUploadClick(event) {
@@ -914,10 +936,8 @@ function insertListItem(listPath, index) {
   markDirty();
   setMessage("[data-global-message]", `Добавлено: ${schema.itemLabel}.`, "success");
 
-  if (isMainAdd) {
-    const container = document.querySelector(`[data-list="${listPath}"]`);
-    container?.querySelector(".item-card")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
+  const container = document.querySelector(`[data-list="${listPath}"]`);
+  container?.querySelectorAll(".item-card")[insertIndex]?.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 function buildItem(schema) {
@@ -1019,12 +1039,19 @@ function moveItem(listPath, index, direction) {
   setByPath(state.content, listPath, items);
   renderList(listPath);
   markDirty();
+
+  const container = document.querySelector(`[data-list="${listPath}"]`);
+  container?.querySelectorAll(".item-card")[nextIndex]?.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 function removeItem(listPath, index) {
   const items = [...(getByPath(state.content, listPath) || [])];
 
-  if (!window.confirm("Удалить этот элемент?")) {
+  const item = items[index];
+  const label = item?.name || item?.title || item?.role || null;
+  const message = label ? `Удалить «${label}»? Действие необратимо.` : "Удалить этот элемент? Действие необратимо.";
+
+  if (!window.confirm(message)) {
     return;
   }
 
