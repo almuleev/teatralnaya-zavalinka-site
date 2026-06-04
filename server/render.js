@@ -600,9 +600,11 @@ function renderPeopleSection(id, title, description, items, emptyText, options =
                 <div class="card-scroller" id="${escapeAttribute(id)}" data-carousel-track>
                   ${items
                     .map(
-                      (item) => `
+                      (item) => {
+                        const mediaStyle = options.getMediaStyle ? options.getMediaStyle(item) : "";
+                        return `
                         <article class="person-card">
-                          <div class="person-card__media">
+                          <div class="person-card__media"${mediaStyle ? ` style="${escapeAttribute(mediaStyle)}"` : ""}>
                             ${renderImage(item)}
                           </div>
                           <div class="person-card__body">
@@ -613,8 +615,8 @@ function renderPeopleSection(id, title, description, items, emptyText, options =
                             ${item.link ? `<a class="text-link" href="${safeUrl(item.link)}" target="_blank" rel="noreferrer">${escapeHtml(text(options.content || {}, "ui.personMoreLabel", "Подробнее"))}</a>` : ""}
                           </div>
                         </article>
-                      `
-                      )
+                      `;
+                      })
                       .join("")}
                 </div>
               </div>
@@ -1166,7 +1168,11 @@ function renderHomePage(content) {
       sectionText(content, "homePartners", "description", "Организации и площадки, поддерживающие фестиваль."),
       content.collections.partners,
       sectionText(content, "homePartners", "emptyText", "Партнёры пока не опубликованы. Их можно добавить в админке."),
-      { eyebrow: sectionText(content, "homePartners", "eyebrow"), content }
+      {
+        eyebrow: sectionText(content, "homePartners", "eyebrow"),
+        content,
+        getMediaStyle: (item) => item.image ? `--card-bg: url(${JSON.stringify(String(item.image))})` : ""
+      }
     )
   ].join("");
 
