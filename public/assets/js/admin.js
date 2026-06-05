@@ -809,10 +809,7 @@ function renderList(listPath) {
 
   container.className = "list-stack";
   container.innerHTML = items
-    .map((item, index) =>
-      renderItemCard(listPath, schema, item, index) +
-      (index < items.length - 1 ? gap(index) : "")
-    )
+    .map((item, index) => renderItemCard(listPath, schema, item, index) + gap(index))
     .join("");
   container.querySelectorAll(".char-counter").forEach(updateCharCounter);
   updateCollapseButtons(listPath, items);
