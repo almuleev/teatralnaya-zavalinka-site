@@ -687,14 +687,18 @@ img {
 }
 
 .list-gap__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   white-space: nowrap;
-  padding: 2px 14px;
+  min-width: 132px;
+  padding: 6px 20px;
   border-radius: 999px;
-  border: 1.5px solid var(--admin-brand);
+  border: 2px solid var(--admin-brand);
   background: var(--admin-surface-strong);
   color: var(--admin-brand);
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.82rem;
+  font-weight: 700;
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.15s, background 0.15s, color 0.15s;
@@ -1055,6 +1059,18 @@ body.admin-body.is-dirty [data-save-button] {
 
   .drag-handle {
     display: none;
+  }
+
+  .list-gap {
+    height: 24px;
+  }
+
+  .list-gap__btn {
+    opacity: 1;
+    min-width: 152px;
+    padding: 7px 22px;
+    font-size: 0.84rem;
+    box-shadow: 0 6px 16px rgba(0, 128, 255, 0.08);
   }
 
   .item-card__toggle {

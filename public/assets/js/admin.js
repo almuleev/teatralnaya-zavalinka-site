@@ -828,7 +828,10 @@ function initDragDrop() {
   }
 
   document.addEventListener("dragstart", (e) => {
-    const card = e.target.closest("[data-drag-index]");
+    const handle = e.target.closest("[data-drag-handle]");
+    if (!handle) return;
+
+    const card = handle.closest("[data-drag-index]");
     if (!card) return;
     dragSourceList = card.dataset.dragList;
     dragSourceIndex = Number(card.dataset.dragIndex);
@@ -959,9 +962,9 @@ function renderItemCard(listPath, schema, item, index) {
   const isCollapsed = state.collapsedCards.has(cardId);
 
   return `
-    <article class="item-card${isCollapsed ? " is-collapsed" : ""}" draggable="true" data-drag-index="${index}" data-drag-list="${escapeAttribute(listPath)}" data-card-id="${escapeAttribute(cardId)}">
+    <article class="item-card${isCollapsed ? " is-collapsed" : ""}" data-drag-index="${index}" data-drag-list="${escapeAttribute(listPath)}" data-card-id="${escapeAttribute(cardId)}">
       <div class="item-card__header">
-        <span class="drag-handle" title="Перетащить для изменения порядка" aria-hidden="true">⠿</span>
+        <span class="drag-handle" data-drag-handle="true" draggable="true" title="Перетащить для изменения порядка" aria-hidden="true">⠿</span>
         <button class="item-card__toggle" type="button" data-action="toggle-card" data-card-id="${escapeAttribute(cardId)}" aria-expanded="${isCollapsed ? "false" : "true"}" title="${isCollapsed ? "Развернуть" : "Свернуть"}">
           ${isCollapsed ? "▶" : "▼"}
         </button>
@@ -1538,3 +1541,4 @@ function wrapSelectionWithBold(textarea) {
   textarea.dispatchEvent(new Event("input", { bubbles: true }));
   textarea.dispatchEvent(new Event("change", { bubbles: true }));
 }
+
