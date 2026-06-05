@@ -698,7 +698,7 @@ img {
   background: var(--admin-surface-strong);
   color: var(--admin-brand);
   font-size: 0.82rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.15s, background 0.15s, color 0.15s;
