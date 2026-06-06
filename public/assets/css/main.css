@@ -667,13 +667,6 @@ select:focus-visible {
   overscroll-behavior-x: contain;
 }
 
-@media (hover: none) and (pointer: coarse) {
-  .card-scroller {
-    touch-action: pan-y;
-    scroll-snap-type: x proximity;
-  }
-}
-
 .card-scroller::-webkit-scrollbar {
   height: 6px;
 }

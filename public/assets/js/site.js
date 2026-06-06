@@ -497,9 +497,8 @@ function initCarousels(desktopCarouselMode) {
     updateCarouselState(track);
     track.addEventListener("scroll", () => updateCarouselState(track), { passive: true });
 
-    bindPointerDrag(track);
-
     if (desktopCarouselMode) {
+      bindPointerDrag(track);
       bindDesktopScrollSnap(track);
     }
 
@@ -561,18 +560,11 @@ function bindPointerDrag(track) {
     }
 
     const didMove = dragState.moved;
-    const pointerType = dragState.pointerType;
-    const lastDeltaX = dragState.lastDeltaX;
     dragState = null;
     track.classList.remove("is-dragging");
 
     if (didMove) {
-      if (pointerType === "touch") {
-        const direction = lastDeltaX === 0 ? 0 : lastDeltaX > 0 ? -1 : 1;
-        snapToDirectionalCard(track, direction, 180);
-      } else {
-        snapToNearestCard(track, 220);
-      }
+      snapToNearestCard(track, 220);
 
       window.setTimeout(() => {
         suppressClick = false;
@@ -585,7 +577,7 @@ function bindPointerDrag(track) {
   });
 
   track.addEventListener("pointerdown", (event) => {
-    if (event.pointerType === "mouse" && event.button !== 0) {
+    if (event.pointerType !== "mouse" || event.button !== 0) {
       return;
     }
 
@@ -602,11 +594,9 @@ function bindPointerDrag(track) {
 
     dragState = {
       pointerId: event.pointerId,
-      pointerType: event.pointerType,
       startX: event.clientX,
       startScrollLeft: track.scrollLeft,
-      moved: false,
-      lastDeltaX: 0
+      moved: false
     };
 
     track.classList.add("is-dragging");
@@ -622,11 +612,8 @@ function bindPointerDrag(track) {
     }
 
     const deltaX = event.clientX - dragState.startX;
-    dragState.lastDeltaX = deltaX;
 
-    const movementThreshold = dragState.pointerType === "touch" ? 18 : 6;
-
-    if (Math.abs(deltaX) > movementThreshold) {
+    if (Math.abs(deltaX) > 6) {
       dragState.moved = true;
       suppressClick = true;
     }
@@ -680,18 +667,6 @@ function bindDesktopScrollSnap(track) {
 
 function snapToNearestCard(track, duration = 220) {
   const targetLeft = getDirectionalCardLeft(track, 0);
-
-  if (Math.abs(targetLeft - track.scrollLeft) <= 6) {
-    track.classList.remove("is-snapping");
-    updateCarouselState(track);
-    return;
-  }
-
-  animateTrackScroll(track, targetLeft, duration);
-}
-
-function snapToDirectionalCard(track, direction, duration = 180) {
-  const targetLeft = getDirectionalCardLeft(track, direction);
 
   if (Math.abs(targetLeft - track.scrollLeft) <= 6) {
     track.classList.remove("is-snapping");
