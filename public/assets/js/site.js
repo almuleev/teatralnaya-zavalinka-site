@@ -53,6 +53,7 @@ function initVideoPlayers() {
     let fullscreenPressState = null;
     let suppressToggleUntil = 0;
     let suppressPauseUiUntil = 0;
+    let suppressPauseDuringSeekUntil = 0;
     let wasPlayingBeforeSeek = false;
     let lastToggleAt = 0;
     let pauseHideTimer = 0;
@@ -199,13 +200,21 @@ function initVideoPlayers() {
     video.addEventListener("seeking", () => {
       clearTimeout(pauseHideTimer);
       wasPlayingBeforeSeek = !video.paused || shell.classList.contains("is-playing");
-      suppressToggleUntil = Date.now() + 450;
-      suppressPauseUiUntil = Date.now() + 450;
+      const suppressMs = isTouchDevice ? 1600 : 450;
+      const until = Date.now() + suppressMs;
+
+      suppressToggleUntil = until;
+      suppressPauseUiUntil = until;
+      suppressPauseDuringSeekUntil = until;
     });
 
     video.addEventListener("seeked", () => {
-      suppressToggleUntil = Date.now() + 320;
-      suppressPauseUiUntil = Date.now() + 320;
+      const suppressMs = isTouchDevice ? 1600 : 320;
+      const until = Date.now() + suppressMs;
+
+      suppressToggleUntil = until;
+      suppressPauseUiUntil = until;
+      suppressPauseDuringSeekUntil = until;
       const shouldResume = wasPlayingBeforeSeek && video.paused && !video.ended;
       wasPlayingBeforeSeek = false;
 
@@ -227,9 +236,18 @@ function initVideoPlayers() {
         return;
       }
 
+      if (Date.now() < suppressPauseDuringSeekUntil) {
+        return;
+      }
+
       clearTimeout(pauseHideTimer);
       pauseHideTimer = setTimeout(() => {
-        if (video.seeking || Date.now() < suppressPauseUiUntil || !video.paused) {
+        if (
+          video.seeking ||
+          Date.now() < suppressPauseUiUntil ||
+          Date.now() < suppressPauseDuringSeekUntil ||
+          !video.paused
+        ) {
           return;
         }
         setPausedState();

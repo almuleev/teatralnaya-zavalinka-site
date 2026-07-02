@@ -388,7 +388,7 @@ function renderLayout(content, options) {
   <head>
     ${renderHead(content, pageTitle, description, activePath)}
     <link rel="stylesheet" href="/assets/css/main.css?v=20260528-1">
-    <script defer src="/assets/js/site.js?v=20260528-1"></script>
+    <script defer src="/assets/js/site.js?v=20260702-1"></script>
   </head>
   <body class="${bodyClass}">
     ${renderNavigation(content, activePath)}
@@ -1248,4 +1248,3 @@ module.exports = {
   renderDocumentsPage,
   renderHomePage
 };
-
