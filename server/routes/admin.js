@@ -31,7 +31,8 @@ const router = express.Router();
 const IMAGE_UPLOAD_LIMIT_BYTES = 10 * 1000 * 1000;
 const DOCUMENT_UPLOAD_LIMIT_BYTES = 100 * 1000 * 1000;
 const VIDEO_UPLOAD_LIMIT_BYTES = 1500 * 1000 * 1000;
-const UPLOAD_REFERENCE_RE = /\/uploads\/(images|videos|docs)\/([^"'\s?#)]+)/gi;
+// Allow spaces in filenames so cleanup does not treat "copy 1.jpg" style assets as orphaned.
+const UPLOAD_REFERENCE_RE = /\/uploads\/(images|videos|docs)\/([^"'?#)]+)/gi;
 
 const imageUpload = multer({
   storage: buildMulterStorage(config.imagesDir),
