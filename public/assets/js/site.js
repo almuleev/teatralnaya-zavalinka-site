@@ -50,6 +50,21 @@ function initVideoPlayers() {
       video.controls = false;
     };
 
+    const ensureVideoSource = () => {
+      if (video.currentSrc || video.src) {
+        return true;
+      }
+
+      const sourceUrl = video.dataset.videoSrc || "";
+      if (!sourceUrl) {
+        return false;
+      }
+
+      video.src = sourceUrl;
+      video.load();
+      return true;
+    };
+
     let fullscreenPressState = null;
     let suppressToggleUntil = 0;
     let suppressPauseUiUntil = 0;
@@ -111,6 +126,7 @@ function initVideoPlayers() {
         return;
       }
 
+      ensureVideoSource();
       setPlayingState();
 
       try {
@@ -121,6 +137,7 @@ function initVideoPlayers() {
     };
 
     playButton.addEventListener("click", () => {
+      ensureVideoSource();
       startPlayback();
     });
 
@@ -135,6 +152,7 @@ function initVideoPlayers() {
         return;
       }
 
+      ensureVideoSource();
       togglePlayback();
     });
 

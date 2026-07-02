@@ -706,8 +706,7 @@ function renderVideoCard(video) {
     : isDirectVideoFile(videoUrl)
     ? `
       <div class="video-card__video-shell" data-video-shell>
-        <video controls preload="metadata" playsinline data-video-player${poster}>
-            <source src="${safeUrl(videoUrl)}">
+        <video controls preload="none" playsinline data-video-player data-video-src="${safeUrl(videoUrl)}"${poster}>
             Ваш браузер не поддерживает встроенное воспроизведение видео.
         </video>
         <button class="video-card__tap-layer" type="button" data-video-toggle aria-label="${playLabel}"></button>
