@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initMenu();
   initDocumentSearch();
   initCopyButtons();
+  initApplyTracking();
   initVideoPlayers();
 
   const desktopCarouselMode = supportsDesktopCarouselMode();
@@ -309,6 +310,24 @@ function initCopyButtons() {
         copied ? successMessage(value) : "Не удалось скопировать. Попробуйте еще раз.",
         !copied
       );
+    });
+  });
+}
+
+function initApplyTracking() {
+  const applyButtons = Array.from(document.querySelectorAll("[data-track-apply]"));
+
+  if (!applyButtons.length) {
+    return;
+  }
+
+  applyButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const goal = button.dataset.trackGoal || "apply_click";
+
+      if (typeof window.ym === "function") {
+        window.ym(110352000, "reachGoal", goal);
+      }
     });
   });
 }

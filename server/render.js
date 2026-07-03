@@ -256,6 +256,16 @@ function renderHead(content, pageTitle, description, pathname) {
     <meta property="og:url" content="${escapeAttribute(url)}">
     <meta property="og:image" content="${escapeAttribute(ogImage)}">
     <link rel="icon" href="/assets/images/festival-favicon.png" type="image/png">
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+      (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+      })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=110352000', 'ym');
+      ym(110352000, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
   `;
 }
 
@@ -297,7 +307,7 @@ function renderNavigation(content, activePath) {
           <ul>${navItems}</ul>
           <div class="site-nav__actions">
             <a class="button button--ghost" href="${safeUrl(links.festivalRegulation)}" target="_blank" rel="noreferrer">${escapeHtml(text(content, "ui.headerRegulationLabel", "Положение"))}</a>
-            <a class="button" href="${safeUrl(links.applicationForm)}" target="_blank" rel="noreferrer">${escapeHtml(text(content, "ui.headerApplicationLabel", "Подать заявку"))}</a>
+            <a class="button" href="${safeUrl(links.applicationForm)}" target="_blank" rel="noreferrer" data-track-apply data-track-goal="apply_click">${escapeHtml(text(content, "ui.headerApplicationLabel", "Подать заявку"))}</a>
           </div>
         </nav>
       </div>
@@ -388,9 +398,10 @@ function renderLayout(content, options) {
   <head>
     ${renderHead(content, pageTitle, description, activePath)}
     <link rel="stylesheet" href="/assets/css/main.css?v=20260528-1">
-    <script defer src="/assets/js/site.js?v=20260702-1"></script>
+    <script defer src="/assets/js/site.js?v=20260703-1"></script>
   </head>
   <body class="${bodyClass}">
+    <noscript><div><img src="https://mc.yandex.ru/watch/110352000" style="position:absolute; left:-9999px;" alt=""></div></noscript>
     ${renderNavigation(content, activePath)}
     <main id="main-content">
       ${body}
@@ -412,7 +423,7 @@ function renderHero(content) {
           <p class="hero__subtitle">${escapeHtml(content.home.heroSubtitle)}</p>
           <p class="hero__lead">${renderFormattedText(content.home.heroLead)}</p>
           <div class="hero__actions">
-            <a class="button" href="${safeUrl(content.links.applicationForm)}" target="_blank" rel="noreferrer">${escapeHtml(text(content, "ui.heroApplicationLabel", "Подать заявку"))}</a>
+            <a class="button" href="${safeUrl(content.links.applicationForm)}" target="_blank" rel="noreferrer" data-track-apply data-track-goal="apply_click">${escapeHtml(text(content, "ui.heroApplicationLabel", "Подать заявку"))}</a>
             <a class="button button--ghost" href="${safeUrl(content.links.festivalRegulation)}" target="_blank" rel="noreferrer">${escapeHtml(text(content, "ui.heroRegulationLabel", "Положение о фестивале"))}</a>
           </div>
         </div>
