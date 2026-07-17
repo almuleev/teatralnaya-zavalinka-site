@@ -29,7 +29,7 @@
     "heroRegulationLabel": "Положение о фестивале",
     "heroContactLabel": "Быстрый контакт:",
     "personMoreLabel": "Подробнее",
-    "carouselHint": "",
+    "carouselHint": "Листайте карточки стрелками или горизонтальной прокруткой.",
     "docsSearchLabel": "Поиск по документам",
     "docsSearchPlaceholder": "Введите название, тип, описание или год",
     "docsSearchClearLabel": "Сбросить",
@@ -260,8 +260,36 @@
     "lifeVideos": [
       {
         "id": "video-life",
-        "title": "Event archive preview",
+        "title": "Festival opening preview",
         "description": "Media is intentionally omitted from the public demo repository.",
+        "url": "",
+        "poster": ""
+      },
+      {
+        "id": "video-life-workshops",
+        "title": "Workshop programme preview",
+        "description": "A demonstration card for the editable festival video collection.",
+        "url": "",
+        "poster": ""
+      },
+      {
+        "id": "video-life-performances",
+        "title": "Performances preview",
+        "description": "A demonstration card for the editable festival video collection.",
+        "url": "",
+        "poster": ""
+      },
+      {
+        "id": "video-life-meetings",
+        "title": "Creative meetings preview",
+        "description": "A demonstration card for the editable festival video collection.",
+        "url": "",
+        "poster": ""
+      },
+      {
+        "id": "video-life-closing",
+        "title": "Festival closing preview",
+        "description": "A demonstration card for the editable festival video collection.",
         "url": "",
         "poster": ""
       }
@@ -269,8 +297,36 @@
     "starVideos": [
       {
         "id": "video-stars",
-        "title": "Featured collection preview",
+        "title": "Guest interview preview",
         "description": "Media is intentionally omitted from the public demo repository.",
+        "url": "",
+        "poster": ""
+      },
+      {
+        "id": "video-stars-greeting",
+        "title": "Festival greeting preview",
+        "description": "A demonstration card for the editable guest video collection.",
+        "url": "",
+        "poster": ""
+      },
+      {
+        "id": "video-stars-meeting",
+        "title": "Creative meeting preview",
+        "description": "A demonstration card for the editable guest video collection.",
+        "url": "",
+        "poster": ""
+      },
+      {
+        "id": "video-stars-performance",
+        "title": "Special performance preview",
+        "description": "A demonstration card for the editable guest video collection.",
+        "url": "",
+        "poster": ""
+      },
+      {
+        "id": "video-stars-backstage",
+        "title": "Backstage story preview",
+        "description": "A demonstration card for the editable guest video collection.",
         "url": "",
         "poster": ""
       }
@@ -312,8 +368,40 @@
     "founders": [
       {
         "id": "founder-1",
-        "name": "Demo contact",
-        "role": "Demo role",
+        "name": "Demo founder one",
+        "role": "Festival founder",
+        "phone": "",
+        "email": "",
+        "image": "/assets/images/demo-placeholder.svg"
+      },
+      {
+        "id": "founder-2",
+        "name": "Demo founder two",
+        "role": "Programme representative",
+        "phone": "",
+        "email": "",
+        "image": "/assets/images/demo-placeholder.svg"
+      },
+      {
+        "id": "founder-3",
+        "name": "Demo founder three",
+        "role": "Organising partner",
+        "phone": "",
+        "email": "",
+        "image": "/assets/images/demo-placeholder.svg"
+      },
+      {
+        "id": "founder-4",
+        "name": "Demo founder four",
+        "role": "Cultural programme partner",
+        "phone": "",
+        "email": "",
+        "image": "/assets/images/demo-placeholder.svg"
+      },
+      {
+        "id": "founder-5",
+        "name": "Demo founder five",
+        "role": "Festival representative",
         "phone": "",
         "email": "",
         "image": "/assets/images/demo-placeholder.svg"

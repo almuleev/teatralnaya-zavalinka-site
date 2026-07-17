@@ -24,6 +24,21 @@ function verifyUnsafeUrlsAreRejected() {
   assert.doesNotMatch(html, /data:text\/html/i);
 }
 
+function verifyDemoCarousels() {
+  const demoContent = JSON.parse(fs.readFileSync(exampleDataFile, "utf8"));
+  const firstCarousels = [
+    demoContent.about.starVideos,
+    demoContent.about.lifeVideos,
+    demoContent.contacts.founders
+  ];
+
+  assert.ok(demoContent.ui.carouselHint.trim(), "Demo carousels should explain how to scroll");
+  firstCarousels.forEach((items) => {
+    assert.equal(items.length, 5, "Each first demo carousel should contain five cards");
+    assert.equal(new Set(items.map((item) => item.id)).size, 5, "Demo carousel card IDs should be unique");
+  });
+}
+
 async function request(baseUrl, pathname, options) {
   const response = await fetch(`${baseUrl}${pathname}`, options);
   return {
@@ -34,6 +49,7 @@ async function request(baseUrl, pathname, options) {
 
 async function run() {
   verifyUnsafeUrlsAreRejected();
+  verifyDemoCarousels();
 
   const app = await createServer();
   const server = await new Promise((resolve, reject) => {
