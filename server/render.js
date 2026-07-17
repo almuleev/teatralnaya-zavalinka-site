@@ -14,11 +14,21 @@ function escapeAttribute(value = "") {
 }
 
 function safeUrl(value = "") {
-  if (!value) {
+  const trimmed = String(value || "").trim();
+
+  if (!trimmed) {
     return "#";
   }
 
-  return escapeAttribute(value);
+  if (/^\/\//.test(trimmed)) {
+    return escapeAttribute(`https:${trimmed}`);
+  }
+
+  if (/^(https?:\/\/|\/[^/]|#)/i.test(trimmed)) {
+    return escapeAttribute(trimmed);
+  }
+
+  return "#";
 }
 
 function pageUrl(pathname) {
@@ -96,8 +106,12 @@ function normalizeActionLink(value = "") {
     return "";
   }
 
-  if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) {
+  if (/^https?:\/\//i.test(trimmed)) {
     return trimmed;
+  }
+
+  if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) {
+    return "";
   }
 
   if (/^\/\//.test(trimmed)) {

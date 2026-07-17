@@ -4,6 +4,8 @@
   "description": "Многостраничный сайт фестиваля «Театральная Завалинка» с минимальной админкой на Express.",
   "main": "server/server.js",
   "scripts": {
+    "check": "node --check server/server.js && node --check server/config.js && node --check server/auth.js && node --check server/render.js && node --check server/storage.js && node --check server/routes/public.js && node --check server/routes/admin.js && node --check public/assets/js/site.js && node --check public/assets/js/admin.js",
+    "test": "npm run check && node scripts/smoke-test.js",
     "start": "node server/server.js",
     "dev": "node --watch server/server.js"
   },
@@ -13,13 +15,21 @@
     "express",
     "admin"
   ],
-  "author": "",
+  "author": "Aleksandr Muleev",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/almuleev/teatralnaya-zavalinka-site.git"
+  },
+  "homepage": "https://tzavalinka.ru",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "dotenv": "^16.6.1",
-    "express": "^4.21.2",
-    "express-rate-limit": "^8.5.2",
+    "express": "^4.22.2",
+    "express-rate-limit": "^8.6.0",
     "express-session": "^1.18.1",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^2.2.0"
   }
 }

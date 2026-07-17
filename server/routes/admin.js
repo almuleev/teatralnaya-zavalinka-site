@@ -58,17 +58,23 @@ const videoUpload = multer({
   }
 });
 
-router.post("/login", loginRateLimit, (req, res) => {
+router.post("/login", loginRateLimit, (req, res, next) => {
   const { username, password } = req.body || {};
 
   if (!verifyCredentials(username, password)) {
     return res.status(401).json({ error: "Неверный логин или пароль." });
   }
 
-  req.session.isAuthenticated = true;
-  req.session.username = username;
+  return req.session.regenerate((error) => {
+    if (error) {
+      return next(error);
+    }
 
-  return res.json({ ok: true, username });
+    req.session.isAuthenticated = true;
+    req.session.username = username;
+
+    return res.json({ ok: true, username });
+  });
 });
 
 router.post("/logout", (req, res) => {

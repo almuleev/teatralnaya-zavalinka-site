@@ -37,6 +37,12 @@ npm run dev
 
 Open `http://localhost:3000/home`.
 
+Run the automated syntax and HTTP smoke checks with:
+
+```bash
+npm test
+```
+
 The local admin credentials are the public development values in `.env.example`. They are intentionally for local demos only.
 
 ## Portfolio Data Policy
@@ -74,4 +80,4 @@ deploy/
 
 ## License
 
-MIT
+[MIT](LICENSE)
