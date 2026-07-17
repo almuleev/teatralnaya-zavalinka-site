@@ -103,7 +103,8 @@ sudo cp deploy/nginx.site.conf.example /etc/nginx/sites-available/teatralnaya-za
 ```
 
 2. Проверьте, что указаны оба production-домена: `tzavalinka.ru` и `teatrzavalinka.ru`.
-3. Включите конфиг:
+3. Не удаляйте `server_tokens off` и заголовок `Strict-Transport-Security` из HTTPS-блока.
+4. Включите конфиг:
 
 ```bash
 sudo ln -s /etc/nginx/sites-available/teatralnaya-zavalinka /etc/nginx/sites-enabled/teatralnaya-zavalinka
