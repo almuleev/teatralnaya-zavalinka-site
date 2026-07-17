@@ -1,7 +1,7 @@
 {
   "meta": {
     "siteName": "Festival Website Demo",
-    "tagline": "Public portfolio data set",
+    "tagline": "Safe public demo data",
     "creatorName": "Development team",
     "creatorTelegram": "",
     "creatorEmail": "",
@@ -164,7 +164,7 @@
     "festivalRegulation": ""
   },
   "home": {
-    "heroTitle": "Festival website portfolio demo",
+    "heroTitle": "Festival website demo",
     "heroSubtitle": "A safe content set for the public repository.",
     "heroLead": "This page demonstrates the layout, server rendering, and content administration without publishing real contacts or media.",
     "descriptionTitle": "What this project demonstrates",
@@ -217,17 +217,17 @@
       },
       {
         "id": "fact-3",
-        "title": "Safe portfolio",
+        "title": "Safe demo data",
         "text": "This repository contains only fictional demo data."
       }
     ]
   },
   "about": {
     "pageTitle": "About the demo project",
-    "intro": "A public portfolio build of a content-managed festival website.",
+    "intro": "A public demo of a content-managed festival website.",
     "themeTitle": "Project scope",
     "themeText": "The application combines public pages, an admin workspace, and a media upload flow.",
-    "missionTitle": "Portfolio policy",
+    "missionTitle": "Repository data policy",
     "missionText": "Production contacts, personal profiles, documents, and media are not included in this repository.",
     "achievements": [
       {
@@ -244,7 +244,7 @@
     "statuses": [
       {
         "id": "status-1",
-        "title": "Portfolio version",
+        "title": "Public demo version",
         "text": "Uses fictional data and placeholder artwork."
       }
     ],
@@ -252,7 +252,7 @@
       {
         "id": "video-overview",
         "title": "Video overview",
-        "description": "Media is intentionally omitted from the public portfolio repository.",
+        "description": "Media is intentionally omitted from the public demo repository.",
         "url": "",
         "poster": ""
       }
@@ -261,7 +261,7 @@
       {
         "id": "video-life",
         "title": "Event archive preview",
-        "description": "Media is intentionally omitted from the public portfolio repository.",
+        "description": "Media is intentionally omitted from the public demo repository.",
         "url": "",
         "poster": ""
       }
@@ -270,7 +270,7 @@
       {
         "id": "video-stars",
         "title": "Featured collection preview",
-        "description": "Media is intentionally omitted from the public portfolio repository.",
+        "description": "Media is intentionally omitted from the public demo repository.",
         "url": "",
         "poster": ""
       }
@@ -279,7 +279,7 @@
       {
         "id": "video-guide",
         "title": "Guide preview",
-        "description": "Media is intentionally omitted from the public portfolio repository.",
+        "description": "Media is intentionally omitted from the public demo repository.",
         "url": "",
         "poster": ""
       }
@@ -288,7 +288,7 @@
       {
         "id": "video-event",
         "title": "Event preview",
-        "description": "Media is intentionally omitted from the public portfolio repository.",
+        "description": "Media is intentionally omitted from the public demo repository.",
         "url": "",
         "poster": ""
       }
@@ -296,7 +296,7 @@
   },
   "contacts": {
     "pageTitle": "Demo contacts",
-    "intro": "All contact details in this portfolio version are fictional.",
+    "intro": "All contact details in this demo are fictional.",
     "organizationLegalName": "Demo organization",
     "organizationShortName": "Demo project",
     "ogrn": "",

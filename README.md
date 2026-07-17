@@ -1,48 +1,50 @@
-# Teatralnaya Zavalinka
+[**Русский**](README.md) | [English](README.en.md)
+
+# Театральная Завалинка
 
 [![CI](https://github.com/almuleev/teatralnaya-zavalinka-site/actions/workflows/ci.yml/badge.svg)](https://github.com/almuleev/teatralnaya-zavalinka-site/actions/workflows/ci.yml)
 [![Node.js 18+](https://img.shields.io/badge/Node.js-18%2B-386641)](https://nodejs.org/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-c6533c)](LICENSE)
+[![Лицензия: MIT](https://img.shields.io/badge/license-MIT-c6533c)](LICENSE)
 
-Public portfolio version of a multi-page festival website with server-side rendering and a lightweight content administration area.
+Многостраничный сайт фестиваля «Театральная Завалинка» с серверным рендерингом и встроенной панелью управления содержимым.
 
-Live project: [tzavalinka.ru](https://tzavalinka.ru) and [teatrzavalinka.ru](https://teatrzavalinka.ru).
+Рабочий сайт: [tzavalinka.ru](https://tzavalinka.ru) и [teatrzavalinka.ru](https://teatrzavalinka.ru).
 
-## Screenshots
+## Скриншоты
 
-All screenshots use the fictional portfolio data set committed to this repository.
+На снимках используется вымышленный демонстрационный набор данных из репозитория.
 
-| Home page | About page |
+| Главная страница | О фестивале |
 | --- | --- |
-| [![Festival website demo home page](docs/screenshots/portfolio-demo.png)](docs/screenshots/portfolio-demo.png) | [![Festival website demo about page](docs/screenshots/portfolio-about.png)](docs/screenshots/portfolio-about.png) |
+| [![Главная страница сайта фестиваля](docs/screenshots/demo-home.png)](docs/screenshots/demo-home.png) | [![Страница о фестивале](docs/screenshots/demo-about.png)](docs/screenshots/demo-about.png) |
 
-| Documents catalogue | Administration workspace |
+| Каталог документов | Панель управления |
 | --- | --- |
-| [![Festival document catalogue](docs/screenshots/portfolio-documents.png)](docs/screenshots/portfolio-documents.png) | [![Festival website administration workspace](docs/screenshots/portfolio-admin.png)](docs/screenshots/portfolio-admin.png) |
+| [![Каталог документов фестиваля](docs/screenshots/demo-documents.png)](docs/screenshots/demo-documents.png) | [![Панель управления сайтом](docs/screenshots/demo-admin.png)](docs/screenshots/demo-admin.png) |
 
-## Features
+## Возможности
 
-- Public pages: `/home`, `/info`, `/docs`, and `/contacts`.
-- Password-protected admin area at `/admin`.
-- JSON-based content model with immediate server rendering.
-- Upload workflows for images, documents, and video.
-- Image optimisation and unused-upload cleanup tools.
-- Responsive vanilla JavaScript interface.
+- Публичные страницы: `/home`, `/info`, `/docs` и `/contacts`.
+- Защищённая паролем панель управления по адресу `/admin`.
+- Хранение структурированного содержимого в JSON и серверный рендеринг страниц.
+- Загрузка изображений, документов и видео.
+- Оптимизация изображений и очистка неиспользуемых файлов.
+- Адаптивный интерфейс на JavaScript без клиентского фреймворка.
 
-## Stack
+## Технологии
 
-- Node.js and Express
-- Express Session, Express Rate Limit, Multer
-- Vanilla JavaScript and CSS
-- PM2 and Nginx for production deployment
+- Node.js и Express
+- Express Session, Express Rate Limit и Multer
+- Vanilla JavaScript и CSS
+- PM2 и Nginx для production-развёртывания
 
-## Run Locally
+## Локальный запуск
 
-Requirements: Node.js 18+ and npm 9+.
+Требования: Node.js 18+ и npm 9+.
 
-On Windows, run `run-local-server.bat` from the project root. It creates a local `.env` and a runtime copy of the demo content when they are missing. If the configured port is already occupied, the launcher selects the next available port and prints the actual URL.
+В Windows запустите `run-local-server.bat` из корня проекта. Скрипт создаст локальный `.env` и рабочую копию демонстрационных данных, если их ещё нет. Если заданный порт занят, скрипт выберет следующий свободный порт и выведет фактический URL.
 
-Alternatively:
+Альтернативный запуск:
 
 ```bash
 npm install
@@ -51,49 +53,52 @@ copy data\site-content.example.json data\site-content.json
 npm run dev
 ```
 
-Open `http://localhost:3000/home`.
+Откройте `http://localhost:3000/home` или адрес, показанный скриптом запуска.
 
-Run the automated syntax and HTTP smoke checks with:
+Локальные данные для входа в панель управления указаны в `.env.example` и предназначены только для демонстрационного режима.
+
+## Проверки
 
 ```bash
 npm test
+npm audit --omit=dev
 ```
 
-The local admin credentials are the public development values in `.env.example`. They are intentionally for local demos only.
+Тесты проверяют синтаксис, основные HTTP-маршруты, границы авторизации, фильтрацию опасных URL и обработку занятого порта.
 
-## Portfolio Data Policy
+## Данные репозитория
 
-This repository does not include production content or media:
+Production-содержимое и загруженные файлы не публикуются:
 
-- `data/site-content.json` is local-only and ignored by Git.
-- `data/site-content.example.json` is a fictional, safe demo data set committed to the repository.
-- `public/uploads/**` is ignored because it may contain licensed media, documents, and personal data.
+- `data/site-content.json` используется локально и исключён из Git.
+- `data/site-content.example.json` содержит вымышленные демонстрационные данные.
+- `public/uploads/**` исключён из Git, поскольку может содержать лицензируемые материалы, документы и персональные данные.
 
-After a fresh clone, create `data/site-content.json` from the example file, or let `run-local-server.bat` do it automatically.
+После клонирования создайте `data/site-content.json` из файла-примера или используйте `run-local-server.bat`.
 
-## Production Configuration
+## Production-конфигурация
 
-Production deployment requires a private `.env` file. Never commit it. When `NODE_ENV=production`, the server requires:
+Для production требуется приватный файл `.env`. При `NODE_ENV=production` сервер проверяет:
 
-- `SESSION_SECRET` with at least 32 characters.
-- `ADMIN_USERNAME` with at least 3 characters.
-- `ADMIN_PASSWORD` with at least 12 characters.
+- `SESSION_SECRET` длиной не менее 32 символов.
+- `ADMIN_USERNAME` длиной не менее 3 символов.
+- `ADMIN_PASSWORD` длиной не менее 12 символов.
 
-The production server also needs private production content and media mounted outside the repository. See [DEPLOY.md](DEPLOY.md) for the deployment-oriented setup.
+Production-содержимое и медиа должны храниться вне репозитория. Инструкции приведены в [DEPLOY.md](DEPLOY.md).
 
-## Project Structure
+## Структура проекта
 
 ```text
 data/
-  site-content.example.json  # versioned fictional content
-  site-content.json          # local or production content, ignored by Git
+  site-content.example.json  # демонстрационные данные в Git
+  site-content.json          # локальные или production-данные, исключены из Git
 public/
   assets/
-  uploads/                   # local or production media, ignored by Git
+  uploads/                   # локальные или production-медиа, исключены из Git
 server/
 deploy/
 ```
 
-## License
+## Лицензия
 
 [MIT](LICENSE)
