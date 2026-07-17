@@ -8,7 +8,17 @@ Public portfolio version of a multi-page festival website with server-side rende
 
 Live project: [tzavalinka.ru](https://tzavalinka.ru) and [teatrzavalinka.ru](https://teatrzavalinka.ru).
 
-![Safe portfolio demo of the festival website](docs/screenshots/portfolio-demo.png)
+## Screenshots
+
+All screenshots use the fictional portfolio data set committed to this repository.
+
+| Home page | About page |
+| --- | --- |
+| [![Festival website demo home page](docs/screenshots/portfolio-demo.png)](docs/screenshots/portfolio-demo.png) | [![Festival website demo about page](docs/screenshots/portfolio-about.png)](docs/screenshots/portfolio-about.png) |
+
+| Documents catalogue | Administration workspace |
+| --- | --- |
+| [![Festival document catalogue](docs/screenshots/portfolio-documents.png)](docs/screenshots/portfolio-documents.png) | [![Festival website administration workspace](docs/screenshots/portfolio-admin.png)](docs/screenshots/portfolio-admin.png) |
 
 ## Features
 
