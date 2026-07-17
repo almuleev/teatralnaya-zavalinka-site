@@ -1088,7 +1088,7 @@ function renderContactsBody(content) {
               <dd>${renderPhoneAction(content.contacts.phone)}</dd>
             </div>` : ""}
             ${content.contacts.email ? `<div>
-              <dt>Email</dt>
+              <dt>Электронная почта</dt>
               <dd>${renderEmailAction(content.contacts.email)}</dd>
             </div>` : ""}
             ${

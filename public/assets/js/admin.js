@@ -258,7 +258,7 @@ const listSchemas = {
       { name: "name", label: "Имя", full: true },
       { name: "role", label: "Должность", full: true },
       { name: "phone", label: "Телефон" },
-      { name: "email", label: "Email", type: "email" },
+      { name: "email", label: "Электронная почта", type: "email" },
       { name: "image", label: "Изображение", type: "url", uploadKind: "image", accept: "image/*", full: true }
     ]
   },
@@ -269,7 +269,7 @@ const listSchemas = {
       { name: "name", label: "Имя", full: true },
       { name: "role", label: "Должность", full: true },
       { name: "phone", label: "Телефон" },
-      { name: "email", label: "Email", type: "email" },
+      { name: "email", label: "Электронная почта", type: "email" },
       { name: "image", label: "Изображение", type: "url", uploadKind: "image", accept: "image/*", full: true }
     ]
   },
@@ -280,7 +280,7 @@ const listSchemas = {
       { name: "name", label: "Имя", full: true },
       { name: "role", label: "Должность", full: true },
       { name: "phone", label: "Телефон" },
-      { name: "email", label: "Email", type: "email" },
+      { name: "email", label: "Электронная почта", type: "email" },
       { name: "image", label: "Изображение", type: "url", uploadKind: "image", accept: "image/*", full: true }
     ]
   },

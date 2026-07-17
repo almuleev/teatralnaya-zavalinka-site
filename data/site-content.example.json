@@ -1,8 +1,8 @@
 {
   "meta": {
-    "siteName": "Festival Website Demo",
-    "tagline": "Safe public demo data",
-    "creatorName": "Development team",
+    "siteName": "Демонстрация сайта фестиваля",
+    "tagline": "Безопасные демонстрационные данные",
+    "creatorName": "Команда разработки",
     "creatorTelegram": "",
     "creatorEmail": "",
     "creatorContactLabel": "",
@@ -164,95 +164,95 @@
     "festivalRegulation": ""
   },
   "home": {
-    "heroTitle": "Festival website demo",
-    "heroSubtitle": "A safe content set for the public repository.",
-    "heroLead": "This page demonstrates the layout, server rendering, and content administration without publishing real contacts or media.",
-    "descriptionTitle": "What this project demonstrates",
-    "descriptionText": "A multi-page Express application with editable content, document catalogues, carousels, and media management.",
-    "applicationGuideTitle": "Demo workflow",
-    "applicationGuideText": "Production videos and application materials are intentionally omitted.",
-    "applicationGuideButtonLabel": "Demo only",
+    "heroTitle": "Демонстрация сайта фестиваля",
+    "heroSubtitle": "Безопасный набор данных для публичного репозитория.",
+    "heroLead": "Страница демонстрирует макет, серверный рендеринг и управление содержимым без публикации реальных контактов и медиаматериалов.",
+    "descriptionTitle": "Что демонстрирует проект",
+    "descriptionText": "Многостраничное приложение на Express с редактируемым содержимым, каталогом документов, каруселями и управлением медиаматериалами.",
+    "applicationGuideTitle": "Демонстрационный сценарий",
+    "applicationGuideText": "Рабочие видеозаписи и материалы заявок намеренно исключены.",
+    "applicationGuideButtonLabel": "Только демонстрация",
     "applicationGuideVideoUrl": "",
     "programs": [
       {
         "id": "program-1",
-        "title": "Content management",
-        "description": "Editable public pages and structured content blocks."
+        "title": "Управление содержимым",
+        "description": "Редактируемые публичные страницы и структурированные блоки данных."
       },
       {
         "id": "program-2",
-        "title": "Responsive interface",
-        "description": "Layouts for desktop and mobile screens."
+        "title": "Адаптивный интерфейс",
+        "description": "Макеты для настольных компьютеров и мобильных устройств."
       },
       {
         "id": "program-3",
-        "title": "Media workflow",
-        "description": "Upload, optimisation, and cleanup tools in the admin area."
+        "title": "Работа с медиаматериалами",
+        "description": "Загрузка, оптимизация и удаление файлов через панель управления."
       }
     ],
     "stages": [
       {
         "id": "stage-1",
-        "title": "Plan",
+        "title": "Подготовка",
         "meta": "01",
-        "description": "Create sections and define public content."
+        "description": "Создание разделов и подготовка публичного содержимого."
       },
       {
         "id": "stage-2",
-        "title": "Publish",
+        "title": "Публикация",
         "meta": "02",
-        "description": "Deploy the Node.js service with private production data."
+        "description": "Развёртывание сервиса Node.js с закрытыми рабочими данными."
       }
     ],
     "facts": [
       {
         "id": "fact-1",
-        "title": "Server rendering",
-        "text": "Express renders public pages from JSON content."
+        "title": "Серверный рендеринг",
+        "text": "Express формирует публичные страницы из данных JSON."
       },
       {
         "id": "fact-2",
-        "title": "Admin area",
-        "text": "The admin interface updates structured page data."
+        "title": "Панель управления",
+        "text": "Интерфейс администратора обновляет структурированные данные страниц."
       },
       {
         "id": "fact-3",
-        "title": "Safe demo data",
-        "text": "This repository contains only fictional demo data."
+        "title": "Безопасные демоданные",
+        "text": "Репозиторий содержит только вымышленные демонстрационные данные."
       }
     ]
   },
   "about": {
-    "pageTitle": "About the demo project",
-    "intro": "A public demo of a content-managed festival website.",
-    "themeTitle": "Project scope",
-    "themeText": "The application combines public pages, an admin workspace, and a media upload flow.",
-    "missionTitle": "Repository data policy",
-    "missionText": "Production contacts, personal profiles, documents, and media are not included in this repository.",
+    "pageTitle": "О демонстрационном проекте",
+    "intro": "Публичная демонстрация сайта фестиваля с управляемым содержимым.",
+    "themeTitle": "Возможности проекта",
+    "themeText": "Приложение объединяет публичные страницы, рабочее пространство администратора и загрузку медиаматериалов.",
+    "missionTitle": "Политика данных репозитория",
+    "missionText": "Рабочие контакты, личные профили, документы и медиаматериалы не включены в репозиторий.",
     "achievements": [
       {
         "id": "achievement-1",
-        "title": "Structured content",
-        "text": "Page sections are stored in a JSON document."
+        "title": "Структурированное содержимое",
+        "text": "Разделы страниц хранятся в документе JSON."
       },
       {
         "id": "achievement-2",
-        "title": "Local workflow",
-        "text": "The project starts with a demo data set after cloning."
+        "title": "Локальный запуск",
+        "text": "После клонирования проект запускается с демонстрационным набором данных."
       }
     ],
     "statuses": [
       {
         "id": "status-1",
-        "title": "Public demo version",
-        "text": "Uses fictional data and placeholder artwork."
+        "title": "Публичная демоверсия",
+        "text": "Использует вымышленные данные и изображения-заполнители."
       }
     ],
     "videos": [
       {
         "id": "video-overview",
-        "title": "Video overview",
-        "description": "Media is intentionally omitted from the public demo repository.",
+        "title": "Обзорное видео",
+        "description": "Медиаматериалы намеренно исключены из публичного демонстрационного репозитория.",
         "url": "",
         "poster": ""
       }
@@ -260,36 +260,36 @@
     "lifeVideos": [
       {
         "id": "video-life",
-        "title": "Festival opening preview",
-        "description": "Media is intentionally omitted from the public demo repository.",
+        "title": "Открытие фестиваля",
+        "description": "Медиаматериалы намеренно исключены из публичного демонстрационного репозитория.",
         "url": "",
         "poster": ""
       },
       {
         "id": "video-life-workshops",
-        "title": "Workshop programme preview",
-        "description": "A demonstration card for the editable festival video collection.",
+        "title": "Программа мастер-классов",
+        "description": "Демонстрационная карточка редактируемой подборки видео фестиваля.",
         "url": "",
         "poster": ""
       },
       {
         "id": "video-life-performances",
-        "title": "Performances preview",
-        "description": "A demonstration card for the editable festival video collection.",
+        "title": "Фестивальные спектакли",
+        "description": "Демонстрационная карточка редактируемой подборки видео фестиваля.",
         "url": "",
         "poster": ""
       },
       {
         "id": "video-life-meetings",
-        "title": "Creative meetings preview",
-        "description": "A demonstration card for the editable festival video collection.",
+        "title": "Творческие встречи",
+        "description": "Демонстрационная карточка редактируемой подборки видео фестиваля.",
         "url": "",
         "poster": ""
       },
       {
         "id": "video-life-closing",
-        "title": "Festival closing preview",
-        "description": "A demonstration card for the editable festival video collection.",
+        "title": "Закрытие фестиваля",
+        "description": "Демонстрационная карточка редактируемой подборки видео фестиваля.",
         "url": "",
         "poster": ""
       }
@@ -297,36 +297,36 @@
     "starVideos": [
       {
         "id": "video-stars",
-        "title": "Guest interview preview",
-        "description": "Media is intentionally omitted from the public demo repository.",
+        "title": "Интервью с гостем",
+        "description": "Медиаматериалы намеренно исключены из публичного демонстрационного репозитория.",
         "url": "",
         "poster": ""
       },
       {
         "id": "video-stars-greeting",
-        "title": "Festival greeting preview",
-        "description": "A demonstration card for the editable guest video collection.",
+        "title": "Приветствие участникам",
+        "description": "Демонстрационная карточка редактируемой подборки видео с гостями.",
         "url": "",
         "poster": ""
       },
       {
         "id": "video-stars-meeting",
-        "title": "Creative meeting preview",
-        "description": "A demonstration card for the editable guest video collection.",
+        "title": "Творческая встреча",
+        "description": "Демонстрационная карточка редактируемой подборки видео с гостями.",
         "url": "",
         "poster": ""
       },
       {
         "id": "video-stars-performance",
-        "title": "Special performance preview",
-        "description": "A demonstration card for the editable guest video collection.",
+        "title": "Специальное выступление",
+        "description": "Демонстрационная карточка редактируемой подборки видео с гостями.",
         "url": "",
         "poster": ""
       },
       {
         "id": "video-stars-backstage",
-        "title": "Backstage story preview",
-        "description": "A demonstration card for the editable guest video collection.",
+        "title": "История из-за кулис",
+        "description": "Демонстрационная карточка редактируемой подборки видео с гостями.",
         "url": "",
         "poster": ""
       }
@@ -334,8 +334,8 @@
     "guideVideos": [
       {
         "id": "video-guide",
-        "title": "Guide preview",
-        "description": "Media is intentionally omitted from the public demo repository.",
+        "title": "Видео-путеводитель",
+        "description": "Медиаматериалы намеренно исключены из публичного демонстрационного репозитория.",
         "url": "",
         "poster": ""
       }
@@ -343,24 +343,24 @@
     "eventVideos": [
       {
         "id": "video-event",
-        "title": "Event preview",
-        "description": "Media is intentionally omitted from the public demo repository.",
+        "title": "Видео мероприятия",
+        "description": "Медиаматериалы намеренно исключены из публичного демонстрационного репозитория.",
         "url": "",
         "poster": ""
       }
     ]
   },
   "contacts": {
-    "pageTitle": "Demo contacts",
-    "intro": "All contact details in this demo are fictional.",
-    "organizationLegalName": "Demo organization",
-    "organizationShortName": "Demo project",
+    "pageTitle": "Демонстрационные контакты",
+    "intro": "Все контактные данные в этой демоверсии являются вымышленными.",
+    "organizationLegalName": "Демонстрационная организация",
+    "organizationShortName": "Демонстрационный проект",
     "ogrn": "",
     "innKpp": "",
     "email": "demo@example.com",
     "phone": "",
     "address": "",
-    "notes": "Use the live project website for official contacts.",
+    "notes": "Официальные контакты опубликованы на действующем сайте проекта.",
     "featuredVideoTitle": "",
     "featuredVideoText": "",
     "featuredVideoUrl": "",
@@ -368,40 +368,40 @@
     "founders": [
       {
         "id": "founder-1",
-        "name": "Demo founder one",
-        "role": "Festival founder",
+        "name": "Демонстрационный учредитель № 1",
+        "role": "Учредитель фестиваля",
         "phone": "",
         "email": "",
         "image": "/assets/images/demo-placeholder.svg"
       },
       {
         "id": "founder-2",
-        "name": "Demo founder two",
-        "role": "Programme representative",
+        "name": "Демонстрационный учредитель № 2",
+        "role": "Представитель программы",
         "phone": "",
         "email": "",
         "image": "/assets/images/demo-placeholder.svg"
       },
       {
         "id": "founder-3",
-        "name": "Demo founder three",
-        "role": "Organising partner",
+        "name": "Демонстрационный учредитель № 3",
+        "role": "Организационный партнёр",
         "phone": "",
         "email": "",
         "image": "/assets/images/demo-placeholder.svg"
       },
       {
         "id": "founder-4",
-        "name": "Demo founder four",
-        "role": "Cultural programme partner",
+        "name": "Демонстрационный учредитель № 4",
+        "role": "Партнёр культурной программы",
         "phone": "",
         "email": "",
         "image": "/assets/images/demo-placeholder.svg"
       },
       {
         "id": "founder-5",
-        "name": "Demo founder five",
-        "role": "Festival representative",
+        "name": "Демонстрационный учредитель № 5",
+        "role": "Представитель фестиваля",
         "phone": "",
         "email": "",
         "image": "/assets/images/demo-placeholder.svg"
@@ -411,8 +411,8 @@
     "mediaTeam": [
       {
         "id": "media-1",
-        "name": "Demo contact",
-        "role": "Demo role",
+        "name": "Демонстрационный контакт",
+        "role": "Представитель медиакоманды",
         "phone": "",
         "email": "",
         "image": "/assets/images/demo-placeholder.svg"
@@ -421,8 +421,8 @@
     "orgCommittee": [
       {
         "id": "committee-1",
-        "name": "Demo contact",
-        "role": "Demo role",
+        "name": "Демонстрационный контакт",
+        "role": "Представитель оргкомитета",
         "phone": "",
         "email": "",
         "image": "/assets/images/demo-placeholder.svg"
@@ -433,45 +433,45 @@
     "jury": [
       {
         "id": "jury-1",
-        "name": "Demo participant",
-        "role": "Demo jury member",
-        "description": "Fictional profile used to demonstrate the content management interface.",
+        "name": "Демонстрационный участник",
+        "role": "Член жюри",
+        "description": "Вымышленный профиль для демонстрации интерфейса управления содержимым.",
         "image": "/assets/images/demo-placeholder.svg",
         "link": "",
-        "meta": "Demo data"
+        "meta": "Демонстрационные данные"
       }
     ],
     "experts": [
       {
         "id": "expert-1",
-        "name": "Demo participant",
-        "role": "Demo workshop leader",
-        "description": "Fictional profile used to demonstrate the content management interface.",
+        "name": "Демонстрационный участник",
+        "role": "Ведущий мастер-класса",
+        "description": "Вымышленный профиль для демонстрации интерфейса управления содержимым.",
         "image": "/assets/images/demo-placeholder.svg",
         "link": "",
-        "meta": "Demo data"
+        "meta": "Демонстрационные данные"
       }
     ],
     "guests": [
       {
         "id": "guest-1",
-        "name": "Demo participant",
-        "role": "Demo guest",
-        "description": "Fictional profile used to demonstrate the content management interface.",
+        "name": "Демонстрационный участник",
+        "role": "Гость фестиваля",
+        "description": "Вымышленный профиль для демонстрации интерфейса управления содержимым.",
         "image": "/assets/images/demo-placeholder.svg",
         "link": "",
-        "meta": "Demo data"
+        "meta": "Демонстрационные данные"
       }
     ],
     "partners": [
       {
         "id": "partner-1",
-        "name": "Demo participant",
-        "role": "Demo partner",
-        "description": "Fictional profile used to demonstrate the content management interface.",
+        "name": "Демонстрационный участник",
+        "role": "Партнёр фестиваля",
+        "description": "Вымышленный профиль для демонстрации интерфейса управления содержимым.",
         "image": "/assets/images/demo-placeholder.svg",
         "link": "",
-        "meta": "Demo data"
+        "meta": "Демонстрационные данные"
       }
     ],
     "winners": []
@@ -479,22 +479,22 @@
   "documents": [
     {
       "id": "document-1",
-      "title": "Demo document",
+      "title": "Демонстрационный документ",
       "year": 2026,
       "type": "PDF",
-      "buttonLabel": "Not included",
+      "buttonLabel": "Файл не включён",
       "status": "draft",
-      "description": "Production documents are intentionally excluded from the public repository.",
+      "description": "Рабочие документы намеренно исключены из публичного репозитория.",
       "url": ""
     },
     {
       "id": "document-2",
-      "title": "Content model note",
+      "title": "Описание модели данных",
       "year": 2025,
-      "type": "Reference",
-      "buttonLabel": "Not included",
+      "type": "Справочный материал",
+      "buttonLabel": "Файл не включён",
       "status": "draft",
-      "description": "Use the admin interface to add private documents in a deployed environment.",
+      "description": "Закрытые документы добавляются через панель управления в развёрнутой версии.",
       "url": ""
     }
   ]

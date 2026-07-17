@@ -288,7 +288,7 @@ function initCopyButtons() {
   const emailButtons = Array.from(document.querySelectorAll("[data-copy-email]")).map((button) => ({
     button,
     value: button.dataset.copyEmail || "",
-    successMessage: (value) => `Email скопирован: ${value}`
+    successMessage: (value) => `Электронная почта скопирована: ${value}`
   }));
   const buttons = [...phoneButtons, ...emailButtons];
 
