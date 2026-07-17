@@ -12,6 +12,17 @@ if (createdDemoData) {
 }
 
 const { createServer } = require("../server/server");
+const { renderHomePage } = require("../server/render");
+
+function verifyUnsafeUrlsAreRejected() {
+  const demoContent = JSON.parse(fs.readFileSync(exampleDataFile, "utf8"));
+  demoContent.links.applicationForm = "javascript:alert(document.domain)";
+  demoContent.links.festivalRegulation = "data:text/html,<script>alert(1)</script>";
+
+  const html = renderHomePage(demoContent);
+  assert.doesNotMatch(html, /javascript:/i);
+  assert.doesNotMatch(html, /data:text\/html/i);
+}
 
 async function request(baseUrl, pathname, options) {
   const response = await fetch(`${baseUrl}${pathname}`, options);
@@ -22,6 +33,8 @@ async function request(baseUrl, pathname, options) {
 }
 
 async function run() {
+  verifyUnsafeUrlsAreRejected();
+
   const app = await createServer();
   const server = await new Promise((resolve, reject) => {
     const listener = app.listen(0, "127.0.0.1", () => resolve(listener));

@@ -1,5 +1,9 @@
 # Teatralnaya Zavalinka
 
+[![CI](https://github.com/almuleev/teatralnaya-zavalinka-site/actions/workflows/ci.yml/badge.svg)](https://github.com/almuleev/teatralnaya-zavalinka-site/actions/workflows/ci.yml)
+[![Node.js 18+](https://img.shields.io/badge/Node.js-18%2B-386641)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-c6533c)](LICENSE)
+
 Public portfolio version of a multi-page festival website with server-side rendering and a lightweight content administration area.
 
 Live project: [tzavalinka.ru](https://tzavalinka.ru) and [teatrzavalinka.ru](https://teatrzavalinka.ru).
