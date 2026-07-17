@@ -1,101 +1,77 @@
-# Театральная Завалинка
+# Teatralnaya Zavalinka
 
-Сайт фестиваля на `Node.js + Express` с серверным рендерингом страниц и админ-панелью.
+Public portfolio version of a multi-page festival website with server-side rendering and a lightweight content administration area.
 
-## Что есть в проекте
+Live project: [tzavalinka.ru](https://tzavalinka.ru) and [teatrzavalinka.ru](https://teatrzavalinka.ru).
 
-- Публичные страницы: `/home`, `/info`, `/docs`, `/contacts`.
-- Админка: `/admin` (авторизация по логину/паролю из `.env`).
-- Контент хранится в `data/site-content.json`.
-- Загрузка медиа и документов через админку:
-  - `public/uploads/docs`
-  - `public/uploads/images`
-  - `public/uploads/videos`
+## Features
 
-## Структура
+- Public pages: `/home`, `/info`, `/docs`, and `/contacts`.
+- Password-protected admin area at `/admin`.
+- JSON-based content model with immediate server rendering.
+- Upload workflows for images, documents, and video.
+- Image optimisation and unused-upload cleanup tools.
+- Responsive vanilla JavaScript interface.
 
-```text
-teatralnaya-zavalinka-site/
-  data/
-    site-content.json
-  public/
-    admin.html
-    assets/
-      css/
-      images/
-      js/
-    uploads/
-      docs/
-      images/
-      videos/
-  server/
-    auth.js
-    config.js
-    render.js
-    server.js
-    storage.js
-    routes/
-      admin.js
-      public.js
-  .env.example
-  package.json
-  README.md
-```
+## Stack
 
-## Требования
+- Node.js and Express
+- Express Session, Express Rate Limit, Multer
+- Vanilla JavaScript and CSS
+- PM2 and Nginx for production deployment
 
-- Node.js 18+
-- npm 9+
+## Run Locally
 
-## Запуск
+Requirements: Node.js 18+ and npm 9+.
+
+On Windows, run `run-local-server.bat` from the project root. It creates a local `.env` and a runtime copy of the demo content when they are missing.
+
+Alternatively:
 
 ```bash
 npm install
-cp .env.example .env
-npm start
-```
-
-Для разработки:
-
-```bash
+copy .env.example .env
+copy data\site-content.example.json data\site-content.json
 npm run dev
 ```
 
-## Переменные окружения
+Open `http://localhost:3000/home`.
 
-```env
-PORT=3000
-SESSION_SECRET=change-me-please
-ADMIN_USERNAME=manager
-ADMIN_PASSWORD=change-me-too
-PUBLIC_SITE_URL=http://localhost:3000
+The local admin credentials are the public development values in `.env.example`. They are intentionally for local demos only.
+
+## Portfolio Data Policy
+
+This repository does not include production content or media:
+
+- `data/site-content.json` is local-only and ignored by Git.
+- `data/site-content.example.json` is a fictional, safe demo data set committed to the repository.
+- `public/uploads/**` is ignored because it may contain licensed media, documents, and personal data.
+
+After a fresh clone, create `data/site-content.json` from the example file, or let `run-local-server.bat` do it automatically.
+
+## Production Configuration
+
+Production deployment requires a private `.env` file. Never commit it. When `NODE_ENV=production`, the server requires:
+
+- `SESSION_SECRET` with at least 32 characters.
+- `ADMIN_USERNAME` with at least 3 characters.
+- `ADMIN_PASSWORD` with at least 12 characters.
+
+The production server also needs private production content and media mounted outside the repository. See [DEPLOY.md](DEPLOY.md) for the deployment-oriented setup.
+
+## Project Structure
+
+```text
+data/
+  site-content.example.json  # versioned fictional content
+  site-content.json          # local or production content, ignored by Git
+public/
+  assets/
+  uploads/                   # local or production media, ignored by Git
+server/
+deploy/
 ```
 
-## Работа с админкой
+## License
 
-1. Откройте `http://localhost:3000/admin`.
-2. Войдите под учеткой из `.env`.
-3. Внесите изменения в нужных разделах.
-4. Для локального файла сначала нажмите кнопку `Загрузить`, затем `Сохранить изменения`.
-
-## Где лежат данные
-
-- Основной контент: `data/site-content.json`
-- Загруженные документы: `public/uploads/docs`
-- Загруженные изображения: `public/uploads/images`
-- Загруженные видео: `public/uploads/videos`
-
-## Примечание
-
-Публичные страницы рендерятся сервером напрямую из `data/site-content.json`, поэтому изменения из админки применяются сразу, без сборки фронтенда.
-
-## Публикация на сервере
-
-Для развёртывания на VPS используйте [DEPLOY.md](./DEPLOY.md).
-
-На сервере понадобятся:
-- Node.js 20 LTS
-- PM2
-- Nginx
-- `ffmpeg` для `webp`-картинок
-- `rclone` для бэкапов на Яндекс.Диск
+MIT

@@ -6,7 +6,7 @@ upstream teatralnaya_zavalinka_app {
 server {
     listen 80;
     listen [::]:80;
-    server_name tzavalinka.ru www.tzavalinka.ru;
+    server_name example.com www.example.com;
 
     location /.well-known/acme-challenge/ {
         root /var/www/certbot;
@@ -20,11 +20,11 @@ server {
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-    server_name tzavalinka.ru www.tzavalinka.ru;
+    server_name example.com www.example.com;
 
     # Пути certbot (после выпуска сертификата)
-    ssl_certificate /etc/letsencrypt/live/tzavalinka.ru/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/tzavalinka.ru/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 

@@ -353,7 +353,6 @@ function bindBaseEvents() {
     event.returnValue = "";
   });
 }
-
 function handleFileSelect(event) {
   const input = event.target;
   if (!(input instanceof HTMLInputElement) || input.type !== "file") return;
@@ -1541,4 +1540,3 @@ function wrapSelectionWithBold(textarea) {
   textarea.dispatchEvent(new Event("input", { bubbles: true }));
   textarea.dispatchEvent(new Event("change", { bubbles: true }));
 }
-

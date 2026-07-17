@@ -1,0 +1,413 @@
+{
+  "meta": {
+    "siteName": "Festival Website Demo",
+    "tagline": "Public portfolio data set",
+    "creatorName": "Development team",
+    "creatorTelegram": "",
+    "creatorEmail": "",
+    "creatorContactLabel": "",
+    "creatorContactUrl": "",
+    "updatedAt": "2026-07-17"
+  },
+  "ui": {
+    "navHome": "Главная",
+    "navAbout": "О фестивале",
+    "navDocs": "Документы",
+    "navContacts": "Контакты",
+    "skipLinkLabel": "Перейти к содержанию",
+    "brandAriaLabel": "На главную",
+    "brandSubtitle": "Официальный сайт фестиваля",
+    "menuLabel": "Меню",
+    "primaryNavLabel": "Основная навигация",
+    "headerRegulationLabel": "Положение",
+    "headerApplicationLabel": "Подать заявку",
+    "footerNavigationTitle": "Навигация",
+    "footerContactsTitle": "Связь",
+    "footerCreatorPrefix": "Сайт разработал",
+    "homeHeroEyebrow": "Фестиваль 2026",
+    "heroApplicationLabel": "Подать заявку",
+    "heroRegulationLabel": "Положение о фестивале",
+    "heroContactLabel": "Быстрый контакт:",
+    "personMoreLabel": "Подробнее",
+    "carouselHint": "",
+    "docsSearchLabel": "Поиск по документам",
+    "docsSearchPlaceholder": "Введите название, тип, описание или год",
+    "docsSearchClearLabel": "Сбросить",
+    "docsSearchEmptyText": "По вашему запросу документы не найдены. Попробуйте изменить формулировку или очистить поиск."
+  },
+  "sections": {
+    "homePrograms": {
+      "eyebrow": "Составляющие фестиваля",
+      "title": "Три программы фестиваля",
+      "description": "Фестиваль объединяет конкурсную, учебную и культурно-досуговую программы, которые вместе формируют его основную структуру."
+    },
+    "homeStages": {
+      "eyebrow": "Этапы фестиваля",
+      "title": "Календарь участия",
+      "description": "Основные сроки и формат проведения фестиваля «Театральная Завалинка 2026»."
+    },
+    "homeParticipation": {
+      "eyebrow": "Условия участия",
+      "title": "Что важно знать участникам",
+      "description": ""
+    },
+    "homeStarVideos": {
+      "eyebrow": "",
+      "title": "Звезды на экране",
+      "description": "Обращения к участникам фестиваля Театральная Завалинка, от таких звезд, как **Павел Воля, Баста, Мария Аронова, Александр Гудков, Павел Деревянко и многие другие.**",
+      "emptyText": "Подборка «Звезды на экране» находится в подготовке."
+    },
+    "homeJury": {
+      "eyebrow": "",
+      "title": "Жюри фестиваля",
+      "description": "Экспертный состав конкурсной программы фестиваля «Театральная Завалинка».",
+      "emptyText": "Состав жюри можно добавить и обновить в админке."
+    },
+    "homeWorkshops": {
+      "eyebrow": "",
+      "title": "Ведущие мастер-классов",
+      "description": "Педагоги, режиссёры и представители театрального сообщества, формирующие учебную программу фестиваля.",
+      "emptyText": "Список ведущих мастер-классов можно добавить и обновить в админке."
+    },
+    "homeGuests": {
+      "eyebrow": "",
+      "title": "Гости и звёзды",
+      "description": "Специальные гости, приглашённые артисты и участники культурно-досуговой программы фестиваля.",
+      "emptyText": "Список гостей можно добавить и обновить в админке."
+    },
+    "homePartners": {
+      "eyebrow": "",
+      "title": "Партнёры",
+      "description": "Организации и площадки, поддерживающие фестиваль.",
+      "emptyText": "Партнёры пока не опубликованы."
+    },
+    "aboutHero": {
+      "eyebrow": ""
+    },
+    "aboutAchievements": {
+      "eyebrow": "",
+      "title": "Достижения фестиваля",
+      "description": ""
+    },
+    "aboutStatuses": {
+      "eyebrow": "",
+      "title": "Официальный статус",
+      "description": ""
+    },
+    "aboutLifeVideos": {
+      "eyebrow": "",
+      "title": "Видео о жизни фестиваля",
+      "description": "Ролики о фестивальной атмосфере, участниках, программе и событиях фестивальных дней.",
+      "emptyText": "Подборка видеоматериалов о жизни фестиваля находится в подготовке."
+    },
+    "aboutGuideVideos": {
+      "eyebrow": "",
+      "title": "Видео-путеводители",
+      "description": "Серия роликов по дням фестиваля, помогающая быстро ориентироваться в программе и активности каждой даты.",
+      "emptyText": "Видео-путеводители по дням фестиваля находятся в подготовке."
+    },
+    "aboutEventVideos": {
+      "eyebrow": "",
+      "title": "Видео мероприятий",
+      "description": "Видеоролики по ключевым торжественно-официальным мероприятиям фестиваля.",
+      "emptyText": "Подборка видео с основных мероприятий находится в подготовке."
+    },
+    "aboutVideoHub": {
+      "title": "Больше видеоматериалов",
+      "description": "Следите за новыми публикациями фестиваля в социальных сетях."
+    },
+    "documentsHero": {
+      "eyebrow": "",
+      "title": "Документы фестиваля",
+      "description": "Актуальные документы и архив публикаций по годам. Материалы отсортированы по убыванию года."
+    },
+    "documentsCurrent": {
+      "eyebrow": "Текущий год"
+    },
+    "documentsArchive": {
+      "eyebrow": "Архив",
+      "title": "Предыдущие публикации",
+      "description": ""
+    },
+    "contactsHero": {
+      "eyebrow": ""
+    },
+    "contactsOrganization": {
+      "title": "Организационные сведения",
+      "description": ""
+    },
+    "contactsSocials": {
+      "title": "Социальные сети",
+      "description": ""
+    },
+    "contactsFounders": {
+      "eyebrow": "",
+      "title": "Учредители",
+      "description": "Контакты учредителей и ключевых представителей фестиваля.",
+      "emptyText": "Карточки учредителей можно дополнить в админке."
+    },
+    "contactsOrganizers": {
+      "eyebrow": "",
+      "title": "Организаторы",
+      "description": "Команда фестиваля по вопросам организации, программы и сопровождения.",
+      "emptyText": "Карточки организаторов фестиваля пока не опубликованы."
+    },
+    "contactsMediaTeam": {
+      "eyebrow": "",
+      "title": "Медиа-команда",
+      "description": "Команда визуального сопровождения, публикаций и медийной координации.",
+      "emptyText": "Карточки медиакоманды пока не заполнены. Их можно добавить в админке."
+    }
+  },
+  "links": {
+    "applicationForm": "",
+    "festivalRegulation": ""
+  },
+  "home": {
+    "heroTitle": "Festival website portfolio demo",
+    "heroSubtitle": "A safe content set for the public repository.",
+    "heroLead": "This page demonstrates the layout, server rendering, and content administration without publishing real contacts or media.",
+    "descriptionTitle": "What this project demonstrates",
+    "descriptionText": "A multi-page Express application with editable content, document catalogues, carousels, and media management.",
+    "applicationGuideTitle": "Demo workflow",
+    "applicationGuideText": "Production videos and application materials are intentionally omitted.",
+    "applicationGuideButtonLabel": "Demo only",
+    "applicationGuideVideoUrl": "",
+    "programs": [
+      {
+        "id": "program-1",
+        "title": "Content management",
+        "description": "Editable public pages and structured content blocks."
+      },
+      {
+        "id": "program-2",
+        "title": "Responsive interface",
+        "description": "Layouts for desktop and mobile screens."
+      },
+      {
+        "id": "program-3",
+        "title": "Media workflow",
+        "description": "Upload, optimisation, and cleanup tools in the admin area."
+      }
+    ],
+    "stages": [
+      {
+        "id": "stage-1",
+        "title": "Plan",
+        "meta": "01",
+        "description": "Create sections and define public content."
+      },
+      {
+        "id": "stage-2",
+        "title": "Publish",
+        "meta": "02",
+        "description": "Deploy the Node.js service with private production data."
+      }
+    ],
+    "facts": [
+      {
+        "id": "fact-1",
+        "title": "Server rendering",
+        "text": "Express renders public pages from JSON content."
+      },
+      {
+        "id": "fact-2",
+        "title": "Admin area",
+        "text": "The admin interface updates structured page data."
+      },
+      {
+        "id": "fact-3",
+        "title": "Safe portfolio",
+        "text": "This repository contains only fictional demo data."
+      }
+    ]
+  },
+  "about": {
+    "pageTitle": "About the demo project",
+    "intro": "A public portfolio build of a content-managed festival website.",
+    "themeTitle": "Project scope",
+    "themeText": "The application combines public pages, an admin workspace, and a media upload flow.",
+    "missionTitle": "Portfolio policy",
+    "missionText": "Production contacts, personal profiles, documents, and media are not included in this repository.",
+    "achievements": [
+      {
+        "id": "achievement-1",
+        "title": "Structured content",
+        "text": "Page sections are stored in a JSON document."
+      },
+      {
+        "id": "achievement-2",
+        "title": "Local workflow",
+        "text": "The project starts with a demo data set after cloning."
+      }
+    ],
+    "statuses": [
+      {
+        "id": "status-1",
+        "title": "Portfolio version",
+        "text": "Uses fictional data and placeholder artwork."
+      }
+    ],
+    "videos": [
+      {
+        "id": "video-overview",
+        "title": "Video overview",
+        "description": "Media is intentionally omitted from the public portfolio repository.",
+        "url": "",
+        "poster": ""
+      }
+    ],
+    "lifeVideos": [
+      {
+        "id": "video-life",
+        "title": "Event archive preview",
+        "description": "Media is intentionally omitted from the public portfolio repository.",
+        "url": "",
+        "poster": ""
+      }
+    ],
+    "starVideos": [
+      {
+        "id": "video-stars",
+        "title": "Featured collection preview",
+        "description": "Media is intentionally omitted from the public portfolio repository.",
+        "url": "",
+        "poster": ""
+      }
+    ],
+    "guideVideos": [
+      {
+        "id": "video-guide",
+        "title": "Guide preview",
+        "description": "Media is intentionally omitted from the public portfolio repository.",
+        "url": "",
+        "poster": ""
+      }
+    ],
+    "eventVideos": [
+      {
+        "id": "video-event",
+        "title": "Event preview",
+        "description": "Media is intentionally omitted from the public portfolio repository.",
+        "url": "",
+        "poster": ""
+      }
+    ]
+  },
+  "contacts": {
+    "pageTitle": "Demo contacts",
+    "intro": "All contact details in this portfolio version are fictional.",
+    "organizationLegalName": "Demo organization",
+    "organizationShortName": "Demo project",
+    "ogrn": "",
+    "innKpp": "",
+    "email": "demo@example.com",
+    "phone": "",
+    "address": "",
+    "notes": "Use the live project website for official contacts.",
+    "featuredVideoTitle": "",
+    "featuredVideoText": "",
+    "featuredVideoUrl": "",
+    "featuredVideoPoster": "",
+    "founders": [
+      {
+        "id": "founder-1",
+        "name": "Demo contact",
+        "role": "Demo role",
+        "phone": "",
+        "email": "",
+        "image": "/assets/images/demo-placeholder.svg"
+      }
+    ],
+    "socials": [],
+    "mediaTeam": [
+      {
+        "id": "media-1",
+        "name": "Demo contact",
+        "role": "Demo role",
+        "phone": "",
+        "email": "",
+        "image": "/assets/images/demo-placeholder.svg"
+      }
+    ],
+    "orgCommittee": [
+      {
+        "id": "committee-1",
+        "name": "Demo contact",
+        "role": "Demo role",
+        "phone": "",
+        "email": "",
+        "image": "/assets/images/demo-placeholder.svg"
+      }
+    ]
+  },
+  "collections": {
+    "jury": [
+      {
+        "id": "jury-1",
+        "name": "Demo participant",
+        "role": "Demo jury member",
+        "description": "Fictional profile used to demonstrate the content management interface.",
+        "image": "/assets/images/demo-placeholder.svg",
+        "link": "",
+        "meta": "Demo data"
+      }
+    ],
+    "experts": [
+      {
+        "id": "expert-1",
+        "name": "Demo participant",
+        "role": "Demo workshop leader",
+        "description": "Fictional profile used to demonstrate the content management interface.",
+        "image": "/assets/images/demo-placeholder.svg",
+        "link": "",
+        "meta": "Demo data"
+      }
+    ],
+    "guests": [
+      {
+        "id": "guest-1",
+        "name": "Demo participant",
+        "role": "Demo guest",
+        "description": "Fictional profile used to demonstrate the content management interface.",
+        "image": "/assets/images/demo-placeholder.svg",
+        "link": "",
+        "meta": "Demo data"
+      }
+    ],
+    "partners": [
+      {
+        "id": "partner-1",
+        "name": "Demo participant",
+        "role": "Demo partner",
+        "description": "Fictional profile used to demonstrate the content management interface.",
+        "image": "/assets/images/demo-placeholder.svg",
+        "link": "",
+        "meta": "Demo data"
+      }
+    ],
+    "winners": []
+  },
+  "documents": [
+    {
+      "id": "document-1",
+      "title": "Demo document",
+      "year": 2026,
+      "type": "PDF",
+      "buttonLabel": "Not included",
+      "status": "draft",
+      "description": "Production documents are intentionally excluded from the public repository.",
+      "url": ""
+    },
+    {
+      "id": "document-2",
+      "title": "Content model note",
+      "year": 2025,
+      "type": "Reference",
+      "buttonLabel": "Not included",
+      "status": "draft",
+      "description": "Use the admin interface to add private documents in a deployed environment.",
+      "url": ""
+    }
+  ]
+}

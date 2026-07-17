@@ -45,7 +45,7 @@ NODE_ENV=production
 SESSION_SECRET=change_me_long_random_string
 ADMIN_USERNAME=your_admin_login
 ADMIN_PASSWORD=your_admin_password
-PUBLIC_SITE_URL=https://tzavalinka.ru
+PUBLIC_SITE_URL=https://example.com
 ```
 
 `PUBLIC_SITE_URL` используется для абсолютных ссылок и OpenGraph. Домен не зашит в коде и меняется через `.env`.
@@ -62,9 +62,12 @@ mkdir -p /var/www/teatralnaya-zavalinka/shared/uploads/{docs,images,videos}
 Один раз перенесите текущие данные:
 
 ```bash
-cp -n data/site-content.json /var/www/teatralnaya-zavalinka/shared/data/site-content.json
-rsync -a public/uploads/ /var/www/teatralnaya-zavalinka/shared/uploads/
+# Restore private production data from a backup, not from the public repository.
+rsync -a /path/to/private-backup/data/ /var/www/teatralnaya-zavalinka/shared/data/
+rsync -a /path/to/private-backup/uploads/ /var/www/teatralnaya-zavalinka/shared/uploads/
 ```
+
+The public repository contains only demo content. Keep production content and uploads in private backups and restore them into this persistent directory.
 
 И подключите их симлинками:
 
@@ -99,7 +102,7 @@ pm2 logs teatralnaya-zavalinka
 sudo cp deploy/nginx.site.conf.example /etc/nginx/sites-available/teatralnaya-zavalinka
 ```
 
-2. Замените `tzavalinka.ru` на ваш домен, если вы разворачиваете копию.
+2. Замените `example.com` на ваш домен.
 3. Включите конфиг:
 
 ```bash
@@ -119,7 +122,7 @@ sudo systemctl reload nginx
 ## 8) Выпуск SSL (Let's Encrypt)
 
 ```bash
-sudo certbot --nginx -d tzavalinka.ru -d www.tzavalinka.ru
+sudo certbot --nginx -d example.com -d www.example.com
 ```
 
 Проверка автообновления:
