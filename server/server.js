@@ -91,8 +91,18 @@ async function createServer() {
 if (require.main === module) {
   createServer()
     .then((app) => {
-      app.listen(config.port, () => {
+      const server = app.listen(config.port, () => {
         console.log(`Teatralnaya Zavalinka is running on http://localhost:${config.port}`);
+      });
+
+      server.on("error", (error) => {
+        if (error.code === "EADDRINUSE") {
+          console.error(`Port ${config.port} is already in use. Stop the other process or choose another PORT.`);
+        } else {
+          console.error("Failed to start server", error);
+        }
+
+        process.exit(1);
       });
     })
     .catch((error) => {

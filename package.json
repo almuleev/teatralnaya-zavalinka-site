@@ -5,7 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "check": "node --check server/server.js && node --check server/config.js && node --check server/auth.js && node --check server/render.js && node --check server/storage.js && node --check server/routes/public.js && node --check server/routes/admin.js && node --check public/assets/js/site.js && node --check public/assets/js/admin.js",
-    "test": "npm run check && node scripts/smoke-test.js",
+    "test": "npm run check && node scripts/smoke-test.js && node scripts/startup-test.js",
     "start": "node server/server.js",
     "dev": "node --watch server/server.js"
   },

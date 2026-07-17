@@ -30,7 +30,7 @@ Live project: [tzavalinka.ru](https://tzavalinka.ru) and [teatrzavalinka.ru](htt
 
 Requirements: Node.js 18+ and npm 9+.
 
-On Windows, run `run-local-server.bat` from the project root. It creates a local `.env` and a runtime copy of the demo content when they are missing.
+On Windows, run `run-local-server.bat` from the project root. It creates a local `.env` and a runtime copy of the demo content when they are missing. If the configured port is already occupied, the launcher selects the next available port and prints the actual URL.
 
 Alternatively:
 

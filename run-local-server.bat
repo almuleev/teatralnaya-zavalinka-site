@@ -56,7 +56,29 @@ if not exist "node_modules\express\package.json" (
 )
 
 echo [4/4] Starting local server...
-echo URL: http://localhost:3000
+set "REQUESTED_PORT=3000"
+for /f "usebackq tokens=1,* delims==" %%A in (".env") do (
+  if /I "%%A"=="PORT" set "REQUESTED_PORT=%%B"
+)
+
+set "APP_PORT="
+for /f "delims=" %%P in ('powershell.exe -NoProfile -Command "$port = 0; if (-not [int]::TryParse($env:REQUESTED_PORT, [ref]$port) -or $port -lt 1 -or $port -gt 65535) { $port = 3000 }; while ($port -le 65535 -and (Get-NetTCPConnection -State Listen -LocalPort $port -ErrorAction SilentlyContinue)) { $port++ }; if ($port -gt 65535) { exit 1 }; $port"') do set "APP_PORT=%%P"
+
+if not defined APP_PORT (
+  echo [ERROR] No free local port is available.
+  pause
+  popd >nul
+  exit /b 1
+)
+
+if not "!APP_PORT!"=="!REQUESTED_PORT!" (
+  echo Port !REQUESTED_PORT! is already in use. Using !APP_PORT! instead.
+)
+
+set "PORT=!APP_PORT!"
+set "PUBLIC_SITE_URL=http://localhost:!APP_PORT!"
+
+echo URL: http://localhost:!APP_PORT!
 echo Press Ctrl+C to stop.
 echo.
 
