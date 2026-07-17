@@ -8,6 +8,8 @@ Public portfolio version of a multi-page festival website with server-side rende
 
 Live project: [tzavalinka.ru](https://tzavalinka.ru) and [teatrzavalinka.ru](https://teatrzavalinka.ru).
 
+![Safe portfolio demo of the festival website](docs/screenshots/portfolio-demo.png)
+
 ## Features
 
 - Public pages: `/home`, `/info`, `/docs`, and `/contacts`.
