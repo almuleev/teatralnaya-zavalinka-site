@@ -45,7 +45,7 @@ NODE_ENV=production
 SESSION_SECRET=change_me_long_random_string
 ADMIN_USERNAME=your_admin_login
 ADMIN_PASSWORD=your_admin_password
-PUBLIC_SITE_URL=https://example.com
+PUBLIC_SITE_URL=https://tzavalinka.ru
 ```
 
 `PUBLIC_SITE_URL` используется для абсолютных ссылок и OpenGraph. Домен не зашит в коде и меняется через `.env`.
@@ -102,7 +102,7 @@ pm2 logs teatralnaya-zavalinka
 sudo cp deploy/nginx.site.conf.example /etc/nginx/sites-available/teatralnaya-zavalinka
 ```
 
-2. Замените `example.com` на ваш домен.
+2. Проверьте, что указаны оба production-домена: `tzavalinka.ru` и `teatrzavalinka.ru`.
 3. Включите конфиг:
 
 ```bash
@@ -122,7 +122,7 @@ sudo systemctl reload nginx
 ## 8) Выпуск SSL (Let's Encrypt)
 
 ```bash
-sudo certbot --nginx -d example.com -d www.example.com
+sudo certbot --nginx -d tzavalinka.ru -d teatralzavalinka.ru
 ```
 
 Проверка автообновления:

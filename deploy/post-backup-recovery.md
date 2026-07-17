@@ -2,7 +2,7 @@
 
 Use these commands after restoring from a backup to re-apply production fixes.
 
-## 1) Nginx config (tz.muleev.site)
+## 1) Nginx config (production domains)
 
 ```bash
 sudo cp /var/www/teatralnaya-zavalinka/app/deploy/nginx.site.conf.example /etc/nginx/sites-available/teatralnaya-zavalinka
@@ -11,7 +11,7 @@ sudo nano /etc/nginx/sites-available/teatralnaya-zavalinka
 
 Required settings:
 
-- `server_name tz.muleev.site;`
+- `server_name tzavalinka.ru teatralzavalinka.ru;`
 - `client_max_body_size 1512m;`
 - `location /uploads/` with `alias /var/www/teatralnaya-zavalinka/shared/uploads/;`
 - caching headers (`expires 7d;`, `add_header Cache-Control "public";`)
