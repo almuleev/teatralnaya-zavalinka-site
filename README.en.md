@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/almuleev/teatralnaya-zavalinka-site/actions/workflows/ci.yml/badge.svg)](https://github.com/almuleev/teatralnaya-zavalinka-site/actions/workflows/ci.yml)
 [![Node.js 18+](https://img.shields.io/badge/Node.js-18%2B-386641)](https://nodejs.org/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-c6533c)](LICENSE)
+[![License: All rights reserved](https://img.shields.io/badge/license-All%20rights%20reserved-c6533c)](LICENSE)
 
 A multi-page website for the Teatralnaya Zavalinka festival with server-side rendering and a built-in content administration area.
 
@@ -101,4 +101,6 @@ deploy/
 
 ## License
 
-[MIT](LICENSE)
+The code, design, data structure, documentation, and screenshots are published for viewing only. Use, copying, modification, distribution, publication, deployment, hosting, or derivative works are prohibited without prior written permission from Aleksandr Muleev.
+
+[All rights reserved](LICENSE).

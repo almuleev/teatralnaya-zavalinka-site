@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/almuleev/teatralnaya-zavalinka-site/actions/workflows/ci.yml/badge.svg)](https://github.com/almuleev/teatralnaya-zavalinka-site/actions/workflows/ci.yml)
 [![Node.js 18+](https://img.shields.io/badge/Node.js-18%2B-386641)](https://nodejs.org/)
-[![Лицензия: MIT](https://img.shields.io/badge/license-MIT-c6533c)](LICENSE)
+[![Лицензия: все права защищены](https://img.shields.io/badge/license-All%20rights%20reserved-c6533c)](LICENSE)
 
 Многостраничный сайт фестиваля «Театральная Завалинка» с серверным рендерингом и встроенной панелью управления содержимым.
 
@@ -101,4 +101,6 @@ deploy/
 
 ## Лицензия
 
-[MIT](LICENSE)
+Код, дизайн, структура данных, документация и скриншоты опубликованы только для просмотра. Любое использование, копирование, изменение, распространение, публикация, развёртывание или создание производных работ запрещены без предварительного письменного разрешения Александра Мулеева.
+
+[Все права защищены](LICENSE).
