@@ -37,18 +37,18 @@ function previewStyles() {
       font: 600 13px/1.35 system-ui, sans-serif;
     }
     .pages-preview-banner a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
-    @media (min-width: 861px) and (max-width: 1280px) {
-      .site-header__row { gap: 12px; min-height: 70px; }
+    @media (min-width: 861px) {
+      .site-header__row { gap: 12px; min-height: 64px; }
       .brand { gap: 9px; }
-      .brand__mark { width: 48px; height: 48px; }
-      .brand__logo { width: 44px; height: 44px; }
+      .brand__mark { width: 44px; height: 44px; }
+      .brand__logo { width: 40px; height: 40px; }
       .brand__title { font-size: 0.94rem; white-space: nowrap; }
       .brand__subtitle { font-size: 0.76rem; white-space: nowrap; }
-      .site-nav { gap: 10px; }
+      .site-nav { gap: 8px; }
       .site-nav ul { gap: 0; }
-      .site-nav a { min-height: 38px; padding: 8px 10px; white-space: nowrap; }
-      .site-nav__actions { gap: 8px; }
-      .site-nav__actions .button { min-height: 42px; padding: 9px 12px; white-space: nowrap; }
+      .site-nav a { min-height: 36px; padding: 7px 9px; white-space: nowrap; }
+      .site-nav__actions { gap: 7px; }
+      .site-nav__actions .button { min-height: 40px; padding: 8px 11px; white-space: nowrap; }
     }
     @media (max-width: 540px) {
       .pages-preview-banner { align-items: flex-start; flex-direction: column; gap: 2px; padding: 7px 14px; text-align: left; }
