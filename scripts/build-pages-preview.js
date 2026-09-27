@@ -87,6 +87,13 @@ function renderAdminPreview(content) {
       .preview-admin__section.is-active { display: block; }
       .preview-admin__details { margin-top: 16px; }
       .preview-admin__details summary { cursor: pointer; font-weight: 700; color: #075fc4; }
+      .preview-list { display: grid; gap: 14px; margin-top: 20px; }
+      .preview-list__header { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+      .preview-list__header h3 { margin: 0; }
+      .preview-editor { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--admin-border); }
+      .preview-editor.is-hidden { display: none; }
+      .preview-document__meta { margin: 4px 0 0; color: var(--admin-muted); }
+      @media (max-width: 640px) { .preview-list__header { align-items: stretch; flex-direction: column; } }
     </style>
   </head>
   <body class="admin-body">
@@ -137,7 +144,13 @@ function renderAdminPreview(content) {
           <div class="section-card"><h2>Главная страница</h2><div class="form-grid">
             <label class="field field--full"><span>Главный заголовок</span><input value="${heroTitle}"></label>
             <label class="field field--full"><span>Пояснение</span><textarea rows="4">Демонстрационные данные для проверки интерфейса.</textarea></label>
-          </div><details class="preview-admin__details"><summary>Карточки участников</summary><p>В рабочей админке здесь добавляются и редактируются карточки жюри, экспертов, гостей и партнёров.</p></details></div>
+          </div>
+          <div class="preview-list" data-preview-list="card">
+            <div class="preview-list__header"><h3>Карточки участников</h3><button class="admin-button admin-button--ghost" type="button" data-preview-add="card">Добавить карточку</button></div>
+            <article class="item-card" data-preview-item="card"><div class="item-card__header"><div><h4 class="item-card__title" data-preview-title>Демонстрационный участник</h4><p class="item-card__meta" data-preview-meta>Член жюри</p></div><div class="item-card__actions"><button class="admin-button admin-button--ghost" type="button" data-preview-edit>Изменить</button></div></div><div class="preview-editor is-hidden"><div class="item-card__grid"><label class="field"><span>Имя</span><input data-preview-input="title" value="Демонстрационный участник"></label><label class="field"><span>Роль</span><input data-preview-input="meta" value="Член жюри"></label></div><div class="item-card__actions"><button class="admin-button" type="button" data-preview-apply>Применить в демо</button><button class="admin-button admin-button--ghost" type="button" data-preview-remove>Удалить</button></div></div></article>
+            <article class="item-card" data-preview-item="card"><div class="item-card__header"><div><h4 class="item-card__title" data-preview-title>Демонстрационный эксперт</h4><p class="item-card__meta" data-preview-meta>Ведущий мастер-класса</p></div><div class="item-card__actions"><button class="admin-button admin-button--ghost" type="button" data-preview-edit>Изменить</button></div></div><div class="preview-editor is-hidden"><div class="item-card__grid"><label class="field"><span>Имя</span><input data-preview-input="title" value="Демонстрационный эксперт"></label><label class="field"><span>Роль</span><input data-preview-input="meta" value="Ведущий мастер-класса"></label></div><div class="item-card__actions"><button class="admin-button" type="button" data-preview-apply>Применить в демо</button><button class="admin-button admin-button--ghost" type="button" data-preview-remove>Удалить</button></div></div></article>
+            <article class="item-card" data-preview-item="card"><div class="item-card__header"><div><h4 class="item-card__title" data-preview-title>Демонстрационный гость</h4><p class="item-card__meta" data-preview-meta>Гость фестиваля</p></div><div class="item-card__actions"><button class="admin-button admin-button--ghost" type="button" data-preview-edit>Изменить</button></div></div><div class="preview-editor is-hidden"><div class="item-card__grid"><label class="field"><span>Имя</span><input data-preview-input="title" value="Демонстрационный гость"></label><label class="field"><span>Роль</span><input data-preview-input="meta" value="Гость фестиваля"></label></div><div class="item-card__actions"><button class="admin-button" type="button" data-preview-apply>Применить в демо</button><button class="admin-button admin-button--ghost" type="button" data-preview-remove>Удалить</button></div></div></article>
+          </div></div>
         </section>
         <section class="preview-admin__section" data-preview-section="about">
           <div class="section-card"><h2>О фестивале</h2><div class="form-grid">
@@ -146,7 +159,14 @@ function renderAdminPreview(content) {
           </div></div>
         </section>
         <section class="preview-admin__section" data-preview-section="documents">
-          <div class="section-card"><h2>Документы</h2><p class="section-card__hint">Здесь можно проверить расположение элементов. Загрузка файлов в публичном предпросмотре отключена.</p><button class="admin-button admin-button--ghost" type="button" data-preview-action>Добавить документ</button></div>
+          <div class="section-card"><h2>Документы</h2><p class="section-card__hint">Здесь можно добавлять и редактировать демонстрационные записи. Загрузка рабочих файлов в публичном предпросмотре отключена.</p>
+            <div class="preview-list" data-preview-list="document">
+              <div class="preview-list__header"><h3>Список документов</h3><button class="admin-button admin-button--ghost" type="button" data-preview-add="document">Добавить документ</button></div>
+              <article class="item-card" data-preview-item="document"><div class="item-card__header"><div><h4 class="item-card__title" data-preview-title>Демонстрационный документ</h4><p class="preview-document__meta" data-preview-meta>PDF · 2026</p></div><div class="item-card__actions"><button class="admin-button admin-button--ghost" type="button" data-preview-edit>Изменить</button></div></div><div class="preview-editor is-hidden"><div class="item-card__grid"><label class="field"><span>Название</span><input data-preview-input="title" value="Демонстрационный документ"></label><label class="field"><span>Тип и год</span><input data-preview-input="meta" value="PDF · 2026"></label></div><div class="item-card__actions"><button class="admin-button" type="button" data-preview-apply>Применить в демо</button><button class="admin-button admin-button--ghost" type="button" data-preview-remove>Удалить</button></div></div></article>
+              <article class="item-card" data-preview-item="document"><div class="item-card__header"><div><h4 class="item-card__title" data-preview-title>Описание модели данных</h4><p class="preview-document__meta" data-preview-meta>Справочный материал · 2025</p></div><div class="item-card__actions"><button class="admin-button admin-button--ghost" type="button" data-preview-edit>Изменить</button></div></div><div class="preview-editor is-hidden"><div class="item-card__grid"><label class="field"><span>Название</span><input data-preview-input="title" value="Описание модели данных"></label><label class="field"><span>Тип и год</span><input data-preview-input="meta" value="Справочный материал · 2025"></label></div><div class="item-card__actions"><button class="admin-button" type="button" data-preview-apply>Применить в демо</button><button class="admin-button admin-button--ghost" type="button" data-preview-remove>Удалить</button></div></div></article>
+              <article class="item-card" data-preview-item="document"><div class="item-card__header"><div><h4 class="item-card__title" data-preview-title>Демонстрационная программа</h4><p class="preview-document__meta" data-preview-meta>PDF · 2024</p></div><div class="item-card__actions"><button class="admin-button admin-button--ghost" type="button" data-preview-edit>Изменить</button></div></div><div class="preview-editor is-hidden"><div class="item-card__grid"><label class="field"><span>Название</span><input data-preview-input="title" value="Демонстрационная программа"></label><label class="field"><span>Тип и год</span><input data-preview-input="meta" value="PDF · 2024"></label></div><div class="item-card__actions"><button class="admin-button" type="button" data-preview-apply>Применить в демо</button><button class="admin-button admin-button--ghost" type="button" data-preview-remove>Удалить</button></div></div></article>
+            </div>
+          </div>
         </section>
         <section class="preview-admin__section" data-preview-section="contacts">
           <div class="section-card"><h2>Контакты</h2><div class="form-grid">
@@ -165,9 +185,52 @@ function renderAdminPreview(content) {
         document.querySelectorAll('[data-preview-section]').forEach((section) => section.classList.toggle('is-active', section.dataset.previewSection === button.dataset.previewTab));
         showMessage('Открыт раздел «' + button.textContent + '». Это демонстрация: изменения не записываются.');
       }));
-      document.querySelectorAll('[data-preview-save], [data-preview-action]').forEach((button) => button.addEventListener('click', () => {
+      document.querySelectorAll('[data-preview-save]').forEach((button) => button.addEventListener('click', () => {
         showMessage('Демо-режим: действие выполнено только для проверки интерфейса. Данные сайта не менялись.');
       }));
+      const createItem = (kind) => {
+        const item = document.createElement('article');
+        const isDocument = kind === 'document';
+        const title = isDocument ? 'Новый демонстрационный документ' : 'Новый демонстрационный участник';
+        const meta = isDocument ? 'PDF · 2026' : 'Новая роль';
+        item.className = 'item-card';
+        item.dataset.previewItem = kind;
+        item.innerHTML = '<div class="item-card__header"><div><h4 class="item-card__title" data-preview-title></h4><p class="item-card__meta" data-preview-meta></p></div><div class="item-card__actions"><button class="admin-button admin-button--ghost" type="button" data-preview-edit>Изменить</button></div></div><div class="preview-editor"><div class="item-card__grid"><label class="field"><span>' + (isDocument ? 'Название' : 'Имя') + '</span><input data-preview-input="title"></label><label class="field"><span>' + (isDocument ? 'Тип и год' : 'Роль') + '</span><input data-preview-input="meta"></label></div><div class="item-card__actions"><button class="admin-button" type="button" data-preview-apply>Применить в демо</button><button class="admin-button admin-button--ghost" type="button" data-preview-remove>Удалить</button></div></div>';
+        item.querySelector('[data-preview-title]').textContent = title;
+        item.querySelector('[data-preview-meta]').textContent = meta;
+        item.querySelector('[data-preview-input="title"]').value = title;
+        item.querySelector('[data-preview-input="meta"]').value = meta;
+        return item;
+      };
+      document.addEventListener('click', (event) => {
+        const addButton = event.target.closest('[data-preview-add]');
+        if (addButton) {
+          const kind = addButton.dataset.previewAdd;
+          const list = addButton.closest('[data-preview-list]');
+          list.querySelector('.preview-list__header').insertAdjacentElement('afterend', createItem(kind));
+          showMessage(kind === 'document' ? 'Добавлен новый демонстрационный документ. Заполните поля и примените изменения.' : 'Добавлена новая демонстрационная карточка. Заполните поля и примените изменения.');
+          return;
+        }
+        const item = event.target.closest('[data-preview-item]');
+        if (!item) return;
+        if (event.target.closest('[data-preview-edit]')) {
+          item.querySelector('.preview-editor').classList.toggle('is-hidden');
+          return;
+        }
+        if (event.target.closest('[data-preview-apply]')) {
+          const title = item.querySelector('[data-preview-input="title"]').value.trim() || 'Без названия';
+          const meta = item.querySelector('[data-preview-input="meta"]').value.trim() || 'Без описания';
+          item.querySelector('[data-preview-title]').textContent = title;
+          item.querySelector('[data-preview-meta]').textContent = meta;
+          item.querySelector('.preview-editor').classList.add('is-hidden');
+          showMessage('Изменения применены в демо-версии. После обновления страницы исходные данные восстановятся.');
+          return;
+        }
+        if (event.target.closest('[data-preview-remove]')) {
+          item.remove();
+          showMessage('Элемент удалён только из текущей демонстрации. После обновления страницы он снова появится.');
+        }
+      });
     </script>
   </body>
 </html>`;
