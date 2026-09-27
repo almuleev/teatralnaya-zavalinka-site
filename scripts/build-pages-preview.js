@@ -90,10 +90,17 @@ function renderAdminPreview(content) {
       .preview-list { display: grid; gap: 14px; margin-top: 20px; }
       .preview-list__header { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
       .preview-list__header h3 { margin: 0; }
+      .preview-list .item-card__header { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; }
+      .preview-list .item-card__header > div:first-child { min-width: 0; }
+      .preview-list .item-card__actions { min-width: max-content; }
       .preview-editor { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--admin-border); }
       .preview-editor.is-hidden { display: none; }
       .preview-document__meta { margin: 4px 0 0; color: var(--admin-muted); }
-      @media (max-width: 640px) { .preview-list__header { align-items: stretch; flex-direction: column; } }
+      @media (max-width: 640px) {
+        .preview-list__header { align-items: stretch; flex-direction: column; }
+        .preview-list .item-card__header { grid-template-columns: 1fr; }
+        .preview-list .item-card__header .item-card__actions { margin-top: 12px; }
+      }
     </style>
   </head>
   <body class="admin-body">
