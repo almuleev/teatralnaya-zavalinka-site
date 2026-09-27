@@ -94,6 +94,7 @@ function renderAdminPreview(content) {
       .preview-list .item-card__header > div:first-child { min-width: 0; }
       .preview-list .item-card__actions { min-width: max-content; }
       .preview-editor { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--admin-border); }
+      .preview-editor .item-card__actions { width: 100%; min-width: 0; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--admin-border); }
       .preview-editor.is-hidden { display: none; }
       .preview-document__meta { margin: 4px 0 0; color: var(--admin-muted); }
       @media (max-width: 640px) {
