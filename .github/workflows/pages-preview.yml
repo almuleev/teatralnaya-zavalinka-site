@@ -48,3 +48,43 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  cleanup:
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      deployments: write
+    steps:
+      - name: Keep only the latest Pages deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const deployments = await github.paginate(
+              github.rest.repos.listDeployments,
+              { owner, repo, environment: "github-pages", per_page: 100 }
+            );
+
+            const [latest, ...outdated] = deployments;
+            if (!latest) {
+              core.notice("No GitHub Pages deployments found.");
+              return;
+            }
+
+            for (const deployment of outdated) {
+              await github.rest.repos.createDeploymentStatus({
+                owner,
+                repo,
+                deployment_id: deployment.id,
+                state: "inactive",
+                description: "Superseded by the latest preview deployment.",
+                auto_inactive: false
+              });
+              await github.rest.repos.deleteDeployment({
+                owner,
+                repo,
+                deployment_id: deployment.id
+              });
+            }
+
+            core.notice(`Kept deployment ${latest.id}; removed ${outdated.length} older deployment(s).`);
