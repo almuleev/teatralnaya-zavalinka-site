@@ -23,3 +23,7 @@ old_v/
 *.log
 *.encoding-backup
 data/site-content (*).json
+
+# Local copies of the server filesystem (application, uploads, and certificates).
+/etc/
+/var/
